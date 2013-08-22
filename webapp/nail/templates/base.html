@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% block title %}Nail{% endblock %}</title>
+        <link rel="stylesheet" href="/static/css/960.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+    </head>
+    <body>
+        <header>
+            <h1>{{ self.title() }}</h1>
+        </header>
+
+        <div class="container_12">{% block content %}{% endblock %}</div>
+    </body>
+</html>
