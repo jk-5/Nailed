@@ -50,6 +50,7 @@ th {
 }
 
 .leaderboard {
+    margin-bottom: 20px;
     width: 100%;
 }
 
@@ -60,6 +61,3 @@ th {
 .lb-kills {
     width: 11%;
 }
-
-.lb-role-owner:before { content: '~'; }
-.lb-role-op:before { content: '@'; }
