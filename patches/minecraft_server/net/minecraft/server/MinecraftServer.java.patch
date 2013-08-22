@@ -1,0 +1,28 @@
+--- ../src_base/minecraft_server/net/minecraft/server/MinecraftServer.java
++++ ../src_work/minecraft_server/net/minecraft/server/MinecraftServer.java
+@@ -13,6 +13,7 @@
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
+ 
++import jk_5.nailed.Nailed;
+ import net.minecraft.src.AnvilSaveConverter;
+ import net.minecraft.src.AxisAlignedBB;
+ import net.minecraft.src.CallableIsServerModded;
+@@ -691,6 +692,8 @@
+ 
+     public static void main(String[] par0ArrayOfStr)
+     {
++        Nailed.init();
++
+         StatList.nopInit();
+         ILogAgent var1 = null;
+ 
+@@ -949,7 +952,7 @@
+ 
+     public String getServerModName()
+     {
+-        return "vanilla";
++        return "nailed"; //NAILED
+     }
+ 
+     /**
