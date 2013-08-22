@@ -9,37 +9,30 @@
  import net.minecraft.server.MinecraftServer;
  
  public class NetServerHandler extends NetHandler
-@@ -103,7 +105,7 @@
+@@ -103,7 +105,6 @@
              this.playerEntity.mountEntityAndWakeUp();
              this.sendPacket(new Packet255KickDisconnect(par1Str));
              this.netManager.serverShutdown();
 -            this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
-+            //NAILED DISABLE this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
              this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
              this.connectionClosed = true;
          }
-@@ -523,7 +525,7 @@
+@@ -523,7 +524,6 @@
      public void handleErrorMessage(String par1Str, Object[] par2ArrayOfObj)
      {
          this.mcServer.getLogAgent().func_98233_a(this.playerEntity.getCommandSenderName() + " lost connection: " + par1Str);
 -        this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
-+        //NAILED DISABLE this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
          this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
          this.connectionClosed = true;
  
-@@ -629,8 +631,15 @@
+@@ -629,8 +629,8 @@
                          this.sendPacket(new Packet3Chat(ChatMessageComponent.func_111077_e("chat.cannotSend").func_111059_a(EnumChatFormatting.RED)));
                          return;
                      }
+-                    ChatMessageComponent var4 = ChatMessageComponent.func_111082_b("chat.type.text", new Object[] {this.playerEntity.getTranslatedEntityName(), var2});
+-                    this.mcServer.getConfigurationManager().func_110459_a(var4, false);
 +
-+                    //NAILED START
 +                    Nailed.eventBus.post(new PlayerChatEvent(this.playerEntity, var2));
-+                    //NAILED END
-+
-+                    /* NAILED DISABLE
-                     ChatMessageComponent var4 = ChatMessageComponent.func_111082_b("chat.type.text", new Object[] {this.playerEntity.getTranslatedEntityName(), var2});
-                     this.mcServer.getConfigurationManager().func_110459_a(var4, false);
-+                    */
                  }
  
                  this.chatSpamThresholdCount += 20;

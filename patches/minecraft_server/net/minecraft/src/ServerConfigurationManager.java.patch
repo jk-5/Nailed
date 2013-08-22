@@ -10,23 +10,29 @@
  import net.minecraft.server.MinecraftServer;
  
  public abstract class ServerConfigurationManager
-@@ -86,7 +89,7 @@
+@@ -86,7 +89,6 @@
          var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
          this.func_96456_a((ServerScoreboard)var5.getScoreboard(), par2EntityPlayerMP);
          this.updateTimeAndWeatherForPlayer(par2EntityPlayerMP, var5);
 -        this.sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.joined", new Object[] {par2EntityPlayerMP.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
-+        //NAILED DISABLE this.sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.joined", new Object[] {par2EntityPlayerMP.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
          this.playerLoggedIn(par2EntityPlayerMP);
          var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
          this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -213,6 +216,10 @@
+@@ -213,6 +215,8 @@
       */
      public void playerLoggedIn(EntityPlayerMP par1EntityPlayerMP)
      {
-+        //NAILED START
 +        Nailed.eventBus.post(new PlayerJoinServerEvent(par1EntityPlayerMP));
-+        //NAILED END
 +
          this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
          this.playerEntityList.add(par1EntityPlayerMP);
          WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
+@@ -239,6 +243,8 @@
+      */
+     public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP)
+     {
++        Nailed.eventBus.post(new PlayerLeaveServerEvent(par1EntityPlayerMP));
++
+         this.writePlayerData(par1EntityPlayerMP);
+         WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
+ 

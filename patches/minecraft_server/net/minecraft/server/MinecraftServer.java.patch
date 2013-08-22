@@ -22,7 +22,7 @@
      public String getServerModName()
      {
 -        return "vanilla";
-+        return "nailed"; //NAILED
++        return "nailed";
      }
  
      /**
