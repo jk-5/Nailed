@@ -1,5 +1,6 @@
 package jk_5.nailed.event.player;
 
+import jk_5.nailed.players.Player;
 import net.minecraft.src.EntityPlayerMP;
 
 /**
@@ -9,11 +10,10 @@ import net.minecraft.src.EntityPlayerMP;
  */
 public class PlayerChatEvent extends PlayerEvent {
 
-    public EntityPlayerMP player;
     public String message;
 
-    public PlayerChatEvent(EntityPlayerMP player, String message){
-        this.player = player;
+    public PlayerChatEvent(Player player, String message){
+        super(player);
         this.message = message;
     }
 }

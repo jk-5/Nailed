@@ -7,6 +7,7 @@ import jk_5.nailed.event.player.PlayerLeaveServerEvent;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.teams.TeamRegistry;
 import jk_5.nailed.util.EnumColor;
+import jk_5.nailed.util.ServerUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.ChatMessageComponent;
 
@@ -19,22 +20,16 @@ public class NailedEventListener {
 
     @Subscribe
     public void onPlayerJoinServer(PlayerJoinServerEvent event){
-        Team playerTeam = Nailed.teamRegistry.getTeamFromPlayer(event.player.getCommandSenderName());
-        String format = String.format("%s%s (%s)%s joined the game!", playerTeam.getColor().toString(), event.player.getCommandSenderName(), playerTeam.getName(), EnumColor.YELLOW);
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(format));
+        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "joined the game!"));
     }
 
     @Subscribe
     public void onPlayerLeaveServer(PlayerLeaveServerEvent event){
-        Team playerTeam = Nailed.teamRegistry.getTeamFromPlayer(event.player.getCommandSenderName());
-        String format = String.format("%s%s (%s)%s left the game!", playerTeam.getColor().toString(), event.player.getCommandSenderName(), playerTeam.getName(), EnumColor.YELLOW);
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(format));
+        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "left the game!"));
     }
 
     @Subscribe
     public void onPlayerChat(PlayerChatEvent event){
-        Team playerTeam = Nailed.teamRegistry.getTeamFromPlayer(event.player.getCommandSenderName());
-        String format = String.format("%s%s<%s> %s", playerTeam == Team.UNKNOWN ? "" : playerTeam.getColor().toString() + "* " + playerTeam.getName() + " " + EnumColor.RESET, EnumColor.GREY, event.player.getCommandSenderName(), event.message);
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.func_111066_d(format));
+        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(event.message));
     }
 }

@@ -7,16 +7,19 @@ import jk_5.nailed.util.EnumColor;
  *
  * @author jk-5
  */
-public class Group {
+public abstract class Group {
 
-    private EnumColor nameColor;
-    private String name;
+    public static Group player = new GroupPlayer();
+    public static Group admin = new GroupAdmin();
 
-    public Group(String name){
-        this.name = name;
-    }
+    protected EnumColor nameColor;
+    protected String name;
 
     public EnumColor getNameColor(){
         return this.nameColor;
+    }
+
+    public String getChatPrefix(){
+        return "";
     }
 }

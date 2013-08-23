@@ -31,4 +31,9 @@ public class Team {
     public String toString(){
         return String.format("%s%s%s", this.color.toString(), this.name, EnumColor.RESET);
     }
+
+    public String toChatFormatString(){
+        if(this == Team.UNKNOWN) return "";
+        return String.format("%s* %s%s ", this.getColor().toString(), this.getName(), EnumColor.RESET);
+    }
 }
