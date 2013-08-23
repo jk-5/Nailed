@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Nailed{% endblock %}
+{% block title %}Nailed It!{% endblock %}
 
 {% block content %}
 <div class="grid_12">
@@ -15,6 +15,9 @@
     <p>No game is running right now. Start a game using the button below.</p>
 
     <a class="button" href="/start">Start</a>
+    {% else %}
+    <h2>Error</h2>
+    <p>Unknown game state</p>
     {% endif %}
 </div>
 

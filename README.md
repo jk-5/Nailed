@@ -8,7 +8,8 @@ Web server
 
 The requirements for the web server are:
 
-* Flask
+* Jinja2
+* Tornado
 * SQLAlchemy
 * Python-MySQL
 
