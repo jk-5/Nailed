@@ -9,7 +9,15 @@ import net.minecraft.src.EntityPlayerMP;
  */
 public class NailedEventFactory {
 
-    public void playerJoinServer(EntityPlayerMP entity){
+    public static void playerLoggedIn(EntityPlayerMP entity){
+
+    }
+
+    public static void playerLoggedOut(EntityPlayerMP entity){
+
+    }
+
+    public static void onPlayerChat(EntityPlayerMP entity, String message){
 
     }
 }

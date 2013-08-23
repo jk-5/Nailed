@@ -1,38 +1,38 @@
 --- ../src_base/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
 +++ ../src_work/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
-@@ -13,6 +13,9 @@
+@@ -12,6 +12,8 @@
+ import java.util.Map;
  import java.util.Set;
  import java.util.Map.Entry;
- 
-+import jk_5.nailed.Nailed;
-+import jk_5.nailed.event.player.PlayerJoinServerEvent;
-+import jk_5.nailed.event.player.PlayerLeaveServerEvent;
++
++import jk_5.nailed.NailedEventFactory;
  import net.minecraft.server.MinecraftServer;
  
- public abstract class ServerConfigurationManager
-@@ -86,7 +89,6 @@
-         var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
-         this.func_96456_a((ServerScoreboard)var5.getScoreboard(), par2EntityPlayerMP);
-         this.updateTimeAndWeatherForPlayer(par2EntityPlayerMP, var5);
--        this.sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.joined", new Object[] {par2EntityPlayerMP.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
-         this.playerLoggedIn(par2EntityPlayerMP);
-         var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
-         this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -213,6 +215,8 @@
-      */
-     public void playerLoggedIn(EntityPlayerMP par1EntityPlayerMP)
-     {
-+        Nailed.eventBus.post(new PlayerJoinServerEvent(par1EntityPlayerMP));
-+
-         this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
-         this.playerEntityList.add(par1EntityPlayerMP);
-         WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
-@@ -239,6 +243,8 @@
-      */
-     public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP)
-     {
-+        Nailed.eventBus.post(new PlayerLeaveServerEvent(par1EntityPlayerMP));
-+
-         this.writePlayerData(par1EntityPlayerMP);
-         WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
+ public abstract class ServerConfigurationManager {
+@@ -56,9 +58,8 @@
+       var7.sendPacket(new Packet6SpawnPosition(var6.posX, var6.posY, var6.posZ));
+       var7.sendPacket(new Packet202PlayerAbilities(par2EntityPlayerMP.capabilities));
+       var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
+-      this.func_96456_a((ServerScoreboard)var5.getScoreboard(), par2EntityPlayerMP);
++      this.func_96456_a((ServerScoreboard) var5.getScoreboard(), par2EntityPlayerMP);
+       this.updateTimeAndWeatherForPlayer(par2EntityPlayerMP, var5);
+-      this.sendChatMsg(ChatMessageComponent.func_111082_b("multiplayer.player.joined", new Object[]{par2EntityPlayerMP.getTranslatedEntityName()}).func_111059_a(EnumChatFormatting.YELLOW));
+       this.playerLoggedIn(par2EntityPlayerMP);
+       var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
+       this.mcServer.getNetworkThread().addPlayer(var7);
+@@ -148,6 +149,7 @@
+    }
  
+    public void playerLoggedIn(EntityPlayerMP par1EntityPlayerMP) {
++      NailedEventFactory.playerLoggedIn(par1EntityPlayerMP);
+       this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
+       this.playerEntityList.add(par1EntityPlayerMP);
+       WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
+@@ -165,6 +167,7 @@
+    }
+ 
+    public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP) {
++      NailedEventFactory.playerLoggedOut(par1EntityPlayerMP);
+       this.writePlayerData(par1EntityPlayerMP);
+       WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
+       if(par1EntityPlayerMP.ridingEntity != null) {
