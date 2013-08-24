@@ -2,11 +2,8 @@ package jk_5.nailed.network.packet;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.util.Map;
 
 /**
  * TODO: Edit description
@@ -24,18 +21,20 @@ public abstract class Packet {
     }
 
     public abstract void writeToBuffer(ByteBuf buffer);
+
     public abstract void readFromBuffer(ByteBuf buffer);
 
     public abstract int getSize();
 
-    public int getPacketID(){
+    public int getPacketID() {
         return packetMap.inverse().get(this.getClass());
     }
 
-    public ByteBuf getSendBuffer(){
+    public ByteBuf getSendBuffer() {
         ByteBuf buf = Unpooled.buffer(this.getSize() + 3);
         buf.writeByte(magic1);
         buf.writeByte(magic2);
         buf.writeByte(this.getPacketID());
+        return buf;
     }
 }

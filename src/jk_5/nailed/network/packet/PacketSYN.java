@@ -10,17 +10,17 @@ import io.netty.buffer.ByteBuf;
 public class PacketSYN extends Packet {
 
     @Override
-    public void writeToBuffer(ByteBuf buffer){
+    public void writeToBuffer(ByteBuf buffer) {
 
     }
 
     @Override
-    public void readFromBuffer(ByteBuf buffer){
+    public void readFromBuffer(ByteBuf buffer) {
 
     }
 
     @Override
-    public int getSize(){
-
+    public int getSize() {
+        return 0;
     }
 }
