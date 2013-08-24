@@ -16,11 +16,9 @@ public class Player {
 
     private String username;
     private Group group = Nailed.groupRegistry.getDefaultGroup();
-    private Team team = Team.UNKNOWN;
 
     public Player(String username){
         this.username = username;
-        this.team = Nailed.teamRegistry.getTeamFromPlayer(username);
     }
 
     public String getUsername(){
@@ -36,11 +34,7 @@ public class Player {
     }
 
     public Team getTeam(){
-        return this.team;
-    }
-
-    public void setTeam(Team team){
-        this.team = team;
+        return Nailed.teamRegistry.getTeamFromPlayer(username);
     }
 
     public String getChatFormattedName(){
@@ -48,7 +42,7 @@ public class Player {
     }
 
     public String formatChatMessage(String message){
-        return String.format("%s%s%s[%s%s] %s", this.team.toChatFormatString(), this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
+        return String.format("%s%s%s[%s%s] %s", this.getTeam().toChatFormatString(), this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
     }
 
     public void sendChatMessage(String message){

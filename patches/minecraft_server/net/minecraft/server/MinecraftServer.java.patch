@@ -9,16 +9,35 @@
  import net.minecraft.src.AnvilSaveConverter;
  import net.minecraft.src.AxisAlignedBB;
  import net.minecraft.src.CallableIsServerModded;
-@@ -563,7 +565,7 @@
-          if(var2) {
-             var16.func_120011_ar();
+@@ -185,6 +187,8 @@
+          this.serverConfigManager.setPlayerManager(this.worldServers);
+       }
+ 
++      Nailed.teamRegistry.setupTeams();
++
+       this.setDifficultyForAllWorlds(this.getDifficulty());
+       this.initialWorldChunkLoad();
+    }
+@@ -539,6 +543,7 @@
           }
--
+ 
+          DedicatedServer var16 = new DedicatedServer(new File(var4));
 +         Nailed.init(var16);
+          var1 = var16.getLogAgent();
+          if(var3 != null) {
+             var16.setServerOwner(var3);
+@@ -558,10 +563,6 @@
+ 
+          if(var7) {
+             var16.canCreateBonusChest(true);
+-         }
+-
+-         if(var2) {
+-            var16.func_120011_ar();
+          }
+ 
           var16.startServerThread();
-          Runtime.getRuntime().addShutdownHook(new ThreadDedicatedServer(var16));
-       } catch (Exception var15) {
-@@ -648,7 +650,7 @@
+@@ -648,7 +649,7 @@
     }
  
     public String getServerModName() {

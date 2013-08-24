@@ -27,4 +27,8 @@ public class NailedEventFactory {
         Player p = Nailed.playerRegistry.getOrCreatePlayer(entity.getCommandSenderName());
         Nailed.eventBus.post(new PlayerChatEvent(p, message));
     }
+
+    public static boolean isOp(String username){
+        return Nailed.playerRegistry.getPlayer(username).getGroup().getGroupID().equalsIgnoreCase("admin");
+    }
 }

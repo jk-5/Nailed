@@ -43,6 +43,7 @@ public class CommandGroup extends CommandBase {
             if(args[0].equals("set")){
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 if(p == null) throw new CommandException("Player " + args[1] + " was not found");
+                else throw new WrongUsageException("/group set <player> <admin:player>");
             }
         }else if(args.length == 3){
             if(args[0].equals("set")){
@@ -54,7 +55,7 @@ public class CommandGroup extends CommandBase {
                 p.sendChatMessage(EnumColor.GREEN + "You were moved to the group " + g.getName());
                 sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Moved player " + p.getUsername() + " to group " + g.getName()));
             }
-        }
+        }else throw new WrongUsageException("/group <set>");
     }
 
     @Override

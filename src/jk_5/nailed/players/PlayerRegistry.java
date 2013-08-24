@@ -6,6 +6,7 @@ import com.google.common.eventbus.Subscribe;
 import jk_5.nailed.event.player.PlayerJoinServerEvent;
 import jk_5.nailed.event.player.PlayerLeaveServerEvent;
 import jk_5.nailed.groups.Group;
+import jk_5.nailed.util.EnumColor;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,12 @@ public class PlayerRegistry {
             this.players.put(username, p);
             return p;
         }
+    }
+
+    public String formatPlayerListPlayer(String name){
+        return name;
+        /*Player p = this.getPlayer(name);
+        if(p == null) return name;
+        return p.getGroup().getChatPrefix() + p.getTeam().getColor().toString() + p.getUsername() + EnumColor.RESET;*/
     }
 }

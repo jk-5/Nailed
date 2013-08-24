@@ -9,7 +9,15 @@
  import net.minecraft.server.MinecraftServer;
  
  public abstract class ServerConfigurationManager {
-@@ -56,9 +58,8 @@
+@@ -20,7 +22,6 @@
+    public final List playerEntityList = new ArrayList();
+    private final BanList bannedPlayers = new BanList(new File("banned-players.txt"));
+    private final BanList bannedIPs = new BanList(new File("banned-ips.txt"));
+-   private Set ops = new HashSet();
+    private Set whiteListedPlayers = new HashSet();
+    private IPlayerFileData playerNBTManagerObj;
+    private boolean whiteListEnforced;
+@@ -56,9 +57,8 @@
        var7.sendPacket(new Packet6SpawnPosition(var6.posX, var6.posY, var6.posZ));
        var7.sendPacket(new Packet202PlayerAbilities(par2EntityPlayerMP.capabilities));
        var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
@@ -20,15 +28,26 @@
        this.playerLoggedIn(par2EntityPlayerMP);
        var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
        this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -148,6 +149,7 @@
+@@ -148,7 +148,8 @@
     }
  
     public void playerLoggedIn(EntityPlayerMP par1EntityPlayerMP) {
+-      this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
 +      NailedEventFactory.playerLoggedIn(par1EntityPlayerMP);
-       this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
++      this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP, true, 1000));
        this.playerEntityList.add(par1EntityPlayerMP);
        WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
-@@ -165,6 +167,7 @@
+       var2.spawnEntityInWorld(par1EntityPlayerMP);
+@@ -156,7 +157,7 @@
+ 
+       for(int var3 = 0; var3 < this.playerEntityList.size(); ++var3) {
+          EntityPlayerMP var4 = (EntityPlayerMP)this.playerEntityList.get(var3);
+-         par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet201PlayerInfo(var4.getCommandSenderName(), true, var4.ping));
++         par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet201PlayerInfo(var4, true, var4.ping));
+       }
+    }
+ 
+@@ -165,6 +166,7 @@
     }
  
     public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP) {
@@ -36,3 +55,56 @@
        this.writePlayerData(par1EntityPlayerMP);
        WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
        if(par1EntityPlayerMP.ridingEntity != null) {
+@@ -175,7 +177,7 @@
+       var2.removeEntity(par1EntityPlayerMP);
+       var2.getPlayerManager().removePlayer(par1EntityPlayerMP);
+       this.playerEntityList.remove(par1EntityPlayerMP);
+-      this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), false, 9999));
++      this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP, false, 9999));
+    }
+ 
+    public String allowUserToConnect(SocketAddress par1SocketAddress, String par2Str) {
+@@ -375,7 +377,7 @@
+ 
+       if(this.playerPingIndex < this.playerEntityList.size()) {
+          EntityPlayerMP var1 = (EntityPlayerMP)this.playerEntityList.get(this.playerPingIndex);
+-         this.sendPacketToAllPlayers(new Packet201PlayerInfo(var1.getCommandSenderName(), true, var1.ping));
++         this.sendPacketToAllPlayers(new Packet201PlayerInfo(var1, true, var1.ping));
+       }
+    }
+ 
+@@ -426,21 +428,13 @@
+       return this.bannedIPs;
+    }
+ 
+-   public void addOp(String par1Str) {
+-      this.ops.add(par1Str.toLowerCase());
+-   }
+-
+-   public void removeOp(String par1Str) {
+-      this.ops.remove(par1Str.toLowerCase());
+-   }
+-
+    public boolean isAllowedToLogin(String par1Str) {
+       par1Str = par1Str.trim().toLowerCase();
+-      return !this.whiteListEnforced || this.ops.contains(par1Str) || this.whiteListedPlayers.contains(par1Str);
++      return !this.whiteListEnforced || NailedEventFactory.isOp(par1Str) || this.whiteListedPlayers.contains(par1Str);
+    }
+ 
+    public boolean areCommandsAllowed(String par1Str) {
+-      return this.ops.contains(par1Str.trim().toLowerCase()) || this.mcServer.isSinglePlayer() && this.mcServer.worldServers[0].getWorldInfo().areCommandsAllowed() && this.mcServer.getServerOwner().equalsIgnoreCase(par1Str) || this.commandsAllowedForAll;
++      return NailedEventFactory.isOp(par1Str) || this.mcServer.isSinglePlayer() && this.mcServer.worldServers[0].getWorldInfo().areCommandsAllowed() && this.mcServer.getServerOwner().equalsIgnoreCase(par1Str) || this.commandsAllowedForAll;
+    }
+ 
+    public EntityPlayerMP getPlayerEntity(String par1Str) {
+@@ -592,10 +586,6 @@
+       return this.whiteListedPlayers;
+    }
+ 
+-   public Set getOps() {
+-      return this.ops;
+-   }
+-
+    public void loadWhiteList() {}
+ 
+    public void updateTimeAndWeatherForPlayer(EntityPlayerMP par1EntityPlayerMP, WorldServer par2WorldServer) {

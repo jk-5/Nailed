@@ -14,3 +14,12 @@
        this.registerCommand(new CommandTime());
        this.registerCommand(new CommandGameMode());
        this.registerCommand(new CommandDifficulty());
+@@ -31,8 +34,6 @@
+       this.registerCommand(new CommandPlaySound());
+       this.registerCommand(new ServerCommandScoreboard());
+       if(MinecraftServer.getServer().isDedicatedServer()) {
+-         this.registerCommand(new CommandServerOp());
+-         this.registerCommand(new CommandServerDeop());
+          this.registerCommand(new CommandServerStop());
+          this.registerCommand(new CommandServerSaveAll());
+          this.registerCommand(new CommandServerSaveOff());

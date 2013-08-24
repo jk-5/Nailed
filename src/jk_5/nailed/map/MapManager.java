@@ -55,6 +55,16 @@ public class MapManager {
     }
 
     public File unpackMap(){
-        return FileUtils.unzipMapFromMapPack(this.mapPack, this.mapsFolder, "map" + (this.mapId++));
+        return this.unpackMap(mapId ++);
+    }
+
+    public File unpackMap(int id){
+        File f = new File(this.mapsFolder, "map" + id);
+        if(f.exists()) return f;
+        else return FileUtils.unzipMapFromMapPack(this.mapPack, this.mapsFolder, "map" + id);
+    }
+
+    public Properties getConfig(){
+        return this.config;
     }
 }

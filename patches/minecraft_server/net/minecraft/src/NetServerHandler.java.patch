@@ -25,11 +25,10 @@
        this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
        this.connectionClosed = true;
        if(this.mcServer.isSinglePlayer() && this.playerEntity.getCommandSenderName().equals(this.mcServer.getServerOwner())) {
-@@ -452,9 +452,7 @@
-                   this.sendPacket(new Packet3Chat(ChatMessageComponent.func_111077_e("chat.cannotSend").func_111059_a(EnumChatFormatting.RED)));
+@@ -453,8 +453,7 @@
                    return;
                 }
--
+ 
 -               ChatMessageComponent var4 = ChatMessageComponent.func_111082_b("chat.type.text", new Object[]{this.playerEntity.getTranslatedEntityName(), var2});
 -               this.mcServer.getConfigurationManager().func_110459_a(var4, false);
 +               NailedEventFactory.onPlayerChat(this.playerEntity, var2);

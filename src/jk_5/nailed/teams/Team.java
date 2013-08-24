@@ -1,6 +1,7 @@
 package jk_5.nailed.teams;
 
 import jk_5.nailed.util.EnumColor;
+import net.minecraft.src.ScorePlayerTeam;
 
 /**
  * TODO: Edit description
@@ -9,13 +10,16 @@ import jk_5.nailed.util.EnumColor;
  */
 public class Team {
 
-    public static Team UNKNOWN = new Team("Unknown Team", EnumColor.GREY);
+    public static Team UNKNOWN = new Team("Unknown Team", "unknown", EnumColor.GREY);
 
     private String name;
+    private String teamId;
     private EnumColor color;
+    public ScorePlayerTeam scoreboardTeam = null;
 
-    public Team(String name, EnumColor color){
+    public Team(String name, String teamId, EnumColor color){
         this.name = name;
+        this.teamId = teamId;
         this.color = color;
     }
 
