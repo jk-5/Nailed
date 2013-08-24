@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Boolean, Integer, String
+from sqlalchemy import Column, ForeignKey, Boolean, Integer, String
 
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
@@ -7,7 +7,7 @@ class Player(Base):
     __tablename__ = 'players'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(16))
     total = Column(Integer)
     wins = Column(Integer)
     kills = Column(Integer)
@@ -26,12 +26,14 @@ class Player(Base):
 class Game(Base):
     __tablename__ = 'game'
 
-    player_id = Column(Integer, primary_key=True)
+    player_id = Column(Integer, ForeignKey('players.id'), primary_key=True)
     team = Column(Integer)
+    captain = Column(Boolean)
 
-    def __init__(self, player_id, team):
+    def __init__(self, player_id, team, captain=False):
         self.player_id = player_id
         self.team = team
+        self.captain = captain
 
     def __repr__(self):
-        return '<Game ("%s","%s")>' % (self.player_id, self.team)
+        return '<Game ("%s","%s","%s")>' % (self.player_id, self.team, self.captain)

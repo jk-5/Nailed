@@ -10,6 +10,5 @@ The requirements for the web server are:
 
 * Jinja2
 * Tornado
-* SQLAlchemy
-* Python-MySQL
-
+* SQLAlchemy (+ supporting database library. TODO: Config documentation.)
+* Passlib

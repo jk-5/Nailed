@@ -2,6 +2,8 @@ from tornado.tcpserver import TCPServer
 
 class MinecraftSocket(TCPServer):
     def on_chunk(self, data):
+        print kwargs
+
         print "Got some data."
 
         # Check magic number of the incoming data

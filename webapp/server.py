@@ -3,10 +3,10 @@
 from tornado.web import Application
 from tornado.ioloop import IOLoop
 
-from nailed import app, ipc
+from nailed import app, ipc, config
 
 if __name__ == '__main__':
-    app.listen(5000)
-    ipc.listen(5001)
+    app.listen(config.app_port)
+    ipc.listen(config.ipc_port)
     
     IOLoop.instance().start()
