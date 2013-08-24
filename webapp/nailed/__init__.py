@@ -1,6 +1,13 @@
+# Load the config file
+from nailed.config import Config
+config = Config()
+
 # Set up SQLAlchemy
 from sqlalchemy import create_engine
-engine = create_engine('sqlite:///:memory:', echo=False)
+engine = create_engine(config.database, echo=False)
+
+from sqlalchemy.orm import sessionmaker
+Session = sessionmaker(bind=engine)
 
 from nailed.models import Base
 Base.metadata.create_all(engine)
