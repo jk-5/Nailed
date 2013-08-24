@@ -19,12 +19,15 @@ public class PlayerRegistry {
 
     private Map<String, Player> players = Maps.newHashMap();
 
+    public Player getPlayer(String username){
+        return this.players.get(username);
+    }
+
     public Player getOrCreatePlayer(String username){
         if(this.players.containsKey(username)) return this.players.get(username);
         else{
             final Player p = new Player(username);
             this.players.put(username, p);
-            if(username.equalsIgnoreCase("Clank26")) p.setGroup(Group.admin);
             return p;
         }
     }

@@ -20,12 +20,12 @@ public class NailedEventListener {
 
     @Subscribe
     public void onPlayerJoinServer(PlayerJoinServerEvent event){
-        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "joined the game!"));
+        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "joined the game").replace("[","").replace("]",""));
     }
 
     @Subscribe
     public void onPlayerLeaveServer(PlayerLeaveServerEvent event){
-        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "left the game!"));
+        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "left the game").replace("[","").replace("]",""));
     }
 
     @Subscribe

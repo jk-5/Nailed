@@ -1,5 +1,6 @@
 package jk_5.nailed.groups;
 
+import jk_5.nailed.Nailed;
 import jk_5.nailed.util.EnumColor;
 
 /**
@@ -9,11 +10,12 @@ import jk_5.nailed.util.EnumColor;
  */
 public abstract class Group {
 
-    public static Group player = new GroupPlayer();
-    public static Group admin = new GroupAdmin();
-
     protected EnumColor nameColor;
     protected String name;
+
+    public String getGroupID(){
+        return Nailed.groupRegistry.groups.inverse().get(this);
+    }
 
     public EnumColor getNameColor(){
         return this.nameColor;
@@ -21,5 +23,9 @@ public abstract class Group {
 
     public String getChatPrefix(){
         return "";
+    }
+
+    public String getName(){
+        return this.name;
     }
 }
