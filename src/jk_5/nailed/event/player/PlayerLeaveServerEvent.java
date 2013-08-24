@@ -1,5 +1,6 @@
 package jk_5.nailed.event.player;
 
+import jk_5.nailed.players.Player;
 import net.minecraft.src.EntityPlayerMP;
 
 /**
@@ -9,9 +10,7 @@ import net.minecraft.src.EntityPlayerMP;
  */
 public class PlayerLeaveServerEvent extends PlayerEvent {
 
-    public EntityPlayerMP player;
-
-    public PlayerLeaveServerEvent(EntityPlayerMP player){
-        this.player = player;
+    public PlayerLeaveServerEvent(Player player){
+        super(player);
     }
 }

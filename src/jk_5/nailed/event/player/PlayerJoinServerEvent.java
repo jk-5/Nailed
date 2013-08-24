@@ -10,7 +10,7 @@ import net.minecraft.src.EntityPlayerMP;
  */
 public class PlayerJoinServerEvent extends PlayerEvent {
 
-    public PlayerJoinServerEvent(EntityPlayerMP player){
+    public PlayerJoinServerEvent(Player player){
         super(player);
     }
 }

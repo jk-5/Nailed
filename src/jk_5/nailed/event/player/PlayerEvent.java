@@ -11,10 +11,9 @@ import net.minecraft.src.EntityPlayerMP;
  */
 public class PlayerEvent extends NailedEvent {
 
-    public Player playerInst;
-    public EntityPlayerMP player;
+    public Player player;
 
-    public PlayerEvent(EntityPlayerMP entity){
-        this.player = entity;
+    public PlayerEvent(Player p){
+        this.player = p;
     }
 }
