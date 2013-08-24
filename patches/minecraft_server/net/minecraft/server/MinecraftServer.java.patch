@@ -9,15 +9,16 @@
  import net.minecraft.src.AnvilSaveConverter;
  import net.minecraft.src.AxisAlignedBB;
  import net.minecraft.src.CallableIsServerModded;
-@@ -490,6 +492,7 @@
-    }
- 
-    public static void main(String[] par0ArrayOfStr) {
-+      Nailed.init();
-       StatList.nopInit();
-       ILogAgent var1 = null;
- 
-@@ -648,7 +651,7 @@
+@@ -563,7 +565,7 @@
+          if(var2) {
+             var16.func_120011_ar();
+          }
+-
++         Nailed.init(var16);
+          var16.startServerThread();
+          Runtime.getRuntime().addShutdownHook(new ThreadDedicatedServer(var16));
+       } catch (Exception var15) {
+@@ -648,7 +650,7 @@
     }
  
     public String getServerModName() {
