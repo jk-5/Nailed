@@ -9,15 +9,35 @@
  import net.minecraft.src.AnvilSaveConverter;
  import net.minecraft.src.AxisAlignedBB;
  import net.minecraft.src.CallableIsServerModded;
-@@ -185,6 +187,8 @@
+@@ -138,7 +140,7 @@
+       this.userMessage = par1Str;
+    }
+ 
+-   protected void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str) {
++   protected void loadAllWorlds(String par1Str, String par2Str, long par3) {
+       this.convertMapIfNeeded(par1Str);
+       this.setUserMessage("menu.loadingLevel");
+       this.worldServers = new WorldServer[3];
+@@ -147,8 +149,8 @@
+       WorldInfo var9 = var7.loadWorldInfo();
+       WorldSettings var8;
+       if(var9 == null) {
+-         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+-         var8.func_82750_a(par6Str);
++         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore());
++         var8.func_82750_a("");
+       } else {
+          var8 = new WorldSettings(var9);
+       }
+@@ -184,6 +186,8 @@
+ 
           this.serverConfigManager.setPlayerManager(this.worldServers);
        }
- 
-+      Nailed.teamRegistry.setupTeams();
 +
++      Nailed.onWorldReady();
+ 
        this.setDifficultyForAllWorlds(this.getDifficulty());
        this.initialWorldChunkLoad();
-    }
 @@ -539,6 +543,7 @@
           }
  

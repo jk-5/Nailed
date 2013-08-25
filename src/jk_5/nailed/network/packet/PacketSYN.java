@@ -1,26 +1,14 @@
 package jk_5.nailed.network.packet;
 
-import io.netty.buffer.ByteBuf;
-
 /**
  * TODO: Edit description
  *
  * @author jk-5
  */
-public class PacketSYN extends Packet {
+public class PacketSYN extends EmptyPayloadPacket {
 
     @Override
-    public void writeToBuffer(ByteBuf buffer) {
+    public void processPacket() {
 
-    }
-
-    @Override
-    public void readFromBuffer(ByteBuf buffer) {
-
-    }
-
-    @Override
-    public int getSize() {
-        return 0;
     }
 }

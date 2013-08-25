@@ -26,15 +26,37 @@ public abstract class Packet {
 
     public abstract int getSize();
 
+    public abstract void processPacket();
+
     public int getPacketID() {
         return packetMap.inverse().get(this.getClass());
     }
 
-    public ByteBuf getSendBuffer() {
+    public final ByteBuf getSendBuffer() {
         ByteBuf buf = Unpooled.buffer(this.getSize() + 3);
         buf.writeByte(magic1);
         buf.writeByte(magic2);
         buf.writeByte(this.getPacketID());
+        this.writeToBuffer(buf);
         return buf;
+    }
+
+    public static Packet getPacket(ByteBuf buffer) {
+        if (buffer.readByte() == magic1 && buffer.readByte() == magic2) {
+            byte packetId = buffer.readByte();
+            Packet packet = getPacket(packetId);
+            if (packet == null) return null;
+            packet.readFromBuffer(buffer);
+            return packet;
+        }
+        return null;
+    }
+
+    private static Packet getPacket(int id) {
+        try {
+            return packetMap.get(id).newInstance();
+        } catch (Exception e) {
+        }
+        return null;
     }
 }

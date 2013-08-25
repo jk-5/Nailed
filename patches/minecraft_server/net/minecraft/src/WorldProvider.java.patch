@@ -1,0 +1,28 @@
+--- ../src_base/minecraft_server/net/minecraft/src/WorldProvider.java
++++ ../src_work/minecraft_server/net/minecraft/src/WorldProvider.java
+@@ -1,4 +1,6 @@
+ package net.minecraft.src;
++
++import jk_5.nailed.map.gen.NailedWorldGen;
+ 
+ public abstract class WorldProvider {
+    public static final float[] field_111203_a = new float[]{1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};
+@@ -30,16 +32,11 @@
+    }
+ 
+    protected void registerWorldChunkManager() {
+-      if(this.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT) {
+-         FlatGeneratorInfo var1 = FlatGeneratorInfo.createFlatGeneratorFromString(this.worldObj.getWorldInfo().getGeneratorOptions());
+-         this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.biomeList[var1.getBiome()], 0.5F, 0.5F);
+-      } else {
+-         this.worldChunkMgr = new WorldChunkManager(this.worldObj);
+-      }
++      this.worldChunkMgr = NailedWorldGen.getWorldChunkManager(this.worldObj);
+    }
+ 
+    public IChunkProvider createChunkGenerator() {
+-      return (IChunkProvider)(this.terrainType == WorldType.FLAT?new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c):new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
++      return NailedWorldGen.getChunkProvider(this.worldObj);
+    }
+ 
+    public boolean canCoordinateBeSpawn(int par1, int par2) {

@@ -37,7 +37,7 @@ public class Nailed {
     public static final IPCClient ipc = new IPCClient("minecraft.reening.nl", 7431);
     public static DedicatedServer server;
 
-    public static void init(DedicatedServer server){
+    public static void init(DedicatedServer server) {
         Nailed.server = server;
 
         server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Next game in 4 minutes");
@@ -57,7 +57,16 @@ public class Nailed {
         ipc.start();
     }
 
-    public static void registerCommands(CommandHandler handler){
+    public static void onWorldReady() {
+        teamRegistry.setupTeams();
+
+        server.setCanSpawnAnimals(mapManager.getConfig().getProperty("spawn-animals", "true").equalsIgnoreCase("true"));
+        server.setCanSpawnNPCs(mapManager.getConfig().getProperty("spawn-npcs", "true").equalsIgnoreCase("true"));
+        server.setAllowPvp(mapManager.getConfig().getProperty("pvp", "true").equalsIgnoreCase("true"));
+        server.setTexturePack(mapManager.getConfig().getProperty("texture-pack", ""));
+    }
+
+    public static void registerCommands(CommandHandler handler) {
         handler.registerCommand(new CommandGroup());
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());

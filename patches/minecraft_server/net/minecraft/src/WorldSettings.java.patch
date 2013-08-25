@@ -1,0 +1,18 @@
+--- ../src_base/minecraft_server/net/minecraft/src/WorldSettings.java
++++ ../src_work/minecraft_server/net/minecraft/src/WorldSettings.java
+@@ -1,4 +1,6 @@
+ package net.minecraft.src;
++
++import jk_5.nailed.map.gen.NailedWorldGen;
+ 
+ public final class WorldSettings {
+    private final long seed;
+@@ -16,7 +18,7 @@
+       this.theGameType = par3EnumGameType;
+       this.mapFeaturesEnabled = par4;
+       this.hardcoreEnabled = par5;
+-      this.terrainType = par6WorldType;
++      this.terrainType = NailedWorldGen.getWorldType();
+    }
+ 
+    public WorldSettings(WorldInfo par1WorldInfo) {

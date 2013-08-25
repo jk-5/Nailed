@@ -15,7 +15,7 @@ public class IPCHandler extends ChannelInboundHandlerAdapter {
 
     private ChannelHandlerContext ctx;
 
-    public void sendPacket(Packet packet){
+    public void sendPacket(Packet packet) {
         this.ctx.writeAndFlush(packet.getSendBuffer());
     }
 
@@ -27,13 +27,14 @@ public class IPCHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ctx.write(msg);
-        System.out.println(msg.getClass().getName());
+        Packet packet = Packet.getPacket((ByteBuf) msg);
+        if (packet == null) return;
+        packet.processPacket();
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        ctx.flush();
+        //ctx.flush();
     }
 
     @Override
