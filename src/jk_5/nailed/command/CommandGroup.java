@@ -23,7 +23,7 @@ public class CommandGroup extends CommandBase {
 
     @Override
     public int getRequiredPermissionLevel() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -33,41 +33,41 @@ public class CommandGroup extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if(args.length == 0){
+        if (args.length == 0) {
             throw new WrongUsageException("/group <set>");
-        }else if(args.length == 1){
-            if(args[0].equals("set")){
+        } else if (args.length == 1) {
+            if (args[0].equals("set")) {
                 throw new WrongUsageException("/group set <player> <admin:player>");
             }
-        }else if(args.length == 2){
-            if(args[0].equals("set")){
+        } else if (args.length == 2) {
+            if (args[0].equals("set")) {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
-                if(p == null) throw new CommandException("Player " + args[1] + " was not found");
+                if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 else throw new WrongUsageException("/group set <player> <admin:player>");
             }
-        }else if(args.length == 3){
-            if(args[0].equals("set")){
+        } else if (args.length == 3) {
+            if (args[0].equals("set")) {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 Group g = Nailed.groupRegistry.getGroup(args[2]);
-                if(p == null) throw new CommandException("Player " + args[1] + " was not found");
-                if(g == null) throw new CommandException("Group " + args[2] + " was not found");
+                if (p == null) throw new CommandException("Player " + args[1] + " was not found");
+                if (g == null) throw new CommandException("Group " + args[2] + " was not found");
                 p.setGroup(g);
                 p.sendChatMessage(EnumColor.GREEN + "You were moved to the group " + g.getName());
                 sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Moved player " + p.getUsername() + " to group " + g.getName()));
             }
-        }else throw new WrongUsageException("/group <set>");
+        } else throw new WrongUsageException("/group <set>");
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-        if(args.length == 1){
+        if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, new String[]{"set"});
-        }else if(args.length == 2){
-            if(args[0].equals("set")){
+        } else if (args.length == 2) {
+            if (args[0].equals("set")) {
                 return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
             }
-        }else if(args.length == 3){
-            if(args[0].equals("set")){
+        } else if (args.length == 3) {
+            if (args[0].equals("set")) {
                 return getListOfStringsFromIterableMatchingLastWord(args, Nailed.groupRegistry.getGroups());
             }
         }

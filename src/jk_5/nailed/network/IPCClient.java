@@ -1,13 +1,19 @@
 package jk_5.nailed.network;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import jk_5.nailed.network.packet.Packet;
+
+import java.net.URI;
 
 /**
  * TODO: Edit description
@@ -16,19 +22,31 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  */
 public class IPCClient extends Thread {
 
-    private final String host;
-    private final int port;
+    private URI uri;
+    private Channel channel;
 
-    public IPCClient(String host, int port) {
-        this.host = host;
-        this.port = port;
+    public IPCClient() {
+        try {
+            this.uri = new URI("ws://minecraft.reening.nl:5000/minecraft");
+        } catch (Exception e) {
+            this.uri = null;
+        }
         this.setDaemon(true);
         this.setName("IPC Client thread");
+    }
+
+    public void sendPacket(Packet p) {
+        this.channel.writeAndFlush(new TextWebSocketFrame(p.getSendPacket().toString()));
+    }
+
+    public URI getURI() {
+        return this.uri;
     }
 
     public void run() {
         EventLoopGroup group = new NioEventLoopGroup();
         try {
+            final IPCHandler handler = new IPCHandler();
             Bootstrap b = new Bootstrap();
             b.group(group)
                     .channel(NioSocketChannel.class)
@@ -36,11 +54,14 @@ public class IPCClient extends Thread {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new IPCHandler());
+                            ch.pipeline().addLast("http-codec", new HttpClientCodec());
+                            ch.pipeline().addLast("aggregator", new HttpObjectAggregator(8192));
+                            ch.pipeline().addLast("ws-handler", handler);
                         }
                     });
-            ChannelFuture f = b.connect(host, port).sync();
-            f.channel().closeFuture().sync();
+            this.channel = b.connect(uri.getHost(), uri.getPort()).sync().channel();
+            handler.handshakeFuture().sync();
+            this.channel.closeFuture().sync();
         } catch (Exception e) {
             System.err.println("IPC Error:");
             e.printStackTrace();

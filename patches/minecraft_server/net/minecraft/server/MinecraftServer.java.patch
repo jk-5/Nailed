@@ -24,7 +24,7 @@
        if(var9 == null) {
 -         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
 -         var8.func_82750_a(par6Str);
-+         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore());
++         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), null);
 +         var8.func_82750_a("");
        } else {
           var8 = new WorldSettings(var9);
@@ -38,7 +38,15 @@
  
        this.setDifficultyForAllWorlds(this.getDifficulty());
        this.initialWorldChunkLoad();
-@@ -539,6 +543,7 @@
+@@ -379,6 +383,7 @@
+    protected void systemExitNow() {}
+ 
+    protected void tick() {
++      Nailed.onTick();
+       long var1 = System.nanoTime();
+       AxisAlignedBB.getAABBPool().cleanPool();
+       ++this.tickCounter;
+@@ -539,6 +544,7 @@
           }
  
           DedicatedServer var16 = new DedicatedServer(new File(var4));
@@ -46,7 +54,7 @@
           var1 = var16.getLogAgent();
           if(var3 != null) {
              var16.setServerOwner(var3);
-@@ -558,10 +563,6 @@
+@@ -558,10 +564,6 @@
  
           if(var7) {
              var16.canCreateBonusChest(true);
@@ -57,7 +65,7 @@
           }
  
           var16.startServerThread();
-@@ -648,7 +649,7 @@
+@@ -648,7 +650,7 @@
     }
  
     public String getServerModName() {

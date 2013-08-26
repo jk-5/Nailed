@@ -2,8 +2,7 @@ package jk_5.nailed.network.packet;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
+import com.nexus.data.json.JsonObject;
 
 /**
  * TODO: Edit description
@@ -13,18 +12,15 @@ import io.netty.buffer.Unpooled;
 public abstract class Packet {
 
     private static BiMap<Integer, Class<? extends Packet>> packetMap = HashBiMap.create();
-    private static final int magic1 = 0x55;
-    private static final int magic2 = 0xAA;
 
     static {
-        packetMap.put(0x01, PacketSYN.class);
+        packetMap.put(21, Packet21PlayerJoin.class);
+        packetMap.put(22, Packet22PlayerLeave.class);
     }
 
-    public abstract void writeToBuffer(ByteBuf buffer);
+    public abstract void writePacketData(JsonObject data);
 
-    public abstract void readFromBuffer(ByteBuf buffer);
-
-    public abstract int getSize();
+    public abstract void readPacketData(JsonObject data);
 
     public abstract void processPacket();
 
@@ -32,27 +28,16 @@ public abstract class Packet {
         return packetMap.inverse().get(this.getClass());
     }
 
-    public final ByteBuf getSendBuffer() {
-        ByteBuf buf = Unpooled.buffer(this.getSize() + 3);
-        buf.writeByte(magic1);
-        buf.writeByte(magic2);
-        buf.writeByte(this.getPacketID());
-        this.writeToBuffer(buf);
-        return buf;
+    public JsonObject getSendPacket() {
+        JsonObject writtenData = new JsonObject();
+        this.writePacketData(writtenData);
+        JsonObject data = new JsonObject();
+        data.add("id", this.getPacketID());
+        if (!writtenData.isEmpty()) data.add("data", writtenData);
+        return data;
     }
 
-    public static Packet getPacket(ByteBuf buffer) {
-        if (buffer.readByte() == magic1 && buffer.readByte() == magic2) {
-            byte packetId = buffer.readByte();
-            Packet packet = getPacket(packetId);
-            if (packet == null) return null;
-            packet.readFromBuffer(buffer);
-            return packet;
-        }
-        return null;
-    }
-
-    private static Packet getPacket(int id) {
+    public static Packet getPacket(int id) {
         try {
             return packetMap.get(id).newInstance();
         } catch (Exception e) {

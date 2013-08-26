@@ -1,13 +1,8 @@
 package jk_5.nailed.command;
 
-import jk_5.nailed.Nailed;
-import jk_5.nailed.groups.Group;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.util.EnumColor;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
-
-import java.util.List;
+import net.minecraft.src.CommandBase;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.ICommandSender;
 
 /**
  * TODO: Edit description
@@ -23,7 +18,7 @@ public class CommandNewWorld extends CommandBase {
 
     @Override
     public int getRequiredPermissionLevel() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -33,7 +28,7 @@ public class CommandNewWorld extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if(sender instanceof EntityPlayerMP){
+        if (sender instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) sender;
             player.mcServer.getConfigurationManager().transferPlayerToDimension(player, 3);
         }

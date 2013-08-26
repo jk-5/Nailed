@@ -1,6 +1,7 @@
 package jk_5.nailed.map;
 
 import jk_5.nailed.Nailed;
+import jk_5.nailed.map.gamestart.GameStartupThread;
 import jk_5.nailed.util.FileUtils;
 
 import java.io.File;
@@ -21,6 +22,8 @@ public class MapManager {
     private File mapsFolder = new File("maps");
     private Properties config;
     private int mapId = 0;
+
+    private GameStartupThread thread;
 
     public void readMapConfig() {
         ZipInputStream stream = null;
@@ -51,9 +54,14 @@ public class MapManager {
     }
 
     public void setupSpawnMap() {
+        this.thread = new GameStartupThread();
         File map = this.unpackMap();
-        Nailed.server.setFolderName("testmap");
-        //Nailed.server.setFolderName("maps" + System.getProperty("file.seperator", "/") + map.getName());
+        //Nailed.server.setFolderName("testmap");
+        Nailed.server.setFolderName("maps" + System.getProperty("file.seperator", "/") + map.getName());
+    }
+
+    public GameStartupThread getThread() {
+        return this.thread;
     }
 
     public File unpackMap() {

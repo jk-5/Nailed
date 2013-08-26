@@ -1,6 +1,7 @@
 package jk_5.nailed;
 
 import com.google.common.eventbus.EventBus;
+import jk_5.nailed.command.CommandCB;
 import jk_5.nailed.command.CommandGroup;
 import jk_5.nailed.command.CommandNewWorld;
 import jk_5.nailed.command.CommandTeam;
@@ -10,6 +11,7 @@ import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
 import jk_5.nailed.map.MapManager;
+import jk_5.nailed.map.stats.StatManager;
 import jk_5.nailed.multiworld.MultiworldManager;
 import jk_5.nailed.network.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
@@ -33,8 +35,9 @@ public class Nailed {
     public static final MultiworldManager multiworldManager = new MultiworldManager();
     public static final ConfigFile config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file");
     public static final MapManager mapManager = new MapManager();
+    public static final StatManager statManager = new StatManager();
     public static final IrcConnector irc = new IrcConnector();
-    public static final IPCClient ipc = new IPCClient("minecraft.reening.nl", 7431);
+    public static final IPCClient ipc = new IPCClient();
     public static DedicatedServer server;
 
     public static void init(DedicatedServer server) {
@@ -67,8 +70,13 @@ public class Nailed {
     }
 
     public static void registerCommands(CommandHandler handler) {
+        handler.registerCommand(new CommandCB());
         handler.registerCommand(new CommandGroup());
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());
+    }
+
+    public static void onTick() {
+
     }
 }
