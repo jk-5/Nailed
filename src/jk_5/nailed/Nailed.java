@@ -1,10 +1,7 @@
 package jk_5.nailed;
 
 import com.google.common.eventbus.EventBus;
-import jk_5.nailed.command.CommandCB;
-import jk_5.nailed.command.CommandGroup;
-import jk_5.nailed.command.CommandNewWorld;
-import jk_5.nailed.command.CommandTeam;
+import jk_5.nailed.command.*;
 import jk_5.nailed.config.helper.ConfigFile;
 import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
@@ -43,7 +40,7 @@ public class Nailed {
     public static void init(DedicatedServer server) {
         Nailed.server = server;
 
-        server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Next game in 4 minutes");
+        server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Let\'s go!");
 
         eventBus.register(new NailedEventListener());
         eventBus.register(playerRegistry);
@@ -74,6 +71,7 @@ public class Nailed {
         handler.registerCommand(new CommandGroup());
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());
+        handler.registerCommand(new CommandSpectator());
     }
 
     public static void onTick() {

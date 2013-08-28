@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author jk-5
  */
-public class GameStartupThread extends Thread {
+public class GameThread extends Thread {
 
     private static final Map<String, Class<?>> instructionMap = Maps.newHashMap();
     private final List<IInstruction> instructions;
@@ -33,9 +33,11 @@ public class GameStartupThread extends Thread {
         instructionMap.put("countdown", InstructionCountdown.class);
         instructionMap.put("setwinner", InstructionSetWinner.class);
         instructionMap.put("startwinnerinterrupt", InstructionStartWinnerInterrupt.class);
+        instructionMap.put("enable", InstructionEnableStat.class);
+        instructionMap.put("disable", InstructionDisableStat.class);
     }
 
-    public GameStartupThread() {
+    public GameThread() {
         String instructionList = Nailed.mapManager.getConfig().getProperty("gamescript", "");
         this.instructions = parseInstructions(instructionList);
         this.setDaemon(true);
@@ -83,6 +85,7 @@ public class GameStartupThread extends Thread {
 
     public void setWinner(Team team) {
         this.winner = team;
+        Nailed.statManager.enableStat("gamewon");
         ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.GOLD + " Winning team: " + winner.toString());
     }
 

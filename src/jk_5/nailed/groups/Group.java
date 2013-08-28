@@ -2,6 +2,7 @@ package jk_5.nailed.groups;
 
 import jk_5.nailed.Nailed;
 import jk_5.nailed.util.EnumColor;
+import net.minecraft.src.EntityPlayer;
 
 /**
  * TODO: Edit description
@@ -13,19 +14,27 @@ public abstract class Group {
     protected EnumColor nameColor;
     protected String name;
 
-    public String getGroupID(){
+    public String getGroupID() {
         return Nailed.groupRegistry.groups.inverse().get(this);
     }
 
-    public EnumColor getNameColor(){
+    public EnumColor getNameColor() {
         return this.nameColor;
     }
 
-    public String getChatPrefix(){
+    public String getChatPrefix() {
         return "";
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
+    }
+
+    public void onPlayerJoin(EntityPlayer player) {
+
+    }
+
+    public void onPlayerLeave(EntityPlayer player) {
+
     }
 }

@@ -6,6 +6,7 @@ import jk_5.nailed.event.player.PlayerChatEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
+import net.minecraft.server.MinecraftServer;
 import org.jibble.pircbot.PircBot;
 
 /**
@@ -21,11 +22,11 @@ public class IrcConnector extends PircBot implements Runnable {
     public String channel = Nailed.config.getTag("irc").getTag("channel").getTag("name").setComment("IRC channel").getValue("#nailed");
     public String channelPass = Nailed.config.getTag("irc").getTag("channel").getTag("password").setComment("IRC channel password").getValue("");
 
-    public IrcConnector(){
+    public IrcConnector() {
         Nailed.eventBus.register(this);
     }
 
-    public void connect(){
+    public void connect() {
         Thread t = new Thread(this);
         t.setDaemon(true);
         t.setName("IRC Connect thread");
@@ -33,18 +34,22 @@ public class IrcConnector extends PircBot implements Runnable {
     }
 
     @Subscribe
-    public void onChat(PlayerChatEvent event){
+    public void onChat(PlayerChatEvent event) {
         this.sendMessage(this.channel, "<" + event.player.getUsername() + "> " + event.message);
     }
 
     @Override
-    public void onMessage(String channel, String sender, String login, String hostname, String message){
-        if(message.startsWith("!msg")){
+    public void onMessage(String channel, String sender, String login, String hostname, String message) {
+        if (message.startsWith("!msg")) {
             String args[] = message.split(" ", 3);
             Player p = Nailed.playerRegistry.getPlayer(args[1]);
-            if(p == null) this.sendMessage(channel, sender + ": Player " + args[1] + " was not found!");
-            else p.sendChatMessage(EnumColor.GREY + "[" + channel + "] [" + sender + " -> " + EnumColor.GOLD + p.getUsername() + EnumColor.GREY + "] " + EnumColor.RESET + args[2]);
-        }else ServerUtils.broadcastChatMessage(EnumColor.GREY + "[" + channel + "]" + EnumColor.RESET + " <" + sender + "> " + message);
+            if (p == null) this.sendMessage(channel, sender + ": Player " + args[1] + " was not found!");
+            else
+                p.sendChatMessage(EnumColor.GREY + "[" + channel + "] [" + sender + " -> " + EnumColor.GOLD + p.getUsername() + EnumColor.GREY + "] " + EnumColor.RESET + args[2]);
+        } else if (message.equals(".players")) {
+            this.sendMessage(channel, "Currently playing: " + MinecraftServer.getServer().getConfigurationManager().getPlayerListAsString());
+        } else
+            ServerUtils.broadcastChatMessage(EnumColor.GREY + "[" + channel + "]" + EnumColor.RESET + " <" + sender + "> " + message);
     }
 
     @Override
@@ -68,12 +73,12 @@ public class IrcConnector extends PircBot implements Runnable {
     }
 
     @Override
-    public void run(){
-        try{
+    public void run() {
+        try {
             this.setName("Nailed-Server");
             this.connect(this.server, this.port, this.serverPassword);
             this.joinChannel(this.channel, this.channelPass);
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
     }

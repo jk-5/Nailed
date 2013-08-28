@@ -1,7 +1,7 @@
 package jk_5.nailed.map.gamestart.instructions;
 
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.GameStartupThread;
+import jk_5.nailed.map.gamestart.GameThread;
 import jk_5.nailed.map.gamestart.IInstruction;
 
 /**
@@ -19,7 +19,7 @@ public class InstructionTrigger implements IInstruction {
     }
 
     @Override
-    public void execute(GameStartupThread controller) throws InterruptedException {
+    public void execute(GameThread controller) throws InterruptedException {
         Nailed.statManager.triggerStat(this.stat);
     }
 }

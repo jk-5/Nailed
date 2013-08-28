@@ -37,12 +37,20 @@ public class StatManager {
      * WARNING: this actually sleeps a short time! Use with care!
      */
     public void triggerStat(String stat) throws InterruptedException {
+        this.enableStat(stat);
+        Thread.sleep(300);
+        this.disableStat(stat);
+    }
+
+    public void enableStat(String stat) {
         for (CommandBlock block : this.commandBlocks) {
             if (block.getListenerName().equalsIgnoreCase("?" + stat)) {
                 block.setRedstoneOutput(15);
             }
         }
-        Thread.sleep(10000);
+    }
+
+    public void disableStat(String stat) {
         for (CommandBlock block : this.commandBlocks) {
             if (block.getListenerName().equalsIgnoreCase("?" + stat)) {
                 block.setRedstoneOutput(0);

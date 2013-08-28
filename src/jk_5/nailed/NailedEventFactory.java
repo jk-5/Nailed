@@ -5,6 +5,7 @@ import jk_5.nailed.event.player.PlayerJoinServerEvent;
 import jk_5.nailed.event.player.PlayerLeaveServerEvent;
 import jk_5.nailed.players.Player;
 import net.minecraft.src.ChunkCoordinates;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityPlayerMP;
 
 /**
@@ -39,5 +40,9 @@ public class NailedEventFactory {
 
     public static ChunkCoordinates getSpawnPoint() {
         return new ChunkCoordinates(spawnX, spawnY, spawnZ);
+    }
+
+    public static boolean canPlayerPickup(EntityPlayer entity) {
+        return !Nailed.playerRegistry.getPlayer(entity.getCommandSenderName()).isSpectator();
     }
 }

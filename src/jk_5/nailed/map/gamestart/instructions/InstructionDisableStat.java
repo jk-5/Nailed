@@ -1,5 +1,6 @@
 package jk_5.nailed.map.gamestart.instructions;
 
+import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gamestart.GameThread;
 import jk_5.nailed.map.gamestart.IInstruction;
 
@@ -8,14 +9,17 @@ import jk_5.nailed.map.gamestart.IInstruction;
  *
  * @author jk-5
  */
-public class InstructionWatchUnready implements IInstruction {
+public class InstructionDisableStat implements IInstruction {
+
+    private String stat;
 
     @Override
     public void injectArguments(String arguments) {
+        this.stat = arguments;
     }
 
     @Override
     public void execute(GameThread controller) throws InterruptedException {
-        controller.setWatchUnready(true);
+        Nailed.statManager.disableStat(this.stat);
     }
 }

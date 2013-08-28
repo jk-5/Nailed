@@ -1,0 +1,17 @@
+--- ../src_base/minecraft_server/net/minecraft/src/EntityXPOrb.java
++++ ../src_work/minecraft_server/net/minecraft/src/EntityXPOrb.java
+@@ -1,4 +1,6 @@
+ package net.minecraft.src;
++
++import jk_5.nailed.NailedEventFactory;
+ 
+ public class EntityXPOrb extends Entity {
+    public int xpColor;
+@@ -134,6 +136,7 @@
+ 
+    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
+       if(!this.worldObj.isRemote) {
++         if(!NailedEventFactory.canPlayerPickup(par1EntityPlayer)) return;
+          if(this.field_70532_c == 0 && par1EntityPlayer.xpCooldown == 0) {
+             par1EntityPlayer.xpCooldown = 2;
+             this.playSound("random.orb", 0.1F, 0.5F * ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.8F));

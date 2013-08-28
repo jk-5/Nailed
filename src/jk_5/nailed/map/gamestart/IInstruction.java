@@ -9,5 +9,5 @@ public interface IInstruction {
 
     public void injectArguments(String arguments);
 
-    public void execute(GameStartupThread controller) throws Exception;
+    public void execute(GameThread controller) throws Exception;
 }

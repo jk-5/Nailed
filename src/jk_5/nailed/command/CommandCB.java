@@ -32,11 +32,7 @@ public class CommandCB extends CommandBase {
         //if (sender instanceof TileEntityCommandBlock) {
         if (args[0].equalsIgnoreCase("startgame")) {
             Nailed.mapManager.getThread().start();
-        } else if (args[0].equalsIgnoreCase("setReady")) {
-
-        } else if (args[0].equalsIgnoreCase("setNotReady")) {
-
-        } else if (args[0].equalsIgnoreCase("setWinner")) {
+        } else if (args[0].equalsIgnoreCase("setwinner")) {
             Team winner = Nailed.teamRegistry.getTeam(args[1]);
             Nailed.mapManager.getThread().setWinner(winner);
         }
