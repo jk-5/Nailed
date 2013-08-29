@@ -73,6 +73,7 @@ public class Player {
             entity.capabilities.disableDamage = true;
             entity.capabilities.allowFlying = true;
             entity.capabilities.isFlying = true;
+            entity.sendPlayerAbilities();
             this.sendChatMessage(EnumColor.GREEN + "You are in spectator mode. To disable, type " + EnumColor.YELLOW + "/spectator" + EnumColor.GREEN + " again");
         } else {
             this.spectator = false;
@@ -82,6 +83,7 @@ public class Player {
             entity.capabilities.disableDamage = false;
             entity.capabilities.allowFlying = false;
             entity.capabilities.isFlying = false;
+            entity.sendPlayerAbilities();
             this.sendChatMessage(EnumColor.GREEN + "You are no longer in spectator mode");
         }
     }
