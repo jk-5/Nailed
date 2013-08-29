@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gamestart.instructions.*;
+import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
@@ -76,6 +77,9 @@ public class GameThread extends Thread {
             ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction: " + current.getClass().getName());
             System.err.println(e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
             e.printStackTrace();
+        }
+        for (Player p : Nailed.playerRegistry.getPlayers()) {
+            if (p.getEntity() != null) p.getEntity().setSpawnChunk(null, false);
         }
     }
 

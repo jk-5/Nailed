@@ -28,6 +28,7 @@ public class InstructionSetGamemode implements IInstruction {
     public void execute(GameThread controller) throws InterruptedException {
         Team team = Nailed.teamRegistry.getTeam(this.team);
         for (Player p : Nailed.playerRegistry.getPlayers()) {
+            if (p.getEntity() == null) continue;
             if (p.getTeam() == team) {
                 p.getEntity().setGameType(EnumGameType.getByID(this.gamemode));
             }
