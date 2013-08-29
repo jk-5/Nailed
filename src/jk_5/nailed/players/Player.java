@@ -31,8 +31,8 @@ public class Player {
         return this.group;
     }
 
-    public EntityPlayer getEntity() {
-        return MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
+    public EntityPlayerMP getEntity() {
+        return (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
     }
 
     public void setGroup(Group group) {

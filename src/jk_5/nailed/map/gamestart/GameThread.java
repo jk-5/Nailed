@@ -35,6 +35,10 @@ public class GameThread extends Thread {
         instructionMap.put("startwinnerinterrupt", InstructionStartWinnerInterrupt.class);
         instructionMap.put("enable", InstructionEnableStat.class);
         instructionMap.put("disable", InstructionDisableStat.class);
+        instructionMap.put("setspawn", InstructionSetSpawnpoint.class);
+        instructionMap.put("resetspawn", InstructionResetSpawnpoint.class);
+        instructionMap.put("clearinventory", InstructionClearInventory.class);
+        instructionMap.put("setgamemode", InstructionSetGamemode.class);
     }
 
     public GameThread() {
