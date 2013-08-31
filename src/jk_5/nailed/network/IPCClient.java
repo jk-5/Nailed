@@ -36,7 +36,11 @@ public class IPCClient extends Thread {
     }
 
     public void sendPacket(Packet p) {
-        this.channel.writeAndFlush(new TextWebSocketFrame(p.getSendPacket().toString()));
+        try {
+            if (this.channel != null) this.channel.writeAndFlush(new TextWebSocketFrame(p.getSendPacket().toString()));
+        } catch (Exception e) {
+
+        }
     }
 
     public URI getURI() {

@@ -55,7 +55,17 @@ public class Player {
     }
 
     public void sendChatMessage(String message) {
-        MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username).sendChatToPlayer(ChatMessageComponent.func_111066_d(message));
+        this.getEntity().sendChatToPlayer(ChatMessageComponent.func_111066_d(message));
+    }
+
+    public void sendPacket(Packet packet) {
+        this.getEntity().playerNetServerHandler.sendPacket(packet);
+    }
+
+    public void playSound(String name, float volume, float pitch) {
+        EntityPlayerMP p = this.getEntity();
+        if (p == null) return;
+        this.sendPacket(new Packet62LevelSound(name, p.posX, p.posY, p.posZ, volume, pitch));
     }
 
     public boolean isSpectator() {

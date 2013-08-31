@@ -70,7 +70,7 @@ public class GameThread extends Thread {
                     ticks = -1;
                 }
                 ticks++;
-                Thread.sleep(1000);
+                if (current instanceof ITimedInstruction) Thread.sleep(1000);
             }
         } catch (Exception e) {
             ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
@@ -92,6 +92,7 @@ public class GameThread extends Thread {
     }
 
     public void setWinner(Team team) {
+        if (this.winner != null) return;
         this.winner = team;
         Nailed.statManager.enableStat("gamewon");
         ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.GOLD + " Winning team: " + winner.toString());
