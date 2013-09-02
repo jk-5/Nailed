@@ -31,10 +31,10 @@ public class CommandCB extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) {
         //if (sender instanceof TileEntityCommandBlock) {
         if (args[0].equalsIgnoreCase("startgame")) {
-            Nailed.mapManager.getThread().start();
+            Nailed.mapManager.getGameThread().start();
         } else if (args[0].equalsIgnoreCase("setwinner")) {
             Team winner = Nailed.teamRegistry.getTeam(args[1]);
-            Nailed.mapManager.getThread().setWinner(winner);
+            Nailed.mapManager.getGameThread().setWinner(winner);
         }
         //} else throw new CommandException("This command can only be used by command blocks");
     }

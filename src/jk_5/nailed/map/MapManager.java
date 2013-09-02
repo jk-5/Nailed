@@ -2,7 +2,6 @@ package jk_5.nailed.map;
 
 import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gamestart.GameThread;
-import jk_5.nailed.util.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,16 +17,18 @@ import java.util.zip.ZipInputStream;
  */
 public class MapManager {
 
-    private File mapPack = new File(Nailed.config.getTag("mappack").getTag("path").setComment("Path to the mappack file").getValue("mappack.zip"));
-    private File mapsFolder = new File("maps");
-    private Properties config;
-    private int mapId = 0;
+    public final File mapPack = new File(Nailed.config.getTag("mappack").getTag("path").setComment("Path to the mappack file").getValue("mappack.zip"));
 
-    private GameThread thread;
+    private File gameInstructionsFile;
+
+    private Properties config;
+
+    private GameThread gameThread;// = new GameThread();
 
     public void readMapConfig() {
         ZipInputStream stream = null;
         boolean foundConfig = false;
+        boolean foundGameInstructions = false;
         try {
             stream = new ZipInputStream(new FileInputStream(this.mapPack));
             ZipEntry entry;
@@ -36,6 +37,9 @@ public class MapManager {
                     foundConfig = true;
                     this.config = new Properties();
                     this.config.load(stream);
+                } else if (entry.getName().equals("gameinstructions.cfg")) {
+                    foundGameInstructions = true;
+                    //this.gameThread.parseInstructions(stream);
                 }
             }
         } catch (IOException e) {
@@ -51,27 +55,15 @@ public class MapManager {
             System.err.println("Was not able to read the mappack.cfg file from the mappack file");
             System.exit(1);
         }
+        /*if (!foundGameInstructions) {
+            System.err.println("Was not able to read the gameinstructions.cfg file from the mappack file");
+            System.exit(1);
+        }*/
+        this.gameThread = new GameThread();
     }
 
-    public void setupSpawnMap() {
-        this.thread = new GameThread();
-        File map = this.unpackMap();
-        //Nailed.server.setFolderName("testmap");
-        Nailed.server.setFolderName("maps" + System.getProperty("file.seperator", "/") + map.getName());
-    }
-
-    public GameThread getThread() {
-        return this.thread;
-    }
-
-    public File unpackMap() {
-        return this.unpackMap(mapId++);
-    }
-
-    public File unpackMap(int id) {
-        File f = new File(this.mapsFolder, "map" + id);
-        if (f.exists()) return f;
-        else return FileUtils.unzipMapFromMapPack(this.mapPack, this.mapsFolder, "map" + id);
+    public GameThread getGameThread() {
+        return this.gameThread;
     }
 
     public Properties getConfig() {

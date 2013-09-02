@@ -25,14 +25,14 @@
        this.playerLoggedIn(par2EntityPlayerMP);
        var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
        this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -148,6 +148,7 @@
-    }
- 
-    public void playerLoggedIn(EntityPlayerMP par1EntityPlayerMP) {
-+      NailedEventFactory.playerLoggedIn(par1EntityPlayerMP);
+@@ -151,6 +151,7 @@
        this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
        this.playerEntityList.add(par1EntityPlayerMP);
        WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
++      NailedEventFactory.playerLoggedIn(par1EntityPlayerMP, var2);
+       var2.spawnEntityInWorld(par1EntityPlayerMP);
+       this.func_72375_a(par1EntityPlayerMP, (WorldServer)null);
+ 
 @@ -165,6 +166,7 @@
     }
  

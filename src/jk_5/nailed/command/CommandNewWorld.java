@@ -1,5 +1,6 @@
 package jk_5.nailed.command;
 
+import jk_5.nailed.Nailed;
 import net.minecraft.src.CommandBase;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ICommandSender;
@@ -30,7 +31,7 @@ public class CommandNewWorld extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) {
         if (sender instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP) sender;
-            player.mcServer.getConfigurationManager().transferPlayerToDimension(player, 3);
+            Nailed.multiworldManager.movePlayerToWorld(player, 1);
         }
     }
 }

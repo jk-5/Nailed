@@ -1,15 +1,16 @@
 --- ../src_base/minecraft_server/net/minecraft/server/MinecraftServer.java
 +++ ../src_work/minecraft_server/net/minecraft/server/MinecraftServer.java
-@@ -12,6 +12,8 @@
+@@ -12,6 +12,9 @@
  import java.util.List;
  import java.util.logging.Level;
  import java.util.logging.Logger;
 +
 +import jk_5.nailed.Nailed;
++import jk_5.nailed.NailedEventFactory;
  import net.minecraft.src.AnvilSaveConverter;
  import net.minecraft.src.AxisAlignedBB;
  import net.minecraft.src.CallableIsServerModded;
-@@ -138,7 +140,7 @@
+@@ -138,7 +141,7 @@
        this.userMessage = par1Str;
     }
  
@@ -18,7 +19,7 @@
        this.convertMapIfNeeded(par1Str);
        this.setUserMessage("menu.loadingLevel");
        this.worldServers = new WorldServer[3];
-@@ -147,8 +149,8 @@
+@@ -147,8 +150,8 @@
        WorldInfo var9 = var7.loadWorldInfo();
        WorldSettings var8;
        if(var9 == null) {
@@ -29,7 +30,7 @@
        } else {
           var8 = new WorldSettings(var9);
        }
-@@ -184,6 +186,8 @@
+@@ -184,6 +187,8 @@
  
           this.serverConfigManager.setPlayerManager(this.worldServers);
        }
@@ -38,7 +39,24 @@
  
        this.setDifficultyForAllWorlds(this.getDifficulty());
        this.initialWorldChunkLoad();
-@@ -379,6 +383,7 @@
+@@ -258,6 +263,7 @@
+                }
+             }
+          }
++         NailedEventFactory.saveWorlds();
+       }
+    }
+ 
+@@ -281,7 +287,7 @@
+             WorldServer var2 = this.worldServers[var1];
+             var2.flush();
+          }
+-
++         NailedEventFactory.flushWorlds();
+          if(this.usageSnooper != null && this.usageSnooper.isSnooperRunning()) {
+             this.usageSnooper.stopSnooper();
+          }
+@@ -379,6 +385,7 @@
     protected void systemExitNow() {}
  
     protected void tick() {
@@ -46,7 +64,7 @@
        long var1 = System.nanoTime();
        AxisAlignedBB.getAABBPool().cleanPool();
        ++this.tickCounter;
-@@ -539,6 +544,7 @@
+@@ -539,6 +546,7 @@
           }
  
           DedicatedServer var16 = new DedicatedServer(new File(var4));
@@ -54,7 +72,7 @@
           var1 = var16.getLogAgent();
           if(var3 != null) {
              var16.setServerOwner(var3);
-@@ -558,10 +564,6 @@
+@@ -558,10 +566,6 @@
  
           if(var7) {
              var16.canCreateBonusChest(true);
@@ -65,7 +83,7 @@
           }
  
           var16.startServerThread();
-@@ -648,7 +650,7 @@
+@@ -648,7 +652,7 @@
     }
  
     public String getServerModName() {

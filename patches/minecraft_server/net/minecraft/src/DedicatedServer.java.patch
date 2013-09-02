@@ -54,6 +54,15 @@
        long var12 = System.nanoTime() - var4;
        String var14 = String.format("%.3fs", new Object[]{Double.valueOf((double)var12 / 1.0E9D)});
        this.getLogAgent().func_98233_a("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
+@@ -185,7 +169,7 @@
+    }
+ 
+    public boolean getAllowNether() {
+-      return this.settings.getBooleanProperty("allow-nether", true);
++      return true;
+    }
+ 
+    public boolean allowSpawnMonsters() {
 @@ -250,15 +234,6 @@
        return var1 != null?var1.getAbsolutePath():"No settings file";
     }

@@ -9,8 +9,11 @@ import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 /**
  * TODO: Edit description
@@ -20,7 +23,8 @@ import java.util.Map;
 public class GameThread extends Thread {
 
     private static final Map<String, Class<?>> instructionMap = Maps.newHashMap();
-    private final List<IInstruction> instructions;
+
+    private final List<IInstruction> instructions;// = Lists.newArrayList();
 
     private boolean watchUnready = false;
     private boolean interruptWin = false;
@@ -103,6 +107,22 @@ public class GameThread extends Thread {
             return (IInstruction) instructionMap.get(name).newInstance();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public void parseInstructions(ZipInputStream stream) {
+        System.out.println("Parsing instructions file...");
+        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+        try {
+            while (in.ready()) {
+                String line = in.readLine();
+
+            }
+            in.close();
+        } catch (Exception e) {
+            System.err.println("Error while parsing instructions file:");
+            e.printStackTrace();
+            System.exit(1);
         }
     }
 

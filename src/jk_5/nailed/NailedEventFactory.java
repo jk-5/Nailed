@@ -7,6 +7,7 @@ import jk_5.nailed.players.Player;
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.WorldServer;
 
 /**
  * TODO: Edit description
@@ -19,7 +20,8 @@ public class NailedEventFactory {
     private static final int spawnY = Integer.parseInt(Nailed.mapManager.getConfig().getProperty("spawnpoint.y", "64"));
     private static final int spawnZ = Integer.parseInt(Nailed.mapManager.getConfig().getProperty("spawnpoint.z", "0"));
 
-    public static void playerLoggedIn(EntityPlayerMP entity) {
+    public static void playerLoggedIn(EntityPlayerMP entity, WorldServer world) {
+        Nailed.multiworldManager.onPlayerJoin(entity, world);
         Player p = Nailed.playerRegistry.getOrCreatePlayer(entity.getCommandSenderName());
         Nailed.eventBus.post(new PlayerJoinServerEvent(p));
     }
@@ -44,5 +46,13 @@ public class NailedEventFactory {
 
     public static boolean canPlayerPickup(EntityPlayer entity) {
         return !Nailed.playerRegistry.getPlayer(entity.getCommandSenderName()).isSpectator();
+    }
+
+    public static void flushWorlds() {
+
+    }
+
+    public static void saveWorlds() {
+
     }
 }

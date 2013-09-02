@@ -40,10 +40,12 @@ public class Nailed {
     public static void init(DedicatedServer server) {
         Nailed.server = server;
 
-        server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Let\'s go!");
+        server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Ohai!");
 
         eventBus.register(new NailedEventListener());
         eventBus.register(playerRegistry);
+
+        multiworldManager.init();
 
         mapManager.readMapConfig();
 
@@ -51,7 +53,7 @@ public class Nailed {
         groupRegistry.registerGroup("admin", new GroupAdmin());
         groupRegistry.setDefaultGroup("player");
 
-        mapManager.setupSpawnMap();
+        Nailed.multiworldManager.setDefaultMapID(0);
 
         irc.connect();
         ipc.start();
@@ -59,6 +61,9 @@ public class Nailed {
 
     public static void onWorldReady() {
         teamRegistry.setupTeams();
+
+        //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
+        //Nailed.multiworldManager.prepareSpawnForWorld(1);
 
         server.setCanSpawnAnimals(mapManager.getConfig().getProperty("spawn-animals", "true").equalsIgnoreCase("true"));
         server.setCanSpawnNPCs(mapManager.getConfig().getProperty("spawn-npcs", "true").equalsIgnoreCase("true"));
