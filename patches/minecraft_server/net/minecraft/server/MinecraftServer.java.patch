@@ -56,15 +56,7 @@
           if(this.usageSnooper != null && this.usageSnooper.isSnooperRunning()) {
              this.usageSnooper.stopSnooper();
           }
-@@ -379,6 +385,7 @@
-    protected void systemExitNow() {}
- 
-    protected void tick() {
-+      Nailed.onTick();
-       long var1 = System.nanoTime();
-       AxisAlignedBB.getAABBPool().cleanPool();
-       ++this.tickCounter;
-@@ -539,6 +546,7 @@
+@@ -539,6 +545,7 @@
           }
  
           DedicatedServer var16 = new DedicatedServer(new File(var4));
@@ -72,7 +64,7 @@
           var1 = var16.getLogAgent();
           if(var3 != null) {
              var16.setServerOwner(var3);
-@@ -558,10 +566,6 @@
+@@ -558,10 +565,6 @@
  
           if(var7) {
              var16.canCreateBonusChest(true);
@@ -83,7 +75,7 @@
           }
  
           var16.startServerThread();
-@@ -648,7 +652,7 @@
+@@ -648,7 +651,7 @@
     }
  
     public String getServerModName() {

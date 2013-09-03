@@ -1,4 +1,4 @@
-package jk_5.nailed.map.gamestart;
+package jk_5.nailed.map.gameloop;
 
 /**
  * TODO: Edit description

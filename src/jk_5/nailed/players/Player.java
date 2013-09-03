@@ -9,7 +9,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 
 /**
- * TODO: Edit description
+ * Utility class that is assigned to each player when they join the server
+ * It is used to store data and to perform actions
  *
  * @author jk-5
  */
@@ -32,7 +33,7 @@ public class Player {
     }
 
     public EntityPlayerMP getEntity() {
-        return (EntityPlayerMP) MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
+        return MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
     }
 
     public void setGroup(Group group) {
@@ -74,6 +75,10 @@ public class Player {
 
     public void setSpectator(boolean spectator) {
         if (this.spectator == spectator) return;
+        if (this.getTeam() != Team.UNKNOWN && Nailed.mapManager.getGameThread().isGameRunning()) {
+            this.sendChatMessage(EnumColor.RED + "You can not join spectator mode while you are in a game!");
+            return;
+        }
         EntityPlayer entity = this.getEntity();
         if (spectator) {
             this.spectator = true;

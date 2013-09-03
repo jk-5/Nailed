@@ -1,9 +1,9 @@
-package jk_5.nailed.map.gamestart;
+package jk_5.nailed.map.gameloop;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.instructions.*;
+import jk_5.nailed.map.gameloop.instructions.*;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
@@ -24,8 +24,9 @@ public class GameThread extends Thread {
 
     private static final Map<String, Class<?>> instructionMap = Maps.newHashMap();
 
-    private final List<IInstruction> instructions;// = Lists.newArrayList();
+    private final List<IInstruction> instructions = Lists.newArrayList();
 
+    private boolean gameRunning = false;
     private boolean watchUnready = false;
     private boolean interruptWin = false;
     private Team winner = null;
@@ -47,14 +48,13 @@ public class GameThread extends Thread {
     }
 
     public GameThread() {
-        String instructionList = Nailed.mapManager.getConfig().getProperty("gamescript", "");
-        this.instructions = parseInstructions(instructionList);
         this.setDaemon(true);
         this.setName("GameStartup");
     }
 
     @Override
     public void run() {
+        this.gameRunning = true;
         IInstruction current = null;
         int ticks = 0;
         int instructionIndex = 0;
@@ -78,13 +78,17 @@ public class GameThread extends Thread {
             }
         } catch (Exception e) {
             ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
-            ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction: " + current.getClass().getName());
+            if (current != null)
+                ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction: " + current.getClass().getName());
+            else
+                ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction is null! (Wow, that\'s weired!)");
             System.err.println(e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
             e.printStackTrace();
         }
         for (Player p : Nailed.playerRegistry.getPlayers()) {
             if (p.getEntity() != null) p.getEntity().setSpawnChunk(null, false);
         }
+        this.gameRunning = false;
     }
 
     public void setWatchUnready(boolean watch) {
@@ -95,8 +99,13 @@ public class GameThread extends Thread {
         this.interruptWin = interrupt;
     }
 
+    public boolean isGameRunning() {
+        return this.gameRunning;
+    }
+
     public void setWinner(Team team) {
         if (this.winner != null) return;
+        if (!this.interruptWin) return;
         this.winner = team;
         Nailed.statManager.enableStat("gamewon");
         ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.GOLD + " Winning team: " + winner.toString());
@@ -113,29 +122,27 @@ public class GameThread extends Thread {
     public void parseInstructions(ZipInputStream stream) {
         System.out.println("Parsing instructions file...");
         BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+        this.instructions.clear();
+        int lineNumber = 1;
         try {
             while (in.ready()) {
                 String line = in.readLine();
-
+                if (line.startsWith("#")) continue;
+                String data[] = line.split(" ", 2);
+                if (data.length == 0) continue;
+                IInstruction instr = getInstruction(data[0].trim());
+                if (instr == null) continue;
+                if (data.length == 2) instr.injectArguments(data[1]);
+                this.instructions.add(instr);
+                System.out.println("Adding " + instr.getClass().getName());
+                lineNumber++;
             }
-            in.close();
+            if (this.instructions.isEmpty())
+                throw new RuntimeException("None of the instructions in the file could be read");
         } catch (Exception e) {
-            System.err.println("Error while parsing instructions file:");
+            System.err.println("Error while parsing instructions file at line " + lineNumber + ":");
             e.printStackTrace();
             System.exit(1);
         }
-    }
-
-    public static List<IInstruction> parseInstructions(String instructionList) {
-        System.out.println(instructionList);
-        List<IInstruction> instr = Lists.newArrayList();
-        String instructions[] = instructionList.split(";");
-        for (String instruction : instructions) {
-            String arg[] = instruction.split("\\(", 2);
-            IInstruction instruct = getInstruction(arg[0]);
-            instruct.injectArguments(arg[1].substring(0, arg[1].length() - 1));
-            instr.add(instruct);
-        }
-        return instr;
     }
 }

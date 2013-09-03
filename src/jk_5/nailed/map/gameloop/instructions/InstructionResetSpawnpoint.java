@@ -1,27 +1,23 @@
-package jk_5.nailed.map.gamestart.instructions;
+package jk_5.nailed.map.gameloop.instructions;
 
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.GameThread;
-import jk_5.nailed.map.gamestart.IInstruction;
+import jk_5.nailed.map.gameloop.GameThread;
+import jk_5.nailed.map.gameloop.IInstruction;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
-import net.minecraft.src.EnumGameType;
 
 /**
  * TODO: Edit description
  *
  * @author jk-5
  */
-public class InstructionSetGamemode implements IInstruction {
+public class InstructionResetSpawnpoint implements IInstruction {
 
     private String team;
-    private int gamemode;
 
     @Override
     public void injectArguments(String arguments) {
-        String data[] = arguments.split(",", 2);
-        this.team = data[0];
-        this.gamemode = Integer.parseInt(data[1]);
+        this.team = arguments;
     }
 
     @Override
@@ -30,7 +26,7 @@ public class InstructionSetGamemode implements IInstruction {
         for (Player p : Nailed.playerRegistry.getPlayers()) {
             if (p.getEntity() == null) continue;
             if (p.getTeam() == team) {
-                p.getEntity().setGameType(EnumGameType.getByID(this.gamemode));
+                p.getEntity().setSpawnChunk(null, false);
             }
         }
     }

@@ -1,7 +1,7 @@
 package jk_5.nailed.map;
 
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.GameThread;
+import jk_5.nailed.map.gameloop.GameThread;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * TODO: Edit description
+ * Class that manages the mappacks and reads them
  *
  * @author jk-5
  */
@@ -19,11 +19,9 @@ public class MapManager {
 
     public final File mapPack = new File(Nailed.config.getTag("mappack").getTag("path").setComment("Path to the mappack file").getValue("mappack.zip"));
 
-    private File gameInstructionsFile;
-
     private Properties config;
 
-    private GameThread gameThread;// = new GameThread();
+    private GameThread gameThread = new GameThread();
 
     public void readMapConfig() {
         ZipInputStream stream = null;
@@ -39,7 +37,7 @@ public class MapManager {
                     this.config.load(stream);
                 } else if (entry.getName().equals("gameinstructions.cfg")) {
                     foundGameInstructions = true;
-                    //this.gameThread.parseInstructions(stream);
+                    this.gameThread.parseInstructions(stream);
                 }
             }
         } catch (IOException e) {
@@ -49,16 +47,17 @@ public class MapManager {
             try {
                 if (stream != null) stream.close();
             } catch (IOException e) {
+                //Wow
             }
         }
         if (!foundConfig) {
             System.err.println("Was not able to read the mappack.cfg file from the mappack file");
             System.exit(1);
         }
-        /*if (!foundGameInstructions) {
+        if (!foundGameInstructions) {
             System.err.println("Was not able to read the gameinstructions.cfg file from the mappack file");
             System.exit(1);
-        }*/
+        }
         this.gameThread = new GameThread();
     }
 

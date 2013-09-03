@@ -1,8 +1,8 @@
-package jk_5.nailed.map.gamestart.instructions;
+package jk_5.nailed.map.gameloop.instructions;
 
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.GameThread;
-import jk_5.nailed.map.gamestart.IInstruction;
+import jk_5.nailed.map.gameloop.GameThread;
+import jk_5.nailed.map.gameloop.IInstruction;
 
 /**
  * TODO: Edit description

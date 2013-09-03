@@ -1,15 +1,15 @@
-package jk_5.nailed.map.gamestart.instructions;
+package jk_5.nailed.map.gameloop.instructions;
 
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.gamestart.GameThread;
-import jk_5.nailed.map.gamestart.IInstruction;
+import jk_5.nailed.map.gameloop.GameThread;
+import jk_5.nailed.map.gameloop.IInstruction;
 
 /**
  * TODO: Edit description
  *
  * @author jk-5
  */
-public class InstructionTrigger implements IInstruction {
+public class InstructionDisableStat implements IInstruction {
 
     private String stat;
 
@@ -20,6 +20,6 @@ public class InstructionTrigger implements IInstruction {
 
     @Override
     public void execute(GameThread controller) throws InterruptedException {
-        Nailed.statManager.triggerStat(this.stat);
+        Nailed.statManager.disableStat(this.stat);
     }
 }

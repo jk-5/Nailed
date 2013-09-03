@@ -1,7 +1,7 @@
-package jk_5.nailed.map.gamestart.instructions;
+package jk_5.nailed.map.gameloop.instructions;
 
-import jk_5.nailed.map.gamestart.GameThread;
-import jk_5.nailed.map.gamestart.IInstruction;
+import jk_5.nailed.map.gameloop.GameThread;
+import jk_5.nailed.map.gameloop.IInstruction;
 
 /**
  * TODO: Edit description
@@ -19,7 +19,6 @@ public class InstructionSleep implements IInstruction {
 
     @Override
     public void execute(GameThread controller) throws InterruptedException {
-        System.out.println("sleeping");
         Thread.sleep(this.delay);
     }
 }

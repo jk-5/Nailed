@@ -20,7 +20,7 @@ import net.minecraft.src.DedicatedServer;
 import java.io.File;
 
 /**
- * TODO: Edit description
+ * Main nailed class. Controls the initialization and contains all helpers that are needed for the server
  *
  * @author jk-5
  */
@@ -77,9 +77,5 @@ public class Nailed {
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());
         handler.registerCommand(new CommandSpectator());
-    }
-
-    public static void onTick() {
-
     }
 }

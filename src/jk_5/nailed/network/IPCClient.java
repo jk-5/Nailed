@@ -13,6 +13,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import jk_5.nailed.network.packet.Packet;
 
+import java.net.ConnectException;
 import java.net.URI;
 
 /**
@@ -39,7 +40,7 @@ public class IPCClient extends Thread {
         try {
             if (this.channel != null) this.channel.writeAndFlush(new TextWebSocketFrame(p.getSendPacket().toString()));
         } catch (Exception e) {
-
+            //NOOP
         }
     }
 
@@ -67,9 +68,12 @@ public class IPCClient extends Thread {
             handler.handshakeFuture().sync();
             this.channel.closeFuture().sync();
         } catch (Exception e) {
-            System.err.println("IPC Error:");
-            e.printStackTrace();
-            //System.exit(1);
+            if (e instanceof ConnectException) System.out.println("Was not able to connect to IPC server");
+            else {
+                System.err.println("IPC Error:");
+                e.printStackTrace();
+                System.exit(1);
+            }
         } finally {
             group.shutdownGracefully();
         }
