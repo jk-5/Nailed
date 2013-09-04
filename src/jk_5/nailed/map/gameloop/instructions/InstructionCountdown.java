@@ -19,7 +19,7 @@ public class InstructionCountdown implements ITimedInstruction {
 
     @Override
     public void injectArguments(String arguments) {
-        String args[] = arguments.split(" ");
+        String args[] = arguments.split(" ", 2);
         this.message = args[1];
         String timedata = args[0].toLowerCase().trim();
         if (timedata.endsWith("sec")) this.ticks = Integer.parseInt(timedata.substring(0, timedata.length() - 3));
@@ -37,7 +37,7 @@ public class InstructionCountdown implements ITimedInstruction {
     @Override
     public boolean shouldContinue(int ticks) {
         if ((this.ticks - ticks) == 60 || (this.ticks - ticks) == 30 || (this.ticks - ticks) == 20 || (this.ticks - ticks) == 10 || (this.ticks - ticks) <= 5 || ticks % 60 == 0) {
-            ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.RESET + message + EnumColor.GOLD + formatSeconds(this.ticks - ticks));
+            ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.RESET + String.format(message, formatSeconds(this.ticks - ticks)));
             if ((this.ticks - ticks) <= 5) {
                 for (Player player : Nailed.playerRegistry.getPlayers()) {
                     player.playSound("note.harp", 1.5f, (this.ticks - ticks) == 0 ? 2 : 1);

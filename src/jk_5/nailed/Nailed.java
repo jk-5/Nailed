@@ -13,9 +13,11 @@ import jk_5.nailed.multiworld.MultiworldManager;
 import jk_5.nailed.network.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teams.TeamRegistry;
+import jk_5.nailed.teamspeak3.TeamspeakManager;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.CommandHandler;
 import net.minecraft.src.DedicatedServer;
+import net.minecraft.src.EnumGameType;
 
 import java.io.File;
 
@@ -35,6 +37,7 @@ public class Nailed {
     public static final StatManager statManager = new StatManager();
     public static final IrcConnector irc = new IrcConnector();
     public static final IPCClient ipc = new IPCClient();
+    public static final TeamspeakManager teamspeak = new TeamspeakManager();
     public static DedicatedServer server;
 
     public static void init(DedicatedServer server) {
@@ -57,6 +60,7 @@ public class Nailed {
 
         irc.connect();
         ipc.start();
+        teamspeak.connect();
     }
 
     public static void onWorldReady() {
@@ -69,6 +73,9 @@ public class Nailed {
         server.setCanSpawnNPCs(mapManager.getConfig().getProperty("spawn-npcs", "true").equalsIgnoreCase("true"));
         server.setAllowPvp(mapManager.getConfig().getProperty("pvp", "true").equalsIgnoreCase("true"));
         server.setTexturePack(mapManager.getConfig().getProperty("texture-pack", ""));
+        server.setGameType(EnumGameType.getByID(Integer.parseInt(mapManager.getConfig().getProperty("default-gamemode", Integer.toString(EnumGameType.SURVIVAL.getID())))));
+        server.setAllowFlight(true);
+        server.func_104055_i(false);  //setForceGamemode
     }
 
     public static void registerCommands(CommandHandler handler) {
@@ -77,5 +84,6 @@ public class Nailed {
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());
         handler.registerCommand(new CommandSpectator());
+        handler.registerCommand(new CommandStartGame());
     }
 }

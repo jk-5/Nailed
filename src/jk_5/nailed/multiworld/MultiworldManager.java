@@ -37,7 +37,6 @@ public class MultiworldManager {
         WorldServer newWorld = new WorldServerMulti(MinecraftServer.getServer(), overworld.getSaveHandler(), this.unpackMap(id).getName(), 0, settings, overworld, MinecraftServer.getServer().theProfiler, overworld.getWorldLogAgent()); //FIXME: replace 0 with id?
         newWorld.addWorldAccess(new WorldManager(MinecraftServer.getServer(), newWorld));
         newWorld.getWorldInfo().setGameType(MinecraftServer.getServer().getGameType());
-        //newWorld.getSaveHandler().
         MinecraftServer.getServer().setDifficultyForAllWorlds(MinecraftServer.getServer().getDifficulty());
         this.worlds.put(id, newWorld);
         return newWorld;

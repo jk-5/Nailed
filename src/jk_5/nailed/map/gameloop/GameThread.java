@@ -134,7 +134,6 @@ public class GameThread extends Thread {
                 if (instr == null) continue;
                 if (data.length == 2) instr.injectArguments(data[1]);
                 this.instructions.add(instr);
-                System.out.println("Adding " + instr.getClass().getName());
                 lineNumber++;
             }
             if (this.instructions.isEmpty())

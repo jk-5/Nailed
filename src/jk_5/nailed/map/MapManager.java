@@ -21,7 +21,7 @@ public class MapManager {
 
     private Properties config;
 
-    private GameThread gameThread = new GameThread();
+    private final GameThread gameThread = new GameThread();
 
     public void readMapConfig() {
         ZipInputStream stream = null;
@@ -58,7 +58,6 @@ public class MapManager {
             System.err.println("Was not able to read the gameinstructions.cfg file from the mappack file");
             System.exit(1);
         }
-        this.gameThread = new GameThread();
     }
 
     public GameThread getGameThread() {

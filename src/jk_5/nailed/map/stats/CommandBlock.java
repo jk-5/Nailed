@@ -4,7 +4,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.TileEntityCommandBlock;
 
 /**
- * TODO: Edit description
+ * Class that will be made for every special command block in the map
  *
  * @author jk-5
  */
@@ -19,7 +19,6 @@ public class CommandBlock {
     }
 
     public void setRedstoneOutput(int strength) {
-        System.out.println("redstone " + strength);
         this.tileEntity.func_96102_a(strength);
         this.tileEntity.getWorldObj().func_96440_m(this.tileEntity.xCoord, this.tileEntity.yCoord, this.tileEntity.zCoord, Block.commandBlock.blockID);
     }
