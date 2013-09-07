@@ -61,7 +61,7 @@ public class CommandGroup extends CommandBase {
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, new String[]{"set"});
+            return getListOfStringsMatchingLastWord(args, "set");
         } else if (args.length == 2) {
             if (args[0].equals("set")) {
                 return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());

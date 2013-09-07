@@ -6,6 +6,7 @@ import jk_5.nailed.event.player.PlayerJoinServerEvent;
 import jk_5.nailed.event.player.PlayerLeaveServerEvent;
 import jk_5.nailed.network.packet.Packet21PlayerJoin;
 import jk_5.nailed.network.packet.Packet22PlayerLeave;
+import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 
@@ -18,6 +19,7 @@ public class NailedEventListener {
 
     @Subscribe
     public void onPlayerJoinServer(PlayerJoinServerEvent event) {
+        event.player.onLogin();
         ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "joined the game").replace("[", "").replace("]", ""));
         Nailed.ipc.sendPacket(new Packet21PlayerJoin(event.player.getUsername()));
     }
@@ -30,6 +32,10 @@ public class NailedEventListener {
 
     @Subscribe
     public void onPlayerChat(PlayerChatEvent event) {
-        ServerUtils.broadcastChatMessage(event.player.formatChatMessage(event.message));
+        if(event.player.getTeam() == Team.UNKNOWN){
+            ServerUtils.broadcastChatMessage(event.player.formatChatMessage(event.message));
+        }else{
+            event.player.getTeam().sendChatMessage(event.player.formatChatMessage(event.message));
+        }
     }
 }

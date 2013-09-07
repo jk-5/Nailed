@@ -2,12 +2,15 @@ package jk_5.nailed.teams;
 
 import com.google.common.collect.Maps;
 import jk_5.nailed.Nailed;
+import jk_5.nailed.config.helper.ConfigFile;
+import jk_5.nailed.config.helper.ConfigTag;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.ScorePlayerTeam;
 import net.minecraft.src.Scoreboard;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -25,30 +28,33 @@ public class TeamRegistry {
     public static ScorePlayerTeam spectatorTeam;
 
     public void setupTeams() {
-        Properties conf = Nailed.mapManager.getConfig();
-        String teamsData = conf.getProperty("teams", null);
-        if (teamsData == null) return;
-        String teams[] = teamsData.split(",");
+        ConfigFile conf = Nailed.mapManager.getConfig();
+        List<ConfigTag> teams = conf.getTag("teams").getSortedTagList();
+        if (teams == null) return;
         Scoreboard s = this.getScoreboardFromWorldServer();
-        this.spectatorTeam = s.func_96527_f("spectator");
-        this.spectatorTeam.func_96664_a("Spectator");                   //teamname
-        this.spectatorTeam.func_96660_a(false);                         //friendlyfire
-        this.spectatorTeam.func_98300_b(true);                          //friendlyinvisibles
-        this.spectatorTeam.func_96666_b(EnumColor.AQUA.toString());     //teamprefix
-        this.spectatorTeam.func_96662_c(EnumColor.RESET.toString());    //teamsuffix
-        for (String t : teams) {
-            EnumColor color = EnumColor.valueOf(conf.getProperty("teams." + t.trim() + ".color", "white").toUpperCase());
-            String name = conf.getProperty("teams." + t.trim() + ".name", t);
-            Team team = new Team(name, t, color);
-            this.teams.put(t, team);
-            ScorePlayerTeam scoreboardTeam = s.func_96527_f(t);         //teamid
-            scoreboardTeam.func_96664_a(name);                          //teamname
-            scoreboardTeam.func_96660_a(false);                         //friendlyfire
-            scoreboardTeam.func_98300_b(true);                          //friendlyinvisibles
-            scoreboardTeam.func_96666_b(color.toString());              //teamprefix
-            scoreboardTeam.func_96662_c(EnumColor.RESET.toString());    //teamsuffix
+        for (ConfigTag tag : teams) {
+            EnumColor color = EnumColor.valueOf(tag.getTag("color").getValue("white").toUpperCase());
+            String name = tag.getTag("name").getValue("");
+            Team team = new Team(name, tag.name(), color);
+            this.teams.put(tag.name(), team);
+            ScorePlayerTeam scoreboardTeam = s.func_96527_f(tag.name());                            //teamid
+            scoreboardTeam.func_96664_a(name);                                                      //teamname
+            scoreboardTeam.func_96660_a(tag.getTag("frienlyfire").getBooleanValue(true));           //friendlyfire
+            scoreboardTeam.func_98300_b(tag.getTag("friendlyinvisibles").getBooleanValue(true));    //friendlyinvisibles
+            scoreboardTeam.func_96666_b(color.toString());                                          //teamprefix
+            scoreboardTeam.func_96662_c(EnumColor.RESET.toString());                                //teamsuffix
             team.scoreboardTeam = scoreboardTeam;
         }
+    }
+
+    private void createSpectatorTeam(){
+        Scoreboard s = this.getScoreboardFromWorldServer();
+        spectatorTeam = s.func_96527_f("spectator");
+        spectatorTeam.func_96664_a("Spectator");                   //teamname
+        spectatorTeam.func_96660_a(false);                         //friendlyfire
+        spectatorTeam.func_98300_b(true);                          //friendlyinvisibles
+        spectatorTeam.func_96666_b(EnumColor.AQUA.toString());     //teamprefix
+        spectatorTeam.func_96662_c(EnumColor.RESET.toString());    //teamsuffix
     }
 
     private Scoreboard getScoreboardFromWorldServer() {

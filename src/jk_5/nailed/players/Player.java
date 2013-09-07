@@ -4,6 +4,7 @@ import jk_5.nailed.Nailed;
 import jk_5.nailed.groups.Group;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.teams.TeamRegistry;
+import jk_5.nailed.teamspeak3.TeamspeakClient;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -17,6 +18,8 @@ import net.minecraft.src.*;
 public class Player {
 
     private String username;
+    private TeamspeakClient teamspeakClient;
+
     private Group group = Nailed.groupRegistry.getDefaultGroup();
     private boolean spectator = false;
 
@@ -32,8 +35,27 @@ public class Player {
         return this.group;
     }
 
+    public void onLogin(){
+        if(!Nailed.config.getTag("teamspeak").getTag("enabled").getBooleanValue(false)) return;
+        if(this.teamspeakClient != null) return;
+        this.setTeamspeakClient(Nailed.teamspeak.getClientForUser(this.username));
+    }
+
     public EntityPlayerMP getEntity() {
         return MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
+    }
+
+    public void setTeamspeakClient(TeamspeakClient ts){
+        this.teamspeakClient = ts;
+        if(this.teamspeakClient != null){
+            this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakClient.getNickname());
+        }else{
+            this.sendChatMessage(EnumColor.AQUA + "There was no teamspeak client found with the same username as you. Change your teamspeak username so it matches your ingame name or do /ts setname");
+        }
+    }
+
+    public TeamspeakClient getTeamspeakClient(){
+        return this.teamspeakClient;
     }
 
     public void setGroup(Group group) {

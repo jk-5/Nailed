@@ -22,12 +22,7 @@ package jk_5.nailed.config.helper
  * @author jk-5
  */
 
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileReader
-import java.io.IOException
-import java.io.PrintWriter
+import java.io._
 
 object ConfigFile {
 
@@ -60,11 +55,14 @@ object ConfigFile {
   }
 }
 
-class ConfigFile(var file: File) extends ConfigTagParent {
+class ConfigFile(var file: File, val reader: Reader) extends ConfigTagParent {
 
-  private var loading: Boolean = false
+  private var loading = false
+  private var readonly = false
 
-  if (!file.exists())
+  def this(file: File) = this(file, new FileReader(file))
+
+  if (file != null && !file.exists())
     try {
       file.createNewFile()
     } catch {
@@ -73,11 +71,15 @@ class ConfigFile(var file: File) extends ConfigTagParent {
   this.newlinemode = 2
   this.loadConfig()
 
-  private def loadConfig() {
+  private def loadConfig(): Unit = this.loadConfig(reader)
+
+  private def loadConfig(r: Reader): Unit = {
     this.loading = true
-    var reader: BufferedReader = null
+    val reader = r match{
+      case _: BufferedReader => r.asInstanceOf[BufferedReader]
+      case re => new BufferedReader(re)
+    }
     try {
-      reader = new BufferedReader(new FileReader(file))
       var read = true
       while (read) {
         reader.mark(2000)
@@ -91,11 +93,15 @@ class ConfigFile(var file: File) extends ConfigTagParent {
         }
       }
       loadChildren(reader)
-      reader.close()
     } catch {
       case e: IOException => throw new RuntimeException(e)
     }
     this.loading = false
+  }
+
+  def setReadOnly(ro: Boolean): ConfigFile = {
+    readonly = ro
+    this
   }
 
   override def setComment(header: String): ConfigFile = {
@@ -111,7 +117,7 @@ class ConfigFile(var file: File) extends ConfigTagParent {
   def getNameQualifier = ""
 
   def saveConfig() {
-    if (this.loading) return
+    if (this.loading || this.readonly) return
     var writer: PrintWriter = null
     try writer = new PrintWriter(file)
     catch {

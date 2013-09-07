@@ -56,10 +56,12 @@ public class Nailed {
         groupRegistry.registerGroup("admin", new GroupAdmin());
         groupRegistry.setDefaultGroup("player");
 
-        Nailed.multiworldManager.setDefaultMapID(0);
+        multiworldManager.setDefaultMapID(0);
 
         irc.connect();
         ipc.start();
+
+        teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
     }
 
@@ -69,13 +71,14 @@ public class Nailed {
         //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
         //Nailed.multiworldManager.prepareSpawnForWorld(1);
 
-        server.setCanSpawnAnimals(mapManager.getConfig().getProperty("spawn-animals", "true").equalsIgnoreCase("true"));
-        server.setCanSpawnNPCs(mapManager.getConfig().getProperty("spawn-npcs", "true").equalsIgnoreCase("true"));
-        server.setAllowPvp(mapManager.getConfig().getProperty("pvp", "true").equalsIgnoreCase("true"));
-        server.setTexturePack(mapManager.getConfig().getProperty("texture-pack", ""));
-        server.setGameType(EnumGameType.getByID(Integer.parseInt(mapManager.getConfig().getProperty("default-gamemode", Integer.toString(EnumGameType.SURVIVAL.getID())))));
+        ConfigFile config = mapManager.getConfig();
+        server.setCanSpawnAnimals(config.getTag("spawning").getTag("spawn-animals").getBooleanValue(true));
+        server.setCanSpawnNPCs(config.getTag("spawning").getTag("spawn-npcs").getBooleanValue(true));
+        server.setAllowPvp(config.getTag("map").getTag("pvp").getBooleanValue(true));
+        server.setTexturePack(config.getTag("texturepackUrl").getValue(""));
+        server.setGameType(EnumGameType.getByID(config.getTag("map").getTag("gamemode").getIntValue(0)));
         server.setAllowFlight(true);
-        server.func_104055_i(false);  //setForceGamemode
+        server.func_104055_i(true);  //setForceGamemode
     }
 
     public static void registerCommands(CommandHandler handler) {
@@ -85,5 +88,7 @@ public class Nailed {
         handler.registerCommand(new CommandNewWorld());
         handler.registerCommand(new CommandSpectator());
         handler.registerCommand(new CommandStartGame());
+        handler.registerCommand(new CommandBroadcastChat());
+        if(teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }

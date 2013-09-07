@@ -45,6 +45,7 @@ public class GameThread extends Thread {
         instructionMap.put("resetspawn", InstructionResetSpawnpoint.class);
         instructionMap.put("clearinventory", InstructionClearInventory.class);
         instructionMap.put("setgamemode", InstructionSetGamemode.class);
+        instructionMap.put("moveteamspeak", InstructionMoveTeamspeak.class);
     }
 
     public GameThread() {
@@ -88,6 +89,10 @@ public class GameThread extends Thread {
         for (Player p : Nailed.playerRegistry.getPlayers()) {
             if (p.getEntity() != null) p.getEntity().setSpawnChunk(null, false);
         }
+        for (Player p : Nailed.playerRegistry.getPlayers()) {
+            if(p.getTeamspeakClient() == null) continue;
+            Nailed.teamspeak.moveClientToChannel(p.getTeamspeakClient(), 14); //FIXME! lobby!
+        }
         this.gameRunning = false;
     }
 
@@ -127,6 +132,7 @@ public class GameThread extends Thread {
         try {
             while (in.ready()) {
                 String line = in.readLine();
+                if (line == null) continue;
                 if (line.startsWith("#")) continue;
                 String data[] = line.split(" ", 2);
                 if (data.length == 0) continue;
@@ -136,8 +142,6 @@ public class GameThread extends Thread {
                 this.instructions.add(instr);
                 lineNumber++;
             }
-            if (this.instructions.isEmpty())
-                throw new RuntimeException("None of the instructions in the file could be read");
         } catch (Exception e) {
             System.err.println("Error while parsing instructions file at line " + lineNumber + ":");
             e.printStackTrace();

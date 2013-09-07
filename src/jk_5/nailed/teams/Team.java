@@ -1,5 +1,7 @@
 package jk_5.nailed.teams;
 
+import jk_5.nailed.Nailed;
+import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.ScorePlayerTeam;
 
@@ -29,6 +31,14 @@ public class Team {
 
     public String getName(){
         return this.name;
+    }
+
+    public void sendChatMessage(String message){
+        for(Player p : Nailed.playerRegistry.getPlayers()){
+            if(p.getTeam() == this){
+                p.sendChatMessage(message);
+            }
+        }
     }
 
     @Override

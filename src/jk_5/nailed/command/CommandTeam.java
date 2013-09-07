@@ -38,7 +38,7 @@ public class CommandTeam extends CommandBase {
             throw new WrongUsageException("/team <join:leave>");
         } else if (args.length == 1) {
             if (args[0].equals("join")) {
-                throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()).toString() + ">");
+                throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()) + ">");
             } else if (args[0].equals("leave")) {
                 throw new WrongUsageException("/team leave <player>");
             }
@@ -47,7 +47,7 @@ public class CommandTeam extends CommandBase {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 else
-                    throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()).toString() + ">");
+                    throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()) + ">");
             } else if (args[0].equals("leave")) {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
@@ -75,7 +75,7 @@ public class CommandTeam extends CommandBase {
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args) {
         if (args.length == 1) {
-            return getListOfStringsMatchingLastWord(args, new String[]{"join", "leave"});
+            return getListOfStringsMatchingLastWord(args, "join", "leave");
         } else if (args.length == 2) {
             if (args[0].equals("join") || args[0].equals("leave")) {
                 return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
