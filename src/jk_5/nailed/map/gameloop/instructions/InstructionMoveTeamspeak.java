@@ -8,7 +8,7 @@ import jk_5.nailed.teams.Team;
 import jk_5.nailed.teamspeak3.TeamspeakClient;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

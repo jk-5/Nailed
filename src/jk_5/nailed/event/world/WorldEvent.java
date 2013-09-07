@@ -4,7 +4,7 @@ import jk_5.nailed.event.NailedEvent;
 import net.minecraft.src.World;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

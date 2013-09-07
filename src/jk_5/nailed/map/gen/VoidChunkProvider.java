@@ -5,7 +5,7 @@ import net.minecraft.src.ChunkProviderFlat;
 import net.minecraft.src.World;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

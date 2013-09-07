@@ -1,12 +1,13 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Maps;
+import jk_5.nailed.Nailed;
 
 import java.util.Collection;
 import java.util.Map;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -27,6 +28,7 @@ public class PlayerRegistry {
         else {
             final Player p = new Player(username);
             this.players.put(username, p);
+            p.setCurrentMap(Nailed.mapLoader.getLobby());
             return p;
         }
     }

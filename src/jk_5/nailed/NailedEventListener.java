@@ -11,7 +11,7 @@ import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

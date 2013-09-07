@@ -6,7 +6,7 @@ import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.ScorePlayerTeam;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

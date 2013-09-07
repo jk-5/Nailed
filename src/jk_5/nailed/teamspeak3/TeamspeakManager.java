@@ -8,7 +8,7 @@ import jk_5.nailed.teamspeak3.api.TeamspeakActionListener;
 import java.util.*;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

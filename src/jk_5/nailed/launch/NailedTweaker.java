@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

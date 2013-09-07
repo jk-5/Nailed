@@ -5,7 +5,7 @@ import jk_5.nailed.map.gameloop.GameThread;
 import jk_5.nailed.map.gameloop.IInstruction;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

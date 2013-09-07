@@ -17,7 +17,7 @@
 package jk_5.nailed.config.helper
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

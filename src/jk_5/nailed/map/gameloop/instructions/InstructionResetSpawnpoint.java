@@ -7,7 +7,7 @@ import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

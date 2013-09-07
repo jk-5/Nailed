@@ -1,12 +1,13 @@
 package jk_5.nailed.command;
 
 import jk_5.nailed.Nailed;
+import jk_5.nailed.players.Player;
 import net.minecraft.src.CommandBase;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ICommandSender;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -14,7 +15,7 @@ public class CommandNewWorld extends CommandBase {
 
     @Override
     public String getCommandName() {
-        return "newworld";
+        return "goto";
     }
 
     @Override
@@ -24,14 +25,13 @@ public class CommandNewWorld extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender par1ICommandSender) {
-        return "/newworld - Teleports you to a new world";
+        return "/goto";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (sender instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP) sender;
-            Nailed.multiworldManager.movePlayerToWorld(player, 1);
-        }
+        Player p = Nailed.playerRegistry.getPlayer(sender.getCommandSenderName());
+        if(p == null) return;
+        Nailed.mapLoader.getMap(Integer.parseInt(args[0])).travelPlayerToMap(p);
     }
 }

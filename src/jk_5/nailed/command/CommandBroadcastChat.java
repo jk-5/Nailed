@@ -11,7 +11,7 @@ import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ICommandSender;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

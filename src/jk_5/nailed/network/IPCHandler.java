@@ -10,7 +10,7 @@ import jk_5.nailed.Nailed;
 import jk_5.nailed.network.packet.Packet;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

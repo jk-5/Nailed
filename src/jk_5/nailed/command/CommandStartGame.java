@@ -5,7 +5,7 @@ import net.minecraft.src.CommandBase;
 import net.minecraft.src.ICommandSender;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -28,6 +28,6 @@ public class CommandStartGame extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        Nailed.mapManager.getGameThread().start();
+        //Nailed.mapManager.getGameThread().start();
     }
 }

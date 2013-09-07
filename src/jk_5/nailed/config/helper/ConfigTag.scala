@@ -19,7 +19,7 @@ package jk_5.nailed.config.helper
 import java.io.PrintWriter
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

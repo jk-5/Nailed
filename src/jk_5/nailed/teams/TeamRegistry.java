@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.Set;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -27,8 +27,8 @@ public class TeamRegistry {
 
     public static ScorePlayerTeam spectatorTeam;
 
-    public void setupTeams() {
-        ConfigFile conf = Nailed.mapManager.getConfig();
+    public void setupTeams() { //TODO: fix!
+        /*ConfigFile conf = Nailed.mapLoader.getMap(0).getConfig();
         List<ConfigTag> teams = conf.getTag("teams").getSortedTagList();
         if (teams == null) return;
         Scoreboard s = this.getScoreboardFromWorldServer();
@@ -44,7 +44,7 @@ public class TeamRegistry {
             scoreboardTeam.func_96666_b(color.toString());                                          //teamprefix
             scoreboardTeam.func_96662_c(EnumColor.RESET.toString());                                //teamsuffix
             team.scoreboardTeam = scoreboardTeam;
-        }
+        }*/
     }
 
     private void createSpectatorTeam(){

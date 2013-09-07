@@ -4,7 +4,7 @@ import jk_5.nailed.players.Player;
 import net.minecraft.src.EntityPlayerMP;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

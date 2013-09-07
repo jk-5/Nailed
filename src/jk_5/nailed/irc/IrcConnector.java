@@ -10,7 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import org.jibble.pircbot.PircBot;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

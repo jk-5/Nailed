@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -25,7 +25,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
         ChunkPosition ret = super.findBiomePosition(x, z, range, biomes, rand);
         if (x == 0 && z == 0 && !world.getWorldInfo().isInitialized()) {
             if (ret == null) ret = new ChunkPosition(0, 0, 0);
-            ChunkCoordinates spawn = NailedEventFactory.getSpawnPoint();
+            ChunkCoordinates spawn = NailedEventFactory.getSpawnPoint(this.world);
             world.setBlock(spawn.posX, spawn.posY, spawn.posZ, Block.bedrock.blockID);
             System.out.printf("Building spawn platform at: %d, %d, %d\n", spawn.posX, spawn.posY, spawn.posZ);
         }

@@ -7,9 +7,9 @@ import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
-import jk_5.nailed.map.MapManager;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
-import jk_5.nailed.multiworld.MultiworldManager;
 import jk_5.nailed.network.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teams.TeamRegistry;
@@ -17,7 +17,6 @@ import jk_5.nailed.teamspeak3.TeamspeakManager;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.CommandHandler;
 import net.minecraft.src.DedicatedServer;
-import net.minecraft.src.EnumGameType;
 
 import java.io.File;
 
@@ -31,9 +30,8 @@ public class Nailed {
     public static final TeamRegistry teamRegistry = new TeamRegistry();
     public static final PlayerRegistry playerRegistry = new PlayerRegistry();
     public static final GroupRegistry groupRegistry = new GroupRegistry();
-    public static final MultiworldManager multiworldManager = new MultiworldManager();
     public static final ConfigFile config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file");
-    public static final MapManager mapManager = new MapManager();
+    public static final MapLoader mapLoader = new MapLoader();
     public static final StatManager statManager = new StatManager();
     public static final IrcConnector irc = new IrcConnector();
     public static final IPCClient ipc = new IPCClient();
@@ -48,15 +46,13 @@ public class Nailed {
         eventBus.register(new NailedEventListener());
         eventBus.register(playerRegistry);
 
-        multiworldManager.init();
-
-        mapManager.readMapConfig();
+        mapLoader.loadMaps();
 
         groupRegistry.registerGroup("player", new GroupPlayer());
         groupRegistry.registerGroup("admin", new GroupAdmin());
         groupRegistry.setDefaultGroup("player");
 
-        multiworldManager.setDefaultMapID(0);
+        mapLoader.setupLobby();
 
         irc.connect();
         ipc.start();
@@ -68,17 +64,13 @@ public class Nailed {
     public static void onWorldReady() {
         teamRegistry.setupTeams();
 
+        Map map1 = mapLoader.createWorld(mapLoader.getMappack("nail"));
+        Map map2 = mapLoader.createWorld(mapLoader.getMappack("nail"));
+
         //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
         //Nailed.multiworldManager.prepareSpawnForWorld(1);
 
-        ConfigFile config = mapManager.getConfig();
-        server.setCanSpawnAnimals(config.getTag("spawning").getTag("spawn-animals").getBooleanValue(true));
-        server.setCanSpawnNPCs(config.getTag("spawning").getTag("spawn-npcs").getBooleanValue(true));
-        server.setAllowPvp(config.getTag("map").getTag("pvp").getBooleanValue(true));
-        server.setTexturePack(config.getTag("texturepackUrl").getValue(""));
-        server.setGameType(EnumGameType.getByID(config.getTag("map").getTag("gamemode").getIntValue(0)));
-        server.setAllowFlight(true);
-        server.func_104055_i(true);  //setForceGamemode
+        mapLoader.setupMapSettings();
     }
 
     public static void registerCommands(CommandHandler handler) {

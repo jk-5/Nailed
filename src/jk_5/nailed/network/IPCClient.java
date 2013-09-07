@@ -17,7 +17,7 @@ import java.net.ConnectException;
 import java.net.URI;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

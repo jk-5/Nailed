@@ -10,7 +10,7 @@ import net.minecraft.src.*;
 import java.util.List;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

@@ -3,7 +3,7 @@ package jk_5.nailed.map.gen;
 import net.minecraft.src.WorldType;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

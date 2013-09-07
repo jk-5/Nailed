@@ -10,7 +10,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
@@ -47,7 +47,7 @@ public class FileUtils {
         }
     }
 
-    public static File unzipMapFromMapPack(File mapPack, File mapsDir, String mapName){
+    public static File unzipMapFromMapPack(File mapPack, File destDir){
         try{
             ZipFile zipFile = new ZipFile(mapPack);
             Enumeration e = zipFile.entries();
@@ -55,9 +55,10 @@ public class FileUtils {
             while(e.hasMoreElements()){
                 ZipEntry entry = (ZipEntry)e.nextElement();
                 if(entry.getName().equals("mappack.cfg")) continue;
+                if(entry.getName().equals("gameinstructions.cfg")) continue;
                 if(entry.getName().contains("##MCEDIT.TEMP##")) continue;
                 if(entry.getName().startsWith("__MACOSX/")) continue;
-                File destinationFilePath = new File(mapsDir,entry.getName());
+                File destinationFilePath = new File(destDir.getParentFile(), entry.getName());
                 destinationFilePath.getParentFile().mkdirs();
                 if(!entry.isDirectory()){
                     BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
@@ -80,9 +81,8 @@ public class FileUtils {
                 System.err.println("Invalid or corrupt mappack file");
                 System.exit(1);
             }
-            File dest = new File(mapsDir, mapName);
-            worldDir.renameTo(dest);
-            return dest;
+            worldDir.renameTo(destDir);
+            return destDir;
         }catch(IOException ioe){
 
         }

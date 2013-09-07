@@ -1,7 +1,7 @@
 package jk_5.nailed.util;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

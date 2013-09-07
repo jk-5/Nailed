@@ -8,7 +8,7 @@ import jk_5.nailed.teams.Team;
 import net.minecraft.src.ChunkCoordinates;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

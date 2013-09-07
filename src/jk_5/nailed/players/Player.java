@@ -2,6 +2,8 @@ package jk_5.nailed.players;
 
 import jk_5.nailed.Nailed;
 import jk_5.nailed.groups.Group;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.Mappack;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.teams.TeamRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakClient;
@@ -19,6 +21,7 @@ public class Player {
 
     private String username;
     private TeamspeakClient teamspeakClient;
+    private Map currentMap;
 
     private Group group = Nailed.groupRegistry.getDefaultGroup();
     private boolean spectator = false;
@@ -97,7 +100,7 @@ public class Player {
 
     public void setSpectator(boolean spectator) {
         if (this.spectator == spectator) return;
-        if (this.getTeam() != Team.UNKNOWN && Nailed.mapManager.getGameThread().isGameRunning()) {
+        if (this.getTeam() != Team.UNKNOWN && this.currentMap.getMappack().getGameThread().isGameRunning()) {
             this.sendChatMessage(EnumColor.RED + "You can not join spectator mode while you are in a game!");
             return;
         }
@@ -127,5 +130,13 @@ public class Player {
 
     private static Scoreboard getScoreboardFromWorldServer() {
         return MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
+    }
+
+    public void setCurrentMap(Map map){
+        this.currentMap = map;
+    }
+
+    public Map getCurrentMap(){
+        return this.currentMap;
     }
 }

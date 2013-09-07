@@ -3,6 +3,8 @@ package jk_5.nailed.map.gameloop;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.Nailed;
+import jk_5.nailed.map.Mappack;
+import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.gameloop.instructions.*;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
@@ -16,20 +18,13 @@ import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
 public class GameThread extends Thread {
 
     private static final Map<String, Class<?>> instructionMap = Maps.newHashMap();
-
-    private final List<IInstruction> instructions = Lists.newArrayList();
-
-    private boolean gameRunning = false;
-    private boolean watchUnready = false;
-    private boolean interruptWin = false;
-    private Team winner = null;
 
     static {
         instructionMap.put("trigger", InstructionTrigger.class);
@@ -48,7 +43,17 @@ public class GameThread extends Thread {
         instructionMap.put("moveteamspeak", InstructionMoveTeamspeak.class);
     }
 
-    public GameThread() {
+    private final List<IInstruction> instructions = Lists.newArrayList();
+
+    private boolean gameRunning = false;
+    private boolean watchUnready = false;
+    private boolean interruptWin = false;
+    private Team winner = null;
+
+    private final Mappack mappack;
+
+    public GameThread(Mappack mappack) {
+        this.mappack = mappack;
         this.setDaemon(true);
         this.setName("GameStartup");
     }
@@ -124,8 +129,7 @@ public class GameThread extends Thread {
         }
     }
 
-    public void parseInstructions(ZipInputStream stream) {
-        System.out.println("Parsing instructions file...");
+    public void readInstructions(ZipInputStream stream) throws MappackInitializationException {
         BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         this.instructions.clear();
         int lineNumber = 1;
@@ -143,9 +147,7 @@ public class GameThread extends Thread {
                 lineNumber++;
             }
         } catch (Exception e) {
-            System.err.println("Error while parsing instructions file at line " + lineNumber + ":");
-            e.printStackTrace();
-            System.exit(1);
+            throw new MappackInitializationException(this.mappack, "Error while parsing instructions file at line " + lineNumber, e);
         }
     }
 }

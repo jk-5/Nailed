@@ -3,7 +3,7 @@ package jk_5.nailed.groups;
 import jk_5.nailed.util.EnumColor;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

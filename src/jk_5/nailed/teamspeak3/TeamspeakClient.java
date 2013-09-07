@@ -3,7 +3,7 @@ package jk_5.nailed.teamspeak3;
 import java.util.HashMap;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */

@@ -3,7 +3,7 @@ package jk_5.nailed.network.packet;
 import com.nexus.data.json.JsonObject;
 
 /**
- * TODO: Edit description
+ * No description given
  *
  * @author jk-5
  */
