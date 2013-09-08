@@ -2,6 +2,7 @@ package jk_5.nailed.command;
 
 import com.google.common.base.Joiner;
 import jk_5.nailed.Nailed;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
@@ -33,12 +34,15 @@ public class CommandTeam extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) {
+    public void processCommand(ICommandSender send, String[] args) {
+        if (!(send instanceof EntityPlayerMP)) return;
+        EntityPlayerMP sender = (EntityPlayerMP) send;
+        Map currentMap = Nailed.mapLoader.getMapFromWorld(sender.getServerForPlayer());
         if (args.length == 0) {
             throw new WrongUsageException("/team <join:leave>");
         } else if (args.length == 1) {
             if (args[0].equals("join")) {
-                throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()) + ">");
+                throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(currentMap.getTeamManager().getTeamNames()) + ">");
             } else if (args[0].equals("leave")) {
                 throw new WrongUsageException("/team leave <player>");
             }
@@ -47,24 +51,24 @@ public class CommandTeam extends CommandBase {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 else
-                    throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(Nailed.teamRegistry.getTeamNames()) + ">");
+                    throw new WrongUsageException("/team join <player> <" + Joiner.on(':').join(currentMap.getTeamManager().getTeamNames()) + ">");
             } else if (args[0].equals("leave")) {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 else {
                     p.sendChatMessage(EnumColor.GREEN + "You have been removed from the team " + p.getTeam().getColor() + p.getTeam().getName());
                     sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Player " + p.getUsername() + " was removed from the team " + p.getTeam().getColor() + p.getTeam().getName()));
-                    Nailed.teamRegistry.setPlayerTeam(p, Team.UNKNOWN);
+                    currentMap.getTeamManager().setPlayerTeam(p, Team.UNKNOWN);
                 }
             }
         } else if (args.length == 3) {
             if (args[0].equals("join")) {
                 Player p = Nailed.playerRegistry.getPlayer(args[1]);
-                Team t = Nailed.teamRegistry.getTeam(args[2]);
+                Team t = currentMap.getTeamManager().getTeam(args[2]);
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 if (t == null) throw new CommandException("Team " + args[2] + " was not found");
                 else {
-                    Nailed.teamRegistry.setPlayerTeam(p, t);
+                    currentMap.getTeamManager().setPlayerTeam(p, t);
                     p.sendChatMessage(EnumColor.GREEN + "You have been added to the team " + p.getTeam().getColor() + p.getTeam().getName());
                     sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Player " + p.getUsername() + " was added to the team " + p.getTeam().getColor() + p.getTeam().getName()));
                 }
@@ -73,7 +77,10 @@ public class CommandTeam extends CommandBase {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+    public List addTabCompletionOptions(ICommandSender send, String[] args) {
+        if (!(send instanceof EntityPlayerMP)) return null;
+        EntityPlayerMP sender = (EntityPlayerMP) send;
+        Map currentMap = Nailed.mapLoader.getMapFromWorld(sender.getServerForPlayer());
         if (args.length == 1) {
             return getListOfStringsMatchingLastWord(args, "join", "leave");
         } else if (args.length == 2) {
@@ -82,7 +89,7 @@ public class CommandTeam extends CommandBase {
             }
         } else if (args.length == 3) {
             if (args[0].equals("join")) {
-                return getListOfStringsFromIterableMatchingLastWord(args, Nailed.teamRegistry.getTeamNames());
+                return getListOfStringsFromIterableMatchingLastWord(args, currentMap.getTeamManager().getTeamNames());
             }
         }
         return null;

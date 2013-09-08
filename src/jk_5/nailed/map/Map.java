@@ -1,10 +1,8 @@
 package jk_5.nailed.map;
 
-import jk_5.nailed.Nailed;
-import jk_5.nailed.NailedEventFactory;
+import jk_5.nailed.map.gameloop.GameThread;
 import jk_5.nailed.players.Player;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
+import net.minecraft.src.WorldServer;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,32 +18,45 @@ public class Map {
     private final int UID = nextId.getAndIncrement();
     private WorldServer world;
     private final Mappack mappack;
+    private final GameThread gameThread;
+    private final TeamManager teamManager;
 
-    public Map(Mappack mappack){
+    public Map(Mappack mappack) {
         this.mappack = mappack;
+        this.gameThread = new GameThread(this);
+        this.teamManager = new TeamManager(this);
     }
 
-    public WorldServer getHandle(){
+    public WorldServer getHandle() {
         return this.world;
     }
 
-    public int getUID(){
+    public int getUID() {
         return this.UID;
     }
 
-    public Mappack getMappack(){
+    public Mappack getMappack() {
         return this.mappack;
     }
 
-    public String getFolderName(){
+    public TeamManager getTeamManager() {
+        return this.teamManager;
+    }
+
+    public String getFolderName() {
         return "map" + this.getUID() + this.getMappack().getName();
     }
 
-    public void setWorldServer(WorldServer server){
-        this.world = server;
+    public GameThread getGameThread() {
+        return this.gameThread;
     }
 
-    public void travelPlayerToMap(Player player){
+    public void setWorldServer(WorldServer server) {
+        this.world = server;
+        this.teamManager.setupTeams();
+    }
+
+    public void travelPlayerToMap(Player player) {
         /*EntityPlayerMP entity = player.getEntity();
         ServerConfigurationManager confManager = Nailed.server.getConfigurationManager();
 

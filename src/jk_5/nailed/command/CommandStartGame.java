@@ -28,6 +28,6 @@ public class CommandStartGame extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        //Nailed.mapManager.getGameThread().start();
+        Nailed.mapLoader.getMap(0).getGameThread().start();
     }
 }

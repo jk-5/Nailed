@@ -7,12 +7,10 @@ import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
-import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
 import jk_5.nailed.network.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
-import jk_5.nailed.teams.TeamRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakManager;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.CommandHandler;
@@ -27,7 +25,6 @@ import java.io.File;
  */
 public class Nailed {
     public static final EventBus eventBus = new EventBus();
-    public static final TeamRegistry teamRegistry = new TeamRegistry();
     public static final PlayerRegistry playerRegistry = new PlayerRegistry();
     public static final GroupRegistry groupRegistry = new GroupRegistry();
     public static final ConfigFile config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file");
@@ -62,10 +59,8 @@ public class Nailed {
     }
 
     public static void onWorldReady() {
-        teamRegistry.setupTeams();
-
-        Map map1 = mapLoader.createWorld(mapLoader.getMappack("nail"));
-        Map map2 = mapLoader.createWorld(mapLoader.getMappack("nail"));
+        //Map map1 = mapLoader.createWorld(mapLoader.getMappack("nail"));
+        //Map map2 = mapLoader.createWorld(mapLoader.getMappack("nail"));
 
         //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
         //Nailed.multiworldManager.prepareSpawnForWorld(1);
@@ -81,6 +76,6 @@ public class Nailed {
         handler.registerCommand(new CommandSpectator());
         handler.registerCommand(new CommandStartGame());
         handler.registerCommand(new CommandBroadcastChat());
-        if(teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
+        if (teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }

@@ -3,9 +3,7 @@ package jk_5.nailed.players;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.groups.Group;
 import jk_5.nailed.map.Map;
-import jk_5.nailed.map.Mappack;
 import jk_5.nailed.teams.Team;
-import jk_5.nailed.teams.TeamRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakClient;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.server.MinecraftServer;
@@ -38,9 +36,9 @@ public class Player {
         return this.group;
     }
 
-    public void onLogin(){
-        if(!Nailed.config.getTag("teamspeak").getTag("enabled").getBooleanValue(false)) return;
-        if(this.teamspeakClient != null) return;
+    public void onLogin() {
+        if (!Nailed.config.getTag("teamspeak").getTag("enabled").getBooleanValue(false)) return;
+        if (this.teamspeakClient != null) return;
         this.setTeamspeakClient(Nailed.teamspeak.getClientForUser(this.username));
     }
 
@@ -48,16 +46,16 @@ public class Player {
         return MinecraftServer.getServer().getConfigurationManager().getPlayerEntity(this.username);
     }
 
-    public void setTeamspeakClient(TeamspeakClient ts){
+    public void setTeamspeakClient(TeamspeakClient ts) {
         this.teamspeakClient = ts;
-        if(this.teamspeakClient != null){
+        if (this.teamspeakClient != null) {
             this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakClient.getNickname());
-        }else{
+        } else {
             this.sendChatMessage(EnumColor.AQUA + "There was no teamspeak client found with the same username as you. Change your teamspeak username so it matches your ingame name or do /ts setname");
         }
     }
 
-    public TeamspeakClient getTeamspeakClient(){
+    public TeamspeakClient getTeamspeakClient() {
         return this.teamspeakClient;
     }
 
@@ -69,7 +67,7 @@ public class Player {
     }
 
     public Team getTeam() {
-        return Nailed.teamRegistry.getTeamFromPlayer(username);
+        return this.currentMap.getTeamManager().getTeamFromPlayer(this);
     }
 
     public String getChatFormattedName() {
@@ -100,14 +98,14 @@ public class Player {
 
     public void setSpectator(boolean spectator) {
         if (this.spectator == spectator) return;
-        if (this.getTeam() != Team.UNKNOWN && this.currentMap.getMappack().getGameThread().isGameRunning()) {
+        if (this.getTeam() != Team.UNKNOWN && this.currentMap.getGameThread().isGameRunning()) {
             this.sendChatMessage(EnumColor.RED + "You can not join spectator mode while you are in a game!");
             return;
         }
         EntityPlayer entity = this.getEntity();
         if (spectator) {
             this.spectator = true;
-            getScoreboardFromWorldServer().func_96521_a(this.username, TeamRegistry.spectatorTeam); //join
+            getScoreboardFromWorldServer().func_96521_a(this.username, this.currentMap.getTeamManager().spectatorTeam); //join
             entity.addPotionEffect(new PotionEffect(Potion.invisibility.getId(), 1000000, 0, true));
             entity.capabilities.allowEdit = false;
             entity.capabilities.disableDamage = true;
@@ -132,11 +130,11 @@ public class Player {
         return MinecraftServer.getServer().worldServerForDimension(0).getScoreboard();
     }
 
-    public void setCurrentMap(Map map){
+    public void setCurrentMap(Map map) {
         this.currentMap = map;
     }
 
-    public Map getCurrentMap(){
+    public Map getCurrentMap() {
         return this.currentMap;
     }
 }

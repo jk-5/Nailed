@@ -26,11 +26,11 @@ public class InstructionMoveTeamspeak implements IInstruction {
 
     @Override
     public void execute(GameThread controller) throws InterruptedException {
-        Team team = Nailed.teamRegistry.getTeam(this.team);
+        Team team = controller.getMap().getTeamManager().getTeam(this.team);
         for (Player p : Nailed.playerRegistry.getPlayers()) {
-            if(p.getTeam() != team) return;
+            if (p.getTeam() != team) return;
             TeamspeakClient ts = p.getTeamspeakClient();
-            if(ts == null) continue;
+            if (ts == null) continue;
             Nailed.teamspeak.moveClientToChannel(ts, this.channelID);
         }
     }

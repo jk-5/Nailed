@@ -1,6 +1,7 @@
 package jk_5.nailed.command;
 
 import jk_5.nailed.Nailed;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.teams.Team;
 import net.minecraft.src.*;
 
@@ -27,14 +28,15 @@ public class CommandCB extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) {
-        if (sender instanceof TileEntityCommandBlock) {
+    public void processCommand(ICommandSender send, String[] args) {
+        if (send instanceof TileEntityCommandBlock) {
+            TileEntityCommandBlock sender = (TileEntityCommandBlock) send;
+            Map currentMap = Nailed.mapLoader.getMapFromWorld((WorldServer) sender.getWorldObj());
             if (args[0].equalsIgnoreCase("startgame")) {
-                //Nailed.mapLoader.getMapFromWorld().getMappack().getGameThread().start();
-                //Nailed.mapManager.getGameThread().start();
+                Nailed.mapLoader.getMap(0).getGameThread().start();
             } else if (args[0].equalsIgnoreCase("setwinner")) {
-                Team winner = Nailed.teamRegistry.getTeam(args[1]);
-                //Nailed.mapManager.getGameThread().setWinner(winner);
+                Team winner = currentMap.getTeamManager().getTeam(args[1]);
+                Nailed.mapLoader.getMap(0).getGameThread().setWinner(winner);
             }
         } else throw new CommandException("This command can only be used by command blocks");
     }

@@ -1,21 +1,12 @@
 package jk_5.nailed.map.gameloop;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import jk_5.nailed.Nailed;
-import jk_5.nailed.map.Mappack;
-import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.gameloop.instructions.*;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipInputStream;
 
 /**
  * No description given
@@ -24,36 +15,18 @@ import java.util.zip.ZipInputStream;
  */
 public class GameThread extends Thread {
 
-    private static final Map<String, Class<?>> instructionMap = Maps.newHashMap();
-
-    static {
-        instructionMap.put("trigger", InstructionTrigger.class);
-        instructionMap.put("sleep", InstructionSleep.class);
-        instructionMap.put("watchunready", InstructionWatchUnready.class);
-        instructionMap.put("unwatchunready", InstructionUnwatchUnready.class);
-        instructionMap.put("countdown", InstructionCountdown.class);
-        instructionMap.put("setwinner", InstructionSetWinner.class);
-        instructionMap.put("startwinnerinterrupt", InstructionStartWinnerInterrupt.class);
-        instructionMap.put("enable", InstructionEnableStat.class);
-        instructionMap.put("disable", InstructionDisableStat.class);
-        instructionMap.put("setspawn", InstructionSetSpawnpoint.class);
-        instructionMap.put("resetspawn", InstructionResetSpawnpoint.class);
-        instructionMap.put("clearinventory", InstructionClearInventory.class);
-        instructionMap.put("setgamemode", InstructionSetGamemode.class);
-        instructionMap.put("moveteamspeak", InstructionMoveTeamspeak.class);
-    }
-
-    private final List<IInstruction> instructions = Lists.newArrayList();
-
     private boolean gameRunning = false;
     private boolean watchUnready = false;
     private boolean interruptWin = false;
     private Team winner = null;
 
-    private final Mappack mappack;
+    private final jk_5.nailed.map.Map map;
 
-    public GameThread(Mappack mappack) {
-        this.mappack = mappack;
+    private final List<IInstruction> instructions;
+
+    public GameThread(jk_5.nailed.map.Map map) {
+        this.map = map;
+        this.instructions = map.getMappack().getInstructions();
         this.setDaemon(true);
         this.setName("GameStartup");
     }
@@ -95,10 +68,14 @@ public class GameThread extends Thread {
             if (p.getEntity() != null) p.getEntity().setSpawnChunk(null, false);
         }
         for (Player p : Nailed.playerRegistry.getPlayers()) {
-            if(p.getTeamspeakClient() == null) continue;
+            if (p.getTeamspeakClient() == null) continue;
             Nailed.teamspeak.moveClientToChannel(p.getTeamspeakClient(), 14); //FIXME! lobby!
         }
         this.gameRunning = false;
+    }
+
+    public jk_5.nailed.map.Map getMap() {
+        return this.map;
     }
 
     public void setWatchUnready(boolean watch) {
@@ -119,35 +96,5 @@ public class GameThread extends Thread {
         this.winner = team;
         Nailed.statManager.enableStat("gamewon");
         ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.GOLD + " Winning team: " + winner.toString());
-    }
-
-    private static IInstruction getInstruction(String name) {
-        try {
-            return (IInstruction) instructionMap.get(name).newInstance();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public void readInstructions(ZipInputStream stream) throws MappackInitializationException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-        this.instructions.clear();
-        int lineNumber = 1;
-        try {
-            while (in.ready()) {
-                String line = in.readLine();
-                if (line == null) continue;
-                if (line.startsWith("#")) continue;
-                String data[] = line.split(" ", 2);
-                if (data.length == 0) continue;
-                IInstruction instr = getInstruction(data[0].trim());
-                if (instr == null) continue;
-                if (data.length == 2) instr.injectArguments(data[1]);
-                this.instructions.add(instr);
-                lineNumber++;
-            }
-        } catch (Exception e) {
-            throw new MappackInitializationException(this.mappack, "Error while parsing instructions file at line " + lineNumber, e);
-        }
     }
 }
