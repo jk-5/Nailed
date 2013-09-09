@@ -3,6 +3,8 @@ package jk_5.nailed.irc;
 import com.google.common.eventbus.Subscribe;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.event.player.PlayerChatEvent;
+import jk_5.nailed.event.player.PlayerJoinServerEvent;
+import jk_5.nailed.event.player.PlayerLeaveServerEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
@@ -34,8 +36,21 @@ public class IrcConnector extends PircBot implements Runnable {
     }
 
     @Subscribe
+    @SuppressWarnings("unused")
     public void onChat(PlayerChatEvent event) {
         this.sendMessage(this.channel, "<" + event.player.getUsername() + "> " + event.message);
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onJoin(PlayerJoinServerEvent event) {
+        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has joined the game");
+    }
+
+    @Subscribe
+    @SuppressWarnings("unused")
+    public void onLeave(PlayerLeaveServerEvent event) {
+        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has left the game");
     }
 
     @Override
@@ -46,8 +61,8 @@ public class IrcConnector extends PircBot implements Runnable {
             if (p == null) this.sendMessage(channel, sender + ": Player " + args[1] + " was not found!");
             else
                 p.sendChatMessage(EnumColor.GREY + "[" + channel + "] [" + sender + " -> " + EnumColor.GOLD + p.getUsername() + EnumColor.GREY + "] " + EnumColor.RESET + args[2]);
-        } else if (message.equals(".players")) {
-            this.sendMessage(channel, "Currently playing: " + MinecraftServer.getServer().getConfigurationManager().getPlayerListAsString());
+        } else if (message.equals("!players")) {
+            this.sendMessage(channel, "Players currently in game: " + MinecraftServer.getServer().getConfigurationManager().getPlayerListAsString());
         } else
             ServerUtils.broadcastChatMessage(EnumColor.GREY + "[" + channel + "]" + EnumColor.RESET + " <" + sender + "> " + message);
     }
@@ -79,7 +94,7 @@ public class IrcConnector extends PircBot implements Runnable {
             this.connect(this.server, this.port, this.serverPassword);
             this.joinChannel(this.channel, this.channelPass);
         } catch (Exception e) {
-
+            System.out.println("Could not connect to IRC");
         }
     }
 }

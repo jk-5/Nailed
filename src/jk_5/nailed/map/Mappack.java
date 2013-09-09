@@ -123,7 +123,7 @@ public class Mappack {
             while (in.ready()) {
                 String line = in.readLine();
                 if (line == null) continue;
-                if (line.startsWith("#")) continue;
+                if (line.startsWith("#") || line.isEmpty()) continue;
                 String data[] = line.split(" ", 2);
                 if (data.length == 0) continue;
                 IInstruction instr = getInstruction(data[0].trim());

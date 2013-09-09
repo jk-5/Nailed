@@ -7,7 +7,6 @@ import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
-import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
 import jk_5.nailed.network.IPCClient;
@@ -55,16 +54,13 @@ public class Nailed {
         irc.connect();
         ipc.start();
 
-        teamspeak.setEnabled(false); //Disable it, it's broke like a joke
+        //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
     }
 
     public static void onWorldReady() {
-        Map map1 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
-        Map map2 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
-
-        //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
-        //Nailed.multiworldManager.prepareSpawnForWorld(1);
+        //Map map1 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
+        //Map map2 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
 
         mapLoader.setupMapSettings();
     }

@@ -68,7 +68,7 @@ public class CommandTeam extends CommandBase {
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 if (t == null) throw new CommandException("Team " + args[2] + " was not found");
                 else {
-                    p.setTeam(Team.UNKNOWN);
+                    p.setTeam(t);
                     p.sendChatMessage(EnumColor.GREEN + "You have been added to the team " + p.getTeam().getColor() + p.getTeam().getName());
                     sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Player " + p.getUsername() + " was added to the team " + p.getTeam().getColor() + p.getTeam().getName()));
                 }

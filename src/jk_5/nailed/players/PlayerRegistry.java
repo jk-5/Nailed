@@ -32,11 +32,4 @@ public class PlayerRegistry {
             return p;
         }
     }
-
-    public String formatPlayerListPlayer(String name) {
-        return name;
-        /*Player p = this.getPlayer(name);
-        if(p == null) return name;
-        return p.getGroup().getChatPrefix() + p.getTeam().getColor().toString() + p.getUsername() + EnumColor.RESET;*/
-    }
 }

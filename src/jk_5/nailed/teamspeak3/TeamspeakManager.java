@@ -5,7 +5,9 @@ import jk_5.nailed.Nailed;
 import jk_5.nailed.teamspeak3.api.JTS3ServerQuery;
 import jk_5.nailed.teamspeak3.api.TeamspeakActionListener;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * No description given
@@ -24,15 +26,15 @@ public class TeamspeakManager implements TeamspeakActionListener {
 
     private final List<TeamspeakClient> clients = Lists.newArrayList();
 
-    public void connect(){
+    public void connect() {
         System.out.println("Connecting to teamspeak...");
-        if(!this.enabled) return;
-        if(!this.server.connectTS3Query(this.host, this.port)){
+        if (!this.enabled) return;
+        if (!this.server.connectTS3Query(this.host, this.port)) {
             System.out.println("Failed!");
             return;
         }
         this.server.loginTS3(this.username, this.password);
-        if(!this.server.selectVirtualServer(1)){
+        if (!this.server.selectVirtualServer(1)) {
             this.displayError();
             return;
         }
@@ -47,61 +49,64 @@ public class TeamspeakManager implements TeamspeakActionListener {
         this.refreshClientList();
     }
 
-    public void teamspeakActionPerformed(String eventType, HashMap<String, String> eventInfo){
+    public void teamspeakActionPerformed(String eventType, HashMap<String, String> eventInfo) {
         this.refreshClientList();
     }
 
-    public void moveClientToChannel(TeamspeakClient client, int channelID){
-        server.moveClient(client.getClientID(), channelID, null);
+    public void moveClientToChannel(TeamspeakClient client, int channelID) {
+        if (server.moveClient(client.getClientID(), channelID, null)) {
+            System.out.println("Error while moving " + client.getNickname());
+            System.out.println(server.getLastError());
+        }
     }
 
-    private void refreshClientList(){
+    private void refreshClientList() {
         this.clients.clear();
         Vector<HashMap<String, String>> dataClientList = this.server.getList(JTS3ServerQuery.LISTMODE_CLIENTLIST, "-info,-times");
-        if(dataClientList == null) return;
-        for(HashMap<String, String> hm : dataClientList) this.clients.add(new TeamspeakClient(hm));
+        if (dataClientList == null) return;
+        for (HashMap<String, String> hm : dataClientList) this.clients.add(new TeamspeakClient(hm));
     }
 
-    public TeamspeakClient getClientForUser(String username){
-        for(TeamspeakClient client : this.clients){
-            if(client.getNickname().equals(username)){
+    public TeamspeakClient getClientForUser(String username) {
+        for (TeamspeakClient client : this.clients) {
+            if (client.getNickname().equals(username)) {
                 return client;
             }
         }
         return null;
     }
 
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return this.enabled;
     }
 
-    public void setEnabled(boolean enabled){
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public List<String> getNicknames(){
+    public List<String> getNicknames() {
         List<String> names = Lists.newArrayList();
-        for(TeamspeakClient client : this.clients){
+        for (TeamspeakClient client : this.clients) {
             names.add(client.getNickname());
         }
         return names;
     }
 
-    private void displayError(){
+    private void displayError() {
         String error = this.server.getLastError();
-        if (error != null){
+        if (error != null) {
             System.out.println("Teamspeak error:");
             System.out.println(error);
-            if (this.server.getLastErrorPermissionID() != -1){
+            if (this.server.getLastErrorPermissionID() != -1) {
                 HashMap<String, String> permInfo = this.server.getPermissionInfo(this.server.getLastErrorPermissionID());
-                if (permInfo != null){
+                if (permInfo != null) {
                     System.out.println("Missing Permission: " + permInfo.get("permname"));
                 }
             }
         }
     }
 
-    private void displayHashMap(HashMap<String, String> hm){
+    /*private void displayHashMap(HashMap<String, String> hm){
         if (hm == null) return;
 
         Collection<String> cValue = hm.values();
@@ -110,5 +115,5 @@ public class TeamspeakManager implements TeamspeakActionListener {
         Iterator<String> itrKey = cKey.iterator();
 
         while (itrValue.hasNext() && itrKey.hasNext()) System.out.println(itrKey.next() + ": " + itrValue.next());
-    }
+    }*/
 }

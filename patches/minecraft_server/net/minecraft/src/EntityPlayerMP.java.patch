@@ -14,7 +14,7 @@
        this.theItemInWorldManager = par4ItemInWorldManager;
        this.renderDistance = par1MinecraftServer.getConfigurationManager().getViewDistance();
 -      ChunkCoordinates var5 = par2World.getSpawnPoint();
-+      ChunkCoordinates var5 = NailedEventFactory.getSpawnPoint();
++      ChunkCoordinates var5 = NailedEventFactory.getSpawnPoint(par2World);
        int var6 = var5.posX;
        int var7 = var5.posZ;
        int var8 = var5.posY;

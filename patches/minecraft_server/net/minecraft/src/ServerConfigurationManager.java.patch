@@ -1,15 +1,16 @@
 --- ../src_base/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
 +++ ../src_work/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
-@@ -12,6 +12,8 @@
+@@ -12,6 +12,9 @@
  import java.util.Map;
  import java.util.Set;
  import java.util.Map.Entry;
 +
++import jk_5.nailed.Nailed;
 +import jk_5.nailed.NailedEventFactory;
  import net.minecraft.server.MinecraftServer;
  
  public abstract class ServerConfigurationManager {
-@@ -20,7 +22,6 @@
+@@ -20,7 +23,6 @@
     public final List playerEntityList = new ArrayList();
     private final BanList bannedPlayers = new BanList(new File("banned-players.txt"));
     private final BanList bannedIPs = new BanList(new File("banned-ips.txt"));
@@ -17,7 +18,7 @@
     private Set whiteListedPlayers = new HashSet();
     private IPlayerFileData playerNBTManagerObj;
     private boolean whiteListEnforced;
-@@ -58,7 +59,6 @@
+@@ -58,7 +60,6 @@
        var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
        this.func_96456_a((ServerScoreboard)var5.getScoreboard(), par2EntityPlayerMP);
        this.updateTimeAndWeatherForPlayer(par2EntityPlayerMP, var5);
@@ -25,7 +26,7 @@
        this.playerLoggedIn(par2EntityPlayerMP);
        var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
        this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -151,6 +151,7 @@
+@@ -151,6 +152,7 @@
        this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
        this.playerEntityList.add(par1EntityPlayerMP);
        WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
@@ -33,7 +34,7 @@
        var2.spawnEntityInWorld(par1EntityPlayerMP);
        this.func_72375_a(par1EntityPlayerMP, (WorldServer)null);
  
-@@ -165,6 +166,7 @@
+@@ -165,6 +167,7 @@
     }
  
     public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP) {
@@ -41,7 +42,117 @@
        this.writePlayerData(par1EntityPlayerMP);
        WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
        if(par1EntityPlayerMP.ridingEntity != null) {
-@@ -426,21 +428,13 @@
+@@ -236,56 +239,59 @@
+    }
+ 
+    public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP par1EntityPlayerMP, int par2, boolean par3) {
+-      par1EntityPlayerMP.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(par1EntityPlayerMP);
+-      par1EntityPlayerMP.getServerForPlayer().getEntityTracker().untrackEntity(par1EntityPlayerMP);
+-      par1EntityPlayerMP.getServerForPlayer().getPlayerManager().removePlayer(par1EntityPlayerMP);
+-      this.playerEntityList.remove(par1EntityPlayerMP);
+-      this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension).removePlayerEntityDangerously(par1EntityPlayerMP);
+-      ChunkCoordinates var4 = par1EntityPlayerMP.getBedLocation();
+-      boolean var5 = par1EntityPlayerMP.isSpawnForced();
+-      par1EntityPlayerMP.dimension = par2;
+-      Object var6;
+-      if(this.mcServer.isDemo()) {
+-         var6 = new DemoWorldManager(this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension));
+-      } else {
+-         var6 = new ItemInWorldManager(this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension));
+-      }
+-
+-      EntityPlayerMP var7 = new EntityPlayerMP(this.mcServer, this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension), par1EntityPlayerMP.getCommandSenderName(), (ItemInWorldManager)var6);
+-      var7.playerNetServerHandler = par1EntityPlayerMP.playerNetServerHandler;
+-      var7.clonePlayer(par1EntityPlayerMP, par3);
+-      var7.entityId = par1EntityPlayerMP.entityId;
+-      WorldServer var8 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
+-      this.func_72381_a(var7, par1EntityPlayerMP, var8);
+-      ChunkCoordinates var9;
+-      if(var4 != null) {
+-         var9 = EntityPlayer.verifyRespawnCoordinates(this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension), var4, var5);
+-         if(var9 != null) {
+-            var7.setLocationAndAngles((double)((float)var9.posX + 0.5F), (double)((float)var9.posY + 0.1F), (double)((float)var9.posZ + 0.5F), 0.0F, 0.0F);
+-            var7.setSpawnChunk(var4, var5);
+-         } else {
+-            var7.playerNetServerHandler.sendPacket(new Packet70GameEvent(0, 0));
+-         }
+-      }
+-
+-      var8.theChunkProviderServer.loadChunk((int)var7.posX >> 4, (int)var7.posZ >> 4);
+-
+-      while(!var8.getCollidingBoundingBoxes(var7, var7.boundingBox).isEmpty()) {
+-         var7.setPosition(var7.posX, var7.posY + 1.0D, var7.posZ);
+-      }
+-
+-      var7.playerNetServerHandler.sendPacket(new Packet9Respawn(var7.dimension, (byte)var7.worldObj.difficultySetting, var7.worldObj.getWorldInfo().getTerrainType(), var7.worldObj.getHeight(), var7.theItemInWorldManager.getGameType()));
+-      var9 = var8.getSpawnPoint();
+-      var7.playerNetServerHandler.setPlayerLocation(var7.posX, var7.posY, var7.posZ, var7.rotationYaw, var7.rotationPitch);
+-      var7.playerNetServerHandler.sendPacket(new Packet6SpawnPosition(var9.posX, var9.posY, var9.posZ));
+-      var7.playerNetServerHandler.sendPacket(new Packet43Experience(var7.experience, var7.experienceTotal, var7.experienceLevel));
+-      this.updateTimeAndWeatherForPlayer(var7, var8);
+-      var8.getPlayerManager().addPlayer(var7);
+-      var8.spawnEntityInWorld(var7);
+-      this.playerEntityList.add(var7);
+-      var7.addSelfToInternalCraftingInventory();
+-      var7.setEntityHealth(var7.func_110143_aJ());
+-      return var7;
++      return this.recreatePlayerEntity(par1EntityPlayerMP, par2, par3, null);
++   }
++
++   public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP entityPlayerMP, int par2, boolean par3, jk_5.nailed.map.Map map) {
++      entityPlayerMP.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(entityPlayerMP);
++      //entityPlayerMP.getServerForPlayer().getEntityTracker().untrackEntity(entityPlayerMP); //Nailed disable
++      entityPlayerMP.getServerForPlayer().getPlayerManager().removePlayer(entityPlayerMP);
++      this.playerEntityList.remove(entityPlayerMP);
++      this.mcServer.worldServerForDimension(entityPlayerMP.dimension).removePlayerEntityDangerously(entityPlayerMP);
++      //Nailed start
++      EntityPlayerMP entityPlayerMP1 = entityPlayerMP;
++      jk_5.nailed.map.Map fromMap = Nailed.mapLoader.getMapFromWorld(entityPlayerMP1.getServerForPlayer());
++      entityPlayerMP1.playerConqueredTheEnd = false;
++      entityPlayerMP1.clonePlayer(entityPlayerMP, par3);
++
++      jk_5.nailed.map.Map toMap = map == null ? fromMap : map;
++      WorldServer toWorld = toMap.getWorld();
++      ChunkCoordinates spawnpoint = toMap.getMappack().getSpawnPoint();
++      if(entityPlayerMP1.isSpawnForced()){
++          spawnpoint = entityPlayerMP1.getBedLocation();
++      }
++      entityPlayerMP1.setPositionAndRotation(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ, 0f, 0f);
++      //Nailed end
++      toWorld.theChunkProviderServer.loadChunk((int)entityPlayerMP1.posX >> 4, (int)entityPlayerMP1.posZ >> 4);
++
++      while(!toWorld.getCollidingBoundingBoxes(entityPlayerMP1, entityPlayerMP1.boundingBox).isEmpty()) {
++          entityPlayerMP1.setPosition(entityPlayerMP1.posX, entityPlayerMP1.posY + 1.0D, entityPlayerMP1.posZ);
++      }
++      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet9Respawn(-1, (byte)entityPlayerMP1.worldObj.difficultySetting, entityPlayerMP1.worldObj.getWorldInfo().getTerrainType(), entityPlayerMP1.worldObj.getHeight(), entityPlayerMP1.theItemInWorldManager.getGameType())); //Nailed add
++      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet9Respawn(0, (byte)entityPlayerMP1.worldObj.difficultySetting, entityPlayerMP1.worldObj.getWorldInfo().getTerrainType(), entityPlayerMP1.worldObj.getHeight(), entityPlayerMP1.theItemInWorldManager.getGameType()));
++      entityPlayerMP1.setWorld(toWorld);
++      entityPlayerMP1.isDead = false;
++      entityPlayerMP1.setSneaking(false);
++      if(map == null) entityPlayerMP1.setEntityHealth(20);
++      //Nailed End
++      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet6SpawnPosition(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ));
++      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet43Experience(entityPlayerMP1.experience, entityPlayerMP1.experienceTotal, entityPlayerMP1.experienceLevel));
++      this.updateTimeAndWeatherForPlayer(entityPlayerMP1, toWorld);
++      toWorld.getPlayerManager().addPlayer(entityPlayerMP1);
++      toWorld.spawnEntityInWorld(entityPlayerMP1);
++      this.playerEntityList.add(entityPlayerMP1);
++      //entityPlayerMP1.addSelfToInternalCraftingInventory();
++      //Nailed start - Added from changeDimension
++      this.syncPlayerInventory(entityPlayerMP1);
++      entityPlayerMP1.sendPlayerAbilities();
++      Iterator iterator = entityPlayerMP1.getActivePotionEffects().iterator();
++      while(iterator.hasNext()){
++         PotionEffect effect = (PotionEffect) iterator.next();
++         entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet41EntityEffect(entityPlayerMP1.entityId, effect));
++      }
++      //Nailed end
++      entityPlayerMP1.setEntityHealth(entityPlayerMP1.func_110143_aJ());
++      return entityPlayerMP1;
+    }
+ 
+    public void transferPlayerToDimension(EntityPlayerMP par1EntityPlayerMP, int par2) {
+@@ -426,21 +432,13 @@
        return this.bannedIPs;
     }
  
@@ -65,7 +176,7 @@
     }
  
     public EntityPlayerMP getPlayerEntity(String par1Str) {
-@@ -592,10 +586,6 @@
+@@ -592,10 +590,6 @@
        return this.whiteListedPlayers;
     }
  

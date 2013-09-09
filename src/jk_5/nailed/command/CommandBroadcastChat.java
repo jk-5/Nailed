@@ -7,7 +7,6 @@ import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.ServerUtils;
 import net.minecraft.src.CommandBase;
 import net.minecraft.src.CommandException;
-import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ICommandSender;
 
 /**
@@ -30,8 +29,7 @@ public class CommandBroadcastChat extends CommandBase {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
         Player p = Nailed.playerRegistry.getPlayer(sender.getCommandSenderName());
-        if(p == null) return false;
-        return p.getTeam() != Team.UNKNOWN;
+        return p != null && p.getTeam() != Team.UNKNOWN;
     }
 
     @Override
@@ -42,7 +40,7 @@ public class CommandBroadcastChat extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         Player p = Nailed.playerRegistry.getPlayer(sender.getCommandSenderName());
-        if(p == null) throw new CommandException("I don\'t know who you are!");
+        if (p == null) throw new CommandException("I don\'t know who you are!");
         ServerUtils.broadcastChatMessage(p.formatChatMessage(Joiner.on(" ").join(args)));
     }
 }

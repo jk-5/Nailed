@@ -2,7 +2,6 @@ package jk_5.nailed.groups;
 
 import jk_5.nailed.Nailed;
 import jk_5.nailed.util.EnumColor;
-import net.minecraft.src.EntityPlayer;
 
 /**
  * No description given
@@ -28,13 +27,5 @@ public abstract class Group {
 
     public String getName() {
         return this.name;
-    }
-
-    public void onPlayerJoin(EntityPlayer player) {
-
-    }
-
-    public void onPlayerLeave(EntityPlayer player) {
-
     }
 }

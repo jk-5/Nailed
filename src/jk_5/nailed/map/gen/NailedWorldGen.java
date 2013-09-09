@@ -13,7 +13,8 @@ import net.minecraft.src.WorldType;
 public class NailedWorldGen {
 
     public static WorldType getWorldType() {
-        return new VoidWorldType(3); //TODO: resolve ID
+        return WorldType.DEFAULT;
+        //return new VoidWorldType(3); //TODO: resolve ID
     }
 
     public static IChunkProvider getChunkProvider(World world) {

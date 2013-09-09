@@ -60,10 +60,7 @@ public class Player {
     }
 
     public void setGroup(Group group) {
-        EntityPlayer entity = this.getEntity();
-        this.group.onPlayerLeave(entity);
         this.group = group;
-        this.group.onPlayerJoin(entity);
     }
 
     public void setTeam(Team team) {
@@ -89,7 +86,7 @@ public class Player {
     }
 
     public void sendChatMessage(String message) {
-        this.getEntity().sendChatToPlayer(ChatMessageComponent.func_111066_d(message));
+        if (this.getEntity() != null) this.getEntity().sendChatToPlayer(ChatMessageComponent.func_111066_d(message));
     }
 
     public void sendPacket(Packet packet) {

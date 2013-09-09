@@ -3,7 +3,6 @@ package jk_5.nailed.map;
 import com.google.common.collect.Sets;
 import jk_5.nailed.config.helper.ConfigFile;
 import jk_5.nailed.config.helper.ConfigTag;
-import jk_5.nailed.players.Player;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.ScorePlayerTeam;
@@ -57,11 +56,6 @@ public class TeamManager {
         spectatorTeam.func_98300_b(true);                          //friendlyinvisibles
         spectatorTeam.func_96666_b(EnumColor.AQUA.toString());     //teamprefix
         spectatorTeam.func_96662_c(EnumColor.RESET.toString());    //teamsuffix
-    }
-
-    @Deprecated
-    public void setPlayerTeam(Player p, Team t) {
-        p.setTeam(t);
     }
 
     public Team getTeam(String teamId) {
