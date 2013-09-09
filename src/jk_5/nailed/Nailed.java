@@ -7,6 +7,7 @@ import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
 import jk_5.nailed.network.IPCClient;
@@ -38,7 +39,7 @@ public class Nailed {
     public static void init(DedicatedServer server) {
         Nailed.server = server;
 
-        server.setMOTD(EnumColor.GREEN + "[Nail]" + EnumColor.RESET + " Ohai!");
+        server.setMOTD(EnumColor.GREEN + "[Nailed]" + EnumColor.RESET + " Well, that escalated quickly!");
 
         eventBus.register(new NailedEventListener());
         eventBus.register(playerRegistry);
@@ -59,8 +60,8 @@ public class Nailed {
     }
 
     public static void onWorldReady() {
-        //Map map1 = mapLoader.createWorld(mapLoader.getMappack("nail"));
-        //Map map2 = mapLoader.createWorld(mapLoader.getMappack("nail"));
+        Map map1 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
+        Map map2 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
 
         //WorldServer world1 = Nailed.multiworldManager.createNewMapDimension(1);
         //Nailed.multiworldManager.prepareSpawnForWorld(1);

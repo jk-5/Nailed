@@ -1,6 +1,6 @@
 package jk_5.nailed.map;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import jk_5.nailed.config.helper.ConfigFile;
 import jk_5.nailed.config.helper.ConfigTag;
 import jk_5.nailed.players.Player;
@@ -20,8 +20,7 @@ import java.util.Set;
 public class TeamManager {
 
     private final Map map;
-    private java.util.Map<String, Team> teams = Maps.newHashMap();
-    private java.util.Map<String, Team> playerTeamMap = Maps.newHashMap();
+    private Set<Team> teams = Sets.newHashSet();
 
     public ScorePlayerTeam spectatorTeam;
 
@@ -33,12 +32,12 @@ public class TeamManager {
         ConfigFile conf = this.map.getMappack().getConfig();
         List<ConfigTag> teams = conf.getTag("teams").getSortedTagList();
         if (teams == null) return;
-        Scoreboard s = this.map.getHandle().getScoreboard();
+        Scoreboard s = this.map.getWorld().getScoreboard();
         for (ConfigTag tag : teams) {
             EnumColor color = EnumColor.valueOf(tag.getTag("color").getValue("white").toUpperCase());
             String name = tag.getTag("name").getValue("");
             Team team = new Team(name, tag.name(), color);
-            this.teams.put(tag.name(), team);
+            this.teams.add(team);
             ScorePlayerTeam scoreboardTeam = s.func_96527_f(tag.name());                            //teamid
             scoreboardTeam.func_96664_a(name);                                                      //teamname
             scoreboardTeam.func_96660_a(tag.getTag("frienlyfire").getBooleanValue(false));          //friendlyfire
@@ -51,7 +50,7 @@ public class TeamManager {
     }
 
     private void createSpectatorTeam() {
-        Scoreboard s = this.map.getHandle().getScoreboard();
+        Scoreboard s = this.map.getWorld().getScoreboard();
         spectatorTeam = s.func_96527_f("spectator");
         spectatorTeam.func_96664_a("Spectator");                   //teamname
         spectatorTeam.func_96660_a(false);                         //friendlyfire
@@ -60,27 +59,25 @@ public class TeamManager {
         spectatorTeam.func_96662_c(EnumColor.RESET.toString());    //teamsuffix
     }
 
-    public Team getTeamFromPlayer(Player player) {
-        if (!this.playerTeamMap.containsKey(player.getUsername())) return Team.UNKNOWN;
-        else return this.playerTeamMap.get(player.getUsername());
-    }
-
+    @Deprecated
     public void setPlayerTeam(Player p, Team t) {
-        Team current = this.playerTeamMap.get(p.getUsername());
-        if (current != null) {
-            this.playerTeamMap.remove(p.getUsername());
-            this.map.getHandle().getScoreboard().func_96524_g(p.getUsername()); //leave
-        }
-        if (t.scoreboardTeam != null)
-            this.map.getHandle().getScoreboard().func_96521_a(p.getUsername(), t.scoreboardTeam);
-        this.playerTeamMap.put(p.getUsername(), t);
+        p.setTeam(t);
     }
 
     public Team getTeam(String teamId) {
-        return this.teams.get(teamId);
+        for (Team team : this.teams) {
+            if (team.getTeamID().equals(teamId)) {
+                return team;
+            }
+        }
+        return null;
     }
 
     public Set<String> getTeamNames() {
-        return this.teams.keySet();
+        Set<String> names = Sets.newHashSet();
+        for (Team team : this.teams) {
+            names.add(team.getTeamID());
+        }
+        return names;
     }
 }

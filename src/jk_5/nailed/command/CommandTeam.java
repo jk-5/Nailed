@@ -58,7 +58,7 @@ public class CommandTeam extends CommandBase {
                 else {
                     p.sendChatMessage(EnumColor.GREEN + "You have been removed from the team " + p.getTeam().getColor() + p.getTeam().getName());
                     sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Player " + p.getUsername() + " was removed from the team " + p.getTeam().getColor() + p.getTeam().getName()));
-                    currentMap.getTeamManager().setPlayerTeam(p, Team.UNKNOWN);
+                    p.setTeam(Team.UNKNOWN);
                 }
             }
         } else if (args.length == 3) {
@@ -68,7 +68,7 @@ public class CommandTeam extends CommandBase {
                 if (p == null) throw new CommandException("Player " + args[1] + " was not found");
                 if (t == null) throw new CommandException("Team " + args[2] + " was not found");
                 else {
-                    currentMap.getTeamManager().setPlayerTeam(p, t);
+                    p.setTeam(Team.UNKNOWN);
                     p.sendChatMessage(EnumColor.GREEN + "You have been added to the team " + p.getTeam().getColor() + p.getTeam().getName());
                     sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(EnumColor.GREEN + "Player " + p.getUsername() + " was added to the team " + p.getTeam().getColor() + p.getTeam().getName()));
                 }

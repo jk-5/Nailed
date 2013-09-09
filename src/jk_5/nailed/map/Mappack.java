@@ -42,18 +42,24 @@ public class Mappack {
         instructionMap.put("clearinventory", InstructionClearInventory.class);
         instructionMap.put("setgamemode", InstructionSetGamemode.class);
         instructionMap.put("moveteamspeak", InstructionMoveTeamspeak.class);
+        instructionMap.put("settime", InstructionSetTime.class);
+        instructionMap.put("setdifficulty", InstructionSetDifficulty.class);
+        instructionMap.put("clearexperience", InstructionResetExperience.class);
+        instructionMap.put("sethealth", InstructionSetHealth.class);
+        instructionMap.put("setfoodlevel", InstructionSetFoodLevel.class);
     }
 
     private final List<IInstruction> instructions = Lists.newArrayList();
 
     private final int UID = nextId.getAndIncrement();
-    private final String name;
+    private final String internalName;
     private final File mappackFile;
 
     private ConfigFile config;
 
     private EnumGameType defaultGamemode;
     private int difficulty;
+    private String mapName;
     private boolean spawnHostileMobs;
     private boolean spawnFriendlyMobs;
 
@@ -63,7 +69,7 @@ public class Mappack {
 
     public Mappack(File mapfile) {
         this.mappackFile = mapfile;
-        this.name = mapfile.getName().split(".mappack", 2)[0];
+        this.internalName = mapfile.getName().split(".mappack", 2)[0];
     }
 
     public void setupSettings() {
@@ -74,6 +80,7 @@ public class Mappack {
         this.spawnX = config.getTag("spawnpoint").getTag("x").getIntValue(0);
         this.spawnY = config.getTag("spawnpoint").getTag("y").getIntValue(0);
         this.spawnZ = config.getTag("spawnpoint").getTag("z").getIntValue(0);
+        this.mapName = config.getTag("name").getValue(this.internalName);
         if (this.defaultGamemode == EnumGameType.NOT_SET) this.defaultGamemode = EnumGameType.SURVIVAL;
 
         Nailed.server.setAllowPvp(config.getTag("map").getTag("pvp").getBooleanValue(true));
@@ -150,8 +157,12 @@ public class Mappack {
         return this.UID;
     }
 
-    public String getName() {
-        return this.name;
+    public String getInternalName() {
+        return this.internalName;
+    }
+
+    public String getMapName() {
+        return this.mapName;
     }
 
     public ConfigFile getConfig() {

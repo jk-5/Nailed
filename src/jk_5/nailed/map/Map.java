@@ -1,9 +1,15 @@
 package jk_5.nailed.map;
 
+import com.beust.jcommander.internal.Lists;
+import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gameloop.GameThread;
 import jk_5.nailed.players.Player;
+import jk_5.nailed.util.EnumColor;
+import net.minecraft.src.EntityPlayerMP;
+import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.WorldServer;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -27,7 +33,7 @@ public class Map {
         this.teamManager = new TeamManager(this);
     }
 
-    public WorldServer getHandle() {
+    public WorldServer getWorld() {
         return this.world;
     }
 
@@ -44,7 +50,7 @@ public class Map {
     }
 
     public String getFolderName() {
-        return "map" + this.getUID() + this.getMappack().getName();
+        return "map" + this.getUID() + this.getMappack().getInternalName();
     }
 
     public GameThread getGameThread() {
@@ -56,21 +62,35 @@ public class Map {
         this.teamManager.setupTeams();
     }
 
-    public void travelPlayerToMap(Player player) {
-        /*EntityPlayerMP entity = player.getEntity();
-        ServerConfigurationManager confManager = Nailed.server.getConfigurationManager();
+    public List<Player> getPlayers() {
+        List<Player> players = Lists.newArrayList();
+        for (Player p : Nailed.playerRegistry.getPlayers()) {
+            if (p.getCurrentMap() == this) players.add(p);
+        }
+        return players;
+    }
 
-        entity.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(entity);
+    public void sendMessageToAllPlayers(String message) {
+        for (Player player : this.getPlayers()) {
+            player.sendChatMessage(EnumColor.GREEN + "[" + this.mappack.getMapName() + "]" + EnumColor.RESET + " " + message);
+        }
+    }
+
+    public void travelPlayerToMap(Player player) {
+        EntityPlayerMP entity = player.getEntity();
+        ServerConfigurationManager confManager = Nailed.server.getConfigurationManager();
+        confManager.recreatePlayerEntity(entity, 0, true, this);
+        /*entity.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(entity);
         entity.getServerForPlayer().getPlayerManager().removePlayer(entity);
         confManager.playerEntityList.remove(entity);
 
-        player.getCurrentMap().getHandle().removeEntity(entity);
+        player.getCurrentMap().getWorld().removeEntity(entity);
 
 
 
 
 
-        EntityPlayerMP newPlayer = new EntityPlayerMP(Nailed.server, Nailed.server.worldServerForDimension(entity.dimension), entity.getCommandSenderName(), new ItemInWorldManager(player.getCurrentMap().getHandle()));
+        EntityPlayerMP newPlayer = new EntityPlayerMP(Nailed.server, Nailed.server.worldServerForDimension(entity.dimension), entity.getCommandSenderName(), new ItemInWorldManager(player.getCurrentMap().getWorld()));
         newPlayer.playerNetServerHandler = entity.playerNetServerHandler;
         newPlayer.clonePlayer(entity, true); //TODO: maybe false
         newPlayer.entityId = entity.entityId;
@@ -118,7 +138,7 @@ public class Map {
         packet.respawnDimension = 0;
         player.sendPacket(packet);*/
 
-        /*WorldServer current = player.getCurrentMap().getHandle();
+        /*WorldServer current = player.getCurrentMap().getWorld();
         WorldServer destination = this.world;
 
         current.removeEntity(entity);
@@ -136,6 +156,11 @@ public class Map {
         player.setCurrentMap(this);
         entity.isDead = true;
         current.resetUpdateEntityTick();
-        destination.resetUpdateEntityTick();*/
+        destination.resetUpdateEntityTick();
+
+        player.sendPacket(new Packet9Respawn(-1, (byte) destination.difficultySetting, WorldType.FLAT, 256, destination.getWorldInfo().getGameType()));
+        player.sendPacket(new Packet9Respawn(0, (byte) destination.difficultySetting, WorldType.FLAT, 256, destination.getWorldInfo().getGameType()));
+        player.sendPacket(new Packet6SpawnPosition(destination.getSpawnPoint().posX, destination.getSpawnPoint().posY, destination.getSpawnPoint().posZ));
+        */
     }
 }

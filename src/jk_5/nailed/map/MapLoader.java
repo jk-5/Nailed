@@ -24,41 +24,41 @@ public class MapLoader {
     private final List<Mappack> mappacks = Lists.newArrayList();        //Loaded mappacks, no fancy data
     private final List<WorldServer> handles = Lists.newArrayList();     //List of loaded worlds                             -> console.worlds
 
-    public MapLoader(){
-        if(!mappackFolder.exists()) mappackFolder.mkdirs();
+    public MapLoader() {
+        if (!mappackFolder.exists()) mappackFolder.mkdirs();
         MapMaker maker = new MapMaker();
         maker.weakKeys();
     }
 
-    public void loadMaps(){
+    public void loadMaps() {
         this.mappacks.clear();
-        for(File file : mappackFolder.listFiles(new FilenameFilter(){
-            public boolean accept(File file, String name){
+        for (File file : mappackFolder.listFiles(new FilenameFilter() {
+            public boolean accept(File file, String name) {
                 return name.endsWith(".mappack");
             }
-        })){
+        })) {
             Mappack pack = new Mappack(file);
             this.mappacks.add(pack);
             pack.readConfig();
         }
     }
 
-    private File worldFolderForMap(Map map){
-        return new File(mapsFolder, "map" + map.getUID() + map.getMappack().getName());
+    private File worldFolderForMap(Map map) {
+        return new File(mapsFolder, "map" + map.getUID() + map.getMappack().getInternalName());
     }
 
-    public Map getMap(int uid){
-        for(Map map : this.maps){
-            if(map.getUID() == uid){
+    public Map getMap(int uid) {
+        for (Map map : this.maps) {
+            if (map.getUID() == uid) {
                 return map;
             }
         }
         return null;
     }
 
-    public Mappack getMappackFromUID(int uid){
-        for(Mappack map : this.mappacks){
-            if(map.getUID() == uid){
+    public Mappack getMappackFromUID(int uid) {
+        for (Mappack map : this.mappacks) {
+            if (map.getUID() == uid) {
                 return map;
             }
         }
@@ -66,19 +66,19 @@ public class MapLoader {
     }
 
     //CraftServer -> createWorld
-    public Map createWorld(Mappack mappack){
+    public Map createWorld(Mappack mappack) {
         Map map = new Map(mappack);
         System.out.println(map.getUID());
         System.out.println(map.getMappack());
-        System.out.println(map.getMappack().getName());
+        System.out.println(map.getMappack().getInternalName());
         File folder = this.worldFolderForMap(map);
         mappack.unpackMappack(folder);
-        if(this.getMap(map.getUID()) != null) return map;
+        if (this.getMap(map.getUID()) != null) return map;
         if ((folder.exists()) && (!folder.isDirectory())) {
             throw new IllegalArgumentException("File exists with the name '" + folder.getName() + "' and isn't a folder");
         }
         AnvilSaveConverter converter = new AnvilSaveConverter(mapsFolder);
-        if(converter.isOldMapFormat("map" + map.getFolderName())){
+        if (converter.isOldMapFormat("map" + map.getFolderName())) {
             System.out.println("Converting world '" + map.getFolderName() + "'");
             converter.convertMapFormat(map.getFolderName(), new ConvertingProgressUpdate(Nailed.server));
         }
@@ -119,10 +119,10 @@ public class MapLoader {
     }
 
     //CraftServer -> unloadWorld
-    public boolean unloadWorld(Map map, boolean save){
+    public boolean unloadWorld(Map map, boolean save) {
         if (map == null) return false;
 
-        WorldServer handle = map.getHandle();
+        WorldServer handle = map.getWorld();
 
         if (!this.handles.contains(handle)) return false;
 
@@ -143,9 +143,9 @@ public class MapLoader {
         return true;
     }
 
-    public Mappack getMappack(String name){
-        for(Mappack m : this.mappacks){
-            if(m.getName().equals(name)){
+    public Mappack getMappack(String name) {
+        for (Mappack m : this.mappacks) {
+            if (m.getInternalName().equals(name)) {
                 return m;
             }
         }
@@ -160,23 +160,23 @@ public class MapLoader {
         Nailed.server.setFolderName("maps/" + this.lobby.getFolderName());
     }
 
-    public void setupMapSettings(){
+    public void setupMapSettings() {
         this.lobby.setWorldServer(Nailed.server.worldServerForDimension(0));
-        for(Mappack pack : mappacks){
+        for (Mappack pack : mappacks) {
             pack.setupSettings();
         }
     }
 
-    public Map getMapFromWorld(WorldServer world){
-        for(Map m : this.maps){
-            if(m.getHandle() == world){
+    public Map getMapFromWorld(WorldServer world) {
+        for (Map m : this.maps) {
+            if (m.getWorld() == world) {
                 return m;
             }
         }
         return null;
     }
 
-    public Map getLobby(){
+    public Map getLobby() {
         return this.lobby;
     }
 }

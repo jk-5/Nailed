@@ -20,7 +20,7 @@ public class Player {
     private String username;
     private TeamspeakClient teamspeakClient;
     private Map currentMap;
-
+    private Team team = Team.UNKNOWN;
     private Group group = Nailed.groupRegistry.getDefaultGroup();
     private boolean spectator = false;
 
@@ -66,8 +66,18 @@ public class Player {
         this.group.onPlayerJoin(entity);
     }
 
+    public void setTeam(Team team) {
+        if (this.team != null) {
+            this.currentMap.getWorld().getScoreboard().func_96524_g(this.username); //leave
+        }
+        if (team.scoreboardTeam != null) {
+            this.currentMap.getWorld().getScoreboard().func_96521_a(this.username, team.scoreboardTeam);
+        }
+        this.team = team;
+    }
+
     public Team getTeam() {
-        return this.currentMap.getTeamManager().getTeamFromPlayer(this);
+        return this.team;
     }
 
     public String getChatFormattedName() {

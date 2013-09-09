@@ -3,7 +3,6 @@ package jk_5.nailed.command;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.players.Player;
 import net.minecraft.src.CommandBase;
-import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.ICommandSender;
 
 /**
@@ -31,7 +30,7 @@ public class CommandNewWorld extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         Player p = Nailed.playerRegistry.getPlayer(sender.getCommandSenderName());
-        if(p == null) return;
+        if (p == null) return;
         Nailed.mapLoader.getMap(Integer.parseInt(args[0])).travelPlayerToMap(p);
     }
 }
