@@ -4,8 +4,6 @@ import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gameloop.GameThread;
 import jk_5.nailed.map.gameloop.ITimedInstruction;
 import jk_5.nailed.players.Player;
-import jk_5.nailed.util.EnumColor;
-import jk_5.nailed.util.ServerUtils;
 
 /**
  * Counts down a specific amount of time with the given message
@@ -35,9 +33,9 @@ public class InstructionCountdown implements ITimedInstruction {
     }
 
     @Override
-    public boolean shouldContinue(int ticks) {
+    public boolean shouldContinue(GameThread controller, int ticks) {
         if ((this.ticks - ticks) == 60 || (this.ticks - ticks) == 30 || (this.ticks - ticks) == 20 || (this.ticks - ticks) == 10 || (this.ticks - ticks) <= 5 || ticks % 60 == 0) {
-            ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.RESET + String.format(message, formatSeconds(this.ticks - ticks)));
+            controller.getMap().sendMessageToAllPlayers(String.format(message, formatSeconds(this.ticks - ticks)));
             if ((this.ticks - ticks) <= 5) {
                 for (Player player : Nailed.playerRegistry.getPlayers()) {
                     player.playSound("note.harp", 1.5f, (this.ticks - ticks) == 0 ? 2 : 1);

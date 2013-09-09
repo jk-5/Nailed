@@ -7,5 +7,5 @@ package jk_5.nailed.map.gameloop;
  */
 public interface ITimedInstruction extends IInstruction {
 
-    public boolean shouldContinue(int ticks);
+    public boolean shouldContinue(GameThread controller, int ticks);
 }

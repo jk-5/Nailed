@@ -6,6 +6,7 @@ import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -33,43 +34,35 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
+        if (this.instructions.size() == 0) return;
         this.gameRunning = true;
         IInstruction current = null;
-        int ticks = 0;
-        int instructionIndex = 0;
+        Iterator<IInstruction> iterator = this.instructions.iterator();
         try {
-            while (this.winner == null) {
-                if (current == null) current = this.instructions.get(instructionIndex);
+            while (this.winner == null && iterator.hasNext()) {
+                current = iterator.next();
                 if (current instanceof ITimedInstruction) {
-                    if (((ITimedInstruction) current).shouldContinue(ticks)) {
-                        current = this.instructions.get(++instructionIndex);
-                        if (this.winner != null) return;
-                        ticks = -1;
+                    int ticks = 0;
+                    ITimedInstruction timer = (ITimedInstruction) current;
+                    while (!timer.shouldContinue(this, ticks)) {
+                        ticks++;
+                        Thread.sleep(1000);
                     }
-                } else {
-                    current.execute(this);
-                    if (this.winner != null) return;
-                    current = this.instructions.get(++instructionIndex);
-                    ticks = -1;
-                }
-                ticks++;
-                if (current instanceof ITimedInstruction) Thread.sleep(1000);
+                } else current.execute(this);
             }
         } catch (Exception e) {
-            ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
+            ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + e.getClass().getName() + " was thrown in the game loop. Game cancelled!");
             if (current != null)
                 ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction: " + current.getClass().getName());
             else
                 ServerUtils.broadcastChatMessage(EnumColor.RED.toString() + "Current instruction is null! (Wow, that\'s weired!)");
-            System.err.println(e.getClass().getName() + " was thrown in the game startup loop. Game cancelled!");
+            System.err.println(e.getClass().getName() + " was thrown in the game loop. Game cancelled!");
             e.printStackTrace();
         }
-        for (Player p : Nailed.playerRegistry.getPlayers()) {
+        for (Player p : this.map.getPlayers()) {
             if (p.getEntity() != null) p.getEntity().setSpawnChunk(null, false);
-        }
-        for (Player p : Nailed.playerRegistry.getPlayers()) {
-            if (p.getTeamspeakClient() == null) continue;
-            Nailed.teamspeak.moveClientToChannel(p.getTeamspeakClient(), 14); //FIXME! lobby!
+            if (Nailed.teamspeak.isEnabled() && p.getTeamspeakClient() != null)
+                Nailed.teamspeak.moveClientToChannel(p.getTeamspeakClient(), 14); //FIXME: lobby!
         }
         this.gameRunning = false;
     }
@@ -91,10 +84,9 @@ public class GameThread extends Thread {
     }
 
     public void setWinner(Team team) {
-        if (this.winner != null) return;
-        if (!this.interruptWin) return;
+        if (this.winner != null && !this.interruptWin) return;
         this.winner = team;
         Nailed.statManager.enableStat("gamewon");
-        ServerUtils.broadcastChatMessage(EnumColor.GREEN + "[Nail] " + EnumColor.GOLD + " Winning team: " + winner.toString());
+        this.getMap().sendMessageToAllPlayers(EnumColor.GOLD + "Winning team: " + winner.toString());
     }
 }
