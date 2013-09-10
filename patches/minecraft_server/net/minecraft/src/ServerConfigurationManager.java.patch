@@ -42,7 +42,7 @@
        this.writePlayerData(par1EntityPlayerMP);
        WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
        if(par1EntityPlayerMP.ridingEntity != null) {
-@@ -236,56 +239,59 @@
+@@ -236,56 +239,62 @@
     }
  
     public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP par1EntityPlayerMP, int par2, boolean par3) {
@@ -101,44 +101,48 @@
 +
 +   public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP entityPlayerMP, int par2, boolean par3, jk_5.nailed.map.Map map) {
 +      entityPlayerMP.getServerForPlayer().getEntityTracker().removePlayerFromTrackers(entityPlayerMP);
-+      //entityPlayerMP.getServerForPlayer().getEntityTracker().untrackEntity(entityPlayerMP); //Nailed disable
 +      entityPlayerMP.getServerForPlayer().getPlayerManager().removePlayer(entityPlayerMP);
 +      this.playerEntityList.remove(entityPlayerMP);
 +      this.mcServer.worldServerForDimension(entityPlayerMP.dimension).removePlayerEntityDangerously(entityPlayerMP);
-+      //Nailed start
-+      EntityPlayerMP entityPlayerMP1 = entityPlayerMP;
-+      jk_5.nailed.map.Map fromMap = Nailed.mapLoader.getMapFromWorld(entityPlayerMP1.getServerForPlayer());
++      EntityPlayerMP entityPlayerMP1 = new EntityPlayerMP(this.mcServer, this.mcServer.worldServerForDimension(entityPlayerMP.dimension), entityPlayerMP.getCommandSenderName(), entityPlayerMP.theItemInWorldManager);
++      entityPlayerMP1.playerNetServerHandler = entityPlayerMP.playerNetServerHandler;
 +      entityPlayerMP1.playerConqueredTheEnd = false;
 +      entityPlayerMP1.clonePlayer(entityPlayerMP, par3);
++      jk_5.nailed.map.Map fromMap = Nailed.mapLoader.getMapFromWorld(entityPlayerMP1.getServerForPlayer());
 +
 +      jk_5.nailed.map.Map toMap = map == null ? fromMap : map;
 +      WorldServer toWorld = toMap.getWorld();
-+      ChunkCoordinates spawnpoint = toMap.getMappack().getSpawnPoint();
-+      if(entityPlayerMP1.isSpawnForced()){
-+          spawnpoint = entityPlayerMP1.getBedLocation();
++      ChunkCoordinates checkingSpawn = entityPlayerMP.getBedLocation();
++      ChunkCoordinates spawnpoint;
++      if(checkingSpawn != null){
++         spawnpoint = EntityPlayer.verifyRespawnCoordinates(toWorld, checkingSpawn, entityPlayerMP.isSpawnForced());
++         if(spawnpoint != null){
++            entityPlayerMP1.setLocationAndAngles((double)(spawnpoint.posX + 0.5F), (double)(spawnpoint.posY + 0.1F), (double)(spawnpoint.posZ + 0.5F), 0.0F, 0.0F);
++            entityPlayerMP1.setSpawnChunk(checkingSpawn, entityPlayerMP.isSpawnForced());
++         }else{
++            entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet70GameEvent(0, 0));
++         }
 +      }
-+      entityPlayerMP1.setPositionAndRotation(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ, 0f, 0f);
-+      //Nailed end
-+      toWorld.theChunkProviderServer.loadChunk((int)entityPlayerMP1.posX >> 4, (int)entityPlayerMP1.posZ >> 4);
 +
++      toWorld.theChunkProviderServer.loadChunk((int)entityPlayerMP1.posX >> 4, (int)entityPlayerMP1.posZ >> 4);
++      spawnpoint = toWorld.getSpawnPoint();
 +      while(!toWorld.getCollidingBoundingBoxes(entityPlayerMP1, entityPlayerMP1.boundingBox).isEmpty()) {
 +          entityPlayerMP1.setPosition(entityPlayerMP1.posX, entityPlayerMP1.posY + 1.0D, entityPlayerMP1.posZ);
 +      }
++      entityPlayerMP1.playerNetServerHandler.setPlayerLocation(entityPlayerMP1.posX, entityPlayerMP1.posY, entityPlayerMP1.posZ, entityPlayerMP1.rotationYaw, entityPlayerMP1.rotationPitch);
 +      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet9Respawn(-1, (byte)entityPlayerMP1.worldObj.difficultySetting, entityPlayerMP1.worldObj.getWorldInfo().getTerrainType(), entityPlayerMP1.worldObj.getHeight(), entityPlayerMP1.theItemInWorldManager.getGameType())); //Nailed add
 +      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet9Respawn(0, (byte)entityPlayerMP1.worldObj.difficultySetting, entityPlayerMP1.worldObj.getWorldInfo().getTerrainType(), entityPlayerMP1.worldObj.getHeight(), entityPlayerMP1.theItemInWorldManager.getGameType()));
 +      entityPlayerMP1.setWorld(toWorld);
 +      entityPlayerMP1.isDead = false;
 +      entityPlayerMP1.setSneaking(false);
-+      if(map == null) entityPlayerMP1.setEntityHealth(20);
-+      //Nailed End
++      //if(map == null) entityPlayerMP1.setEntityHealth(20);
 +      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet6SpawnPosition(spawnpoint.posX, spawnpoint.posY, spawnpoint.posZ));
 +      entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet43Experience(entityPlayerMP1.experience, entityPlayerMP1.experienceTotal, entityPlayerMP1.experienceLevel));
++      entityPlayerMP1.playerNetServerHandler.setPlayerLocation(entityPlayerMP1.posX, entityPlayerMP1.posY, entityPlayerMP1.posZ, entityPlayerMP1.rotationYaw, entityPlayerMP1.rotationPitch);
 +      this.updateTimeAndWeatherForPlayer(entityPlayerMP1, toWorld);
 +      toWorld.getPlayerManager().addPlayer(entityPlayerMP1);
 +      toWorld.spawnEntityInWorld(entityPlayerMP1);
 +      this.playerEntityList.add(entityPlayerMP1);
-+      //entityPlayerMP1.addSelfToInternalCraftingInventory();
-+      //Nailed start - Added from changeDimension
 +      this.syncPlayerInventory(entityPlayerMP1);
 +      entityPlayerMP1.sendPlayerAbilities();
 +      Iterator iterator = entityPlayerMP1.getActivePotionEffects().iterator();
@@ -146,13 +150,12 @@
 +         PotionEffect effect = (PotionEffect) iterator.next();
 +         entityPlayerMP1.playerNetServerHandler.sendPacket(new Packet41EntityEffect(entityPlayerMP1.entityId, effect));
 +      }
-+      //Nailed end
 +      entityPlayerMP1.setEntityHealth(entityPlayerMP1.func_110143_aJ());
 +      return entityPlayerMP1;
     }
  
     public void transferPlayerToDimension(EntityPlayerMP par1EntityPlayerMP, int par2) {
-@@ -426,21 +432,13 @@
+@@ -426,21 +435,13 @@
        return this.bannedIPs;
     }
  
@@ -176,7 +179,7 @@
     }
  
     public EntityPlayerMP getPlayerEntity(String par1Str) {
-@@ -592,10 +590,6 @@
+@@ -592,10 +593,6 @@
        return this.whiteListedPlayers;
     }
  
