@@ -65,6 +65,10 @@ public class MapLoader {
         return null;
     }
 
+    public Map getMap(ICommandSender sender){
+        return this.getMapFromWorld((WorldServer) sender.func_130014_f_());
+    }
+
     //CraftServer -> createWorld
     public Map createWorld(Mappack mappack) {
         Map map = new Map(mappack);

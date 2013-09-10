@@ -58,6 +58,7 @@ public class TeamspeakManager implements TeamspeakActionListener {
             System.out.println("Error while moving " + client.getNickname());
             System.out.println(server.getLastError());
         }
+        this.refreshClientList();
     }
 
     private void refreshClientList() {
