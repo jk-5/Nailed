@@ -54,7 +54,7 @@ public class TeamspeakManager implements TeamspeakActionListener {
     }
 
     public void moveClientToChannel(TeamspeakClient client, int channelID) {
-        if (server.moveClient(client.getClientID(), channelID, null)) {
+        if (!server.moveClient(client.getClientID(), channelID, null)) {
             System.out.println("Error while moving " + client.getNickname());
             System.out.println(server.getLastError());
         }
