@@ -47,6 +47,7 @@ public class Player {
     }
 
     public void setTeamspeakClient(TeamspeakClient ts) {
+        if(!Nailed.teamspeak.isEnabled()) return;
         this.teamspeakClient = ts;
         if (this.teamspeakClient != null) {
             this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakClient.getNickname());
