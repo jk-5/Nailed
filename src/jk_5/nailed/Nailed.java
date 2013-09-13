@@ -57,7 +57,7 @@ public class Nailed {
         irc.connect();
         ipc.start();
 
-        //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
+        teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
     }
 

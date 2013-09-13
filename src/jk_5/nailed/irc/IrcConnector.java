@@ -90,6 +90,8 @@ public class IrcConnector extends PircBot implements Runnable {
     @Override
     public void run() {
         try {
+            this.setVersion("Nailed pvp server, version 0.2.1");
+            this.setLogin("Nailed-Server");
             this.setName("Nailed-Server");
             this.connect(this.server, this.port, this.serverPassword);
             this.joinChannel(this.channel, this.channelPass);
