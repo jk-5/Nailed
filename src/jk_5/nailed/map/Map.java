@@ -1,6 +1,6 @@
 package jk_5.nailed.map;
 
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.map.gameloop.GameThread;
 import jk_5.nailed.players.Player;

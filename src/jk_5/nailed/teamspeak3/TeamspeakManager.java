@@ -1,6 +1,6 @@
 package jk_5.nailed.teamspeak3;
 
-import com.beust.jcommander.internal.Lists;
+import com.google.common.collect.Lists;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.teamspeak3.api.JTS3ServerQuery;
 import jk_5.nailed.teamspeak3.api.TeamspeakActionListener;
