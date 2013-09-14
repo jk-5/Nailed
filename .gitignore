@@ -2,9 +2,9 @@
 *.sw[op]
 *.iml
 .DS_Store
-.idea
-lib
 out
 mcp
 runtime
 mcp.zip
+
+.idea/gradle.xml
