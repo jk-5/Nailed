@@ -44,7 +44,7 @@ public class GameThread extends Thread {
                 if (current instanceof ITimedInstruction) {
                     int ticks = 0;
                     ITimedInstruction timer = (ITimedInstruction) current;
-                    while (!timer.shouldContinue(this, ticks)) {
+                    while (!timer.shouldContinue(this, ticks) && this.winner == null) {
                         ticks++;
                         Thread.sleep(1000);
                     }
