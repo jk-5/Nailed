@@ -14,7 +14,7 @@
        this.theItemInWorldManager = par4ItemInWorldManager;
        this.renderDistance = par1MinecraftServer.getConfigurationManager().getViewDistance();
 -      ChunkCoordinates var5 = par2World.getSpawnPoint();
-+      ChunkCoordinates var5 = NailedEventFactory.getSpawnPoint(par2World);
++      ChunkCoordinates var5 = NailedEventFactory.getSpawnPoint(this);
        int var6 = var5.posX;
        int var7 = var5.posZ;
        int var8 = var5.posY;
@@ -27,3 +27,12 @@
  
        this.mcServer = par1MinecraftServer;
        this.stepHeight = 0.0F;
+@@ -244,7 +240,7 @@
+    }
+ 
+    public boolean func_96122_a(EntityPlayer par1EntityPlayer) {
+-      return !this.mcServer.isPVPEnabled()?false:super.func_96122_a(par1EntityPlayer);
++       return !NailedEventFactory.canPlayerAttackPlayer(this, par1EntityPlayer) ? false:(!this.mcServer.isPVPEnabled()?false:super.func_96122_a(par1EntityPlayer));
+    }
+ 
+    public void travelToTheEnd(int par1) {

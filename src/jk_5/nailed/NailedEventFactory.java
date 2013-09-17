@@ -38,8 +38,23 @@ public class NailedEventFactory {
         return map.getSpawnPoint();
     }
 
+    public static ChunkCoordinates getSpawnPoint(EntityPlayerMP playerEntity) {
+        Player player = Nailed.playerRegistry.getPlayer(playerEntity.getCommandSenderName());
+        ChunkCoordinates spawn = getSpawnPoint(playerEntity.getServerForPlayer());
+        if(player != null && player.getTeam() != null && player.getTeam().shouldOverrideSpawnpoint()){
+            spawn = player.getTeam().getSpawnpoint();
+        }
+        return spawn;
+    }
+
     public static boolean canPlayerPickup(EntityPlayer entity) {
         return !Nailed.playerRegistry.getPlayer(entity.getCommandSenderName()).isSpectator();
+    }
+
+    public static boolean canPlayerAttackPlayer(EntityPlayerMP attacker, EntityPlayer dest){
+        Player player = Nailed.playerRegistry.getPlayer(attacker.getCommandSenderName());
+        if(player == null) return false;
+        return !player.isSpectator();
     }
 
     public static void flushWorlds() {

@@ -27,11 +27,6 @@ public class InstructionSetSpawnpoint implements IInstruction {
     @Override
     public void execute(GameThread controller) throws InterruptedException {
         Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        for (Player p : Nailed.playerRegistry.getPlayers()) {
-            if (p.getEntity() == null) continue;
-            if (p.getTeam() == team) {
-                p.getEntity().setSpawnChunk(this.coordinates, true);
-            }
-        }
+        team.setSpawnpoint(this.coordinates);
     }
 }

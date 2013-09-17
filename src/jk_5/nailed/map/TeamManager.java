@@ -36,6 +36,7 @@ public class TeamManager {
             EnumColor color = EnumColor.valueOf(tag.getTag("color").getValue("white").toUpperCase());
             String name = tag.getTag("name").getValue("");
             Team team = new Team(name, tag.name(), color);
+            team.setMap(this.map);
             this.teams.add(team);
             ScorePlayerTeam scoreboardTeam = s.func_96527_f(tag.name());                            //teamid
             scoreboardTeam.func_96664_a(name);                                                      //teamname

@@ -86,7 +86,7 @@ public class Mappack {
         Nailed.server.setAllowPvp(config.getTag("map").getTag("pvp").getBooleanValue(true));
         Nailed.server.setTexturePack(config.getTag("texturepackUrl").getValue(""));
         Nailed.server.setAllowFlight(true);
-        Nailed.server.func_104055_i(true);  //setForceGamemode
+        Nailed.server.func_104055_i(false);  //setForceGamemode
     }
 
     public void readConfig() throws MappackInitializationException {
