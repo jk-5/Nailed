@@ -83,7 +83,7 @@ public class Player {
     }
 
     public String formatChatMessage(String message) {
-        return String.format("%s%s%s%s%s[%s%s] %s", this.getTeam().toChatFormatString(), this.spectator ? EnumColor.AQUA + "[Spectator] " : "", EnumColor.GREY, this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
+        return String.format("%s%s%s%s%s%s[%s%s] %s", this.getTeam().toChatFormatString(), (this.team.getTeamLeader() == null) ? "" : EnumColor.PURPLE + "[Teamleader] " + EnumColor.GREY, this.spectator ? EnumColor.AQUA + "[Spectator] " : "", EnumColor.GREY, this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
     }
 
     public void sendChatMessage(String message) {
@@ -144,5 +144,13 @@ public class Player {
 
     public Map getCurrentMap() {
         return this.currentMap;
+    }
+
+    public boolean isAdmin(){
+        return this.getGroup().getGroupID().equalsIgnoreCase("admin");
+    }
+
+    public boolean isTeamLeader(){
+        return this.team != Team.UNKNOWN && this.team.getTeamLeader() == this;
     }
 }

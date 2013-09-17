@@ -76,6 +76,8 @@ public class Nailed {
         handler.registerCommand(new CommandSpectator());
         handler.registerCommand(new CommandStartGame());
         handler.registerCommand(new CommandBroadcastChat());
+        handler.registerCommand(new CommandTeamleader());
+        handler.registerCommand(new CommandReady());
         if (teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }

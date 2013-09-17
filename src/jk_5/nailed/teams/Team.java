@@ -1,11 +1,14 @@
 package jk_5.nailed.teams;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.Nailed;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.ScorePlayerTeam;
+
+import java.util.List;
 
 /**
  * No description given
@@ -19,6 +22,8 @@ public class Team {
     private String name;
     private String teamId;
     private EnumColor color;
+    private Player leader = null;
+    private boolean ready = false;
     public ScorePlayerTeam scoreboardTeam = null;
 
     private Map map;
@@ -77,5 +82,35 @@ public class Team {
     public ChunkCoordinates getSpawnpoint(){
         if(!this.shouldOverrideSpawnpoint()) return null;
         else return this.spawn;
+    }
+
+    public Player getTeamLeader(){
+        return this.leader;
+    }
+
+    public void setTeamLeader(Player player){
+        this.leader = player;
+    }
+
+    public List<String> getAllPlayerNames(){
+        List<String> ret = Lists.newArrayList();
+        for(Player p : Nailed.playerRegistry.getPlayers()){
+            if(p.getTeam() == this) ret.add(p.getUsername());
+        }
+        return ret;
+    }
+
+    public boolean isReady(){
+        return this.ready;
+    }
+
+    public void setReady(boolean ready){
+        this.ready = ready;
+        if(this.isReady()){
+            this.map.sendMessageToAllPlayers("Team " + this.toString() + " is ready!");
+        }else{
+            this.map.sendMessageToAllPlayers("Team " + this.toString() + " is not ready!");
+        }
+        this.map.getGameThread().notifyReadyUpdate();
     }
 }

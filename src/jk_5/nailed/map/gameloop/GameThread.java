@@ -39,12 +39,12 @@ public class GameThread extends Thread {
         IInstruction current = null;
         Iterator<IInstruction> iterator = this.instructions.iterator();
         try {
-            while (this.winner == null && iterator.hasNext()) {
+            while (this.gameRunning && this.winner == null && iterator.hasNext()) {
                 current = iterator.next();
                 if (current instanceof ITimedInstruction) {
                     int ticks = 0;
                     ITimedInstruction timer = (ITimedInstruction) current;
-                    while (!timer.shouldContinue(this, ticks) && this.winner == null) {
+                    while (this.gameRunning && !timer.shouldContinue(this, ticks) && this.winner == null) {
                         ticks++;
                         Thread.sleep(1000);
                     }
@@ -88,5 +88,18 @@ public class GameThread extends Thread {
         this.winner = team;
         Nailed.statManager.enableStat("gamewon");
         this.getMap().sendMessageToAllPlayers(EnumColor.GOLD + "Winning team: " + winner.toString());
+    }
+
+    public void notifyReadyUpdate(){
+        boolean allReady = true;
+        for(Team team : this.map.getTeamManager().getTeams()){
+            if(!team.isReady()) allReady = false;
+        }
+        if(!allReady && this.watchUnready && this.gameRunning){
+            this.gameRunning = false;
+            this.getMap().sendMessageToAllPlayers("The game was stopped because not all teams are ready");
+        }else if(allReady && !this.gameRunning){
+            this.start();
+        }
     }
 }

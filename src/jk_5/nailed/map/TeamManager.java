@@ -75,4 +75,8 @@ public class TeamManager {
         }
         return names;
     }
+
+    public Set<Team> getTeams(){
+        return this.teams;
+    }
 }
