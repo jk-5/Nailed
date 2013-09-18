@@ -1,0 +1,19 @@
+--- ../src_base/minecraft_server/net/minecraft/src/MemoryConnection.java
++++ ../src_work/minecraft_server/net/minecraft/src/MemoryConnection.java
+@@ -1,6 +1,7 @@
+ package net.minecraft.src;
+ 
+ import java.net.InetSocketAddress;
++import java.net.Socket;
+ import java.net.SocketAddress;
+ import java.util.List;
+ 
+@@ -73,4 +74,8 @@
+          this.readPacketCache.add(par1Packet);
+       }
+    }
++
++   public Socket getSocket(){
++       return null;
++   }
+ }
