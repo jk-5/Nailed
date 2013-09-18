@@ -83,7 +83,7 @@ public class Player {
     }
 
     public String formatChatMessage(String message) {
-        return String.format("%s%s%s%s%s%s[%s%s] %s", this.getTeam().toChatFormatString(), (this.team.getTeamLeader() == null) ? "" : EnumColor.PURPLE + "[Teamleader] " + EnumColor.GREY, this.spectator ? EnumColor.AQUA + "[Spectator] " : "", EnumColor.GREY, this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
+        return String.format("%s%s%s%s%s%s[%s%s] %s", this.getTeam().toChatFormatString(), this.isTeamLeader() ? EnumColor.PURPLE + "[Teamleader] " + EnumColor.GREY : "", this.spectator ? EnumColor.AQUA + "[Spectator] " : "", EnumColor.GREY, this.getGroup().getChatPrefix(), EnumColor.GREY, this.getChatFormattedName(), EnumColor.GREY, message);
     }
 
     public void sendChatMessage(String message) {

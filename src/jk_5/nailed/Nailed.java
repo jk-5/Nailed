@@ -9,7 +9,7 @@ import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
-import jk_5.nailed.network.IPCClient;
+import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakManager;
 import jk_5.nailed.util.EnumColor;
