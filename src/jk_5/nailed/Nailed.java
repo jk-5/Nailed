@@ -9,15 +9,13 @@ import jk_5.nailed.groups.GroupRegistry;
 import jk_5.nailed.irc.IrcConnector;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
-import jk_5.nailed.network.IPCClient;
+import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakManager;
-import jk_5.nailed.util.EnumColor;
 import net.minecraft.src.CommandHandler;
 import net.minecraft.src.DedicatedServer;
 
 import java.io.File;
-import java.util.Random;
 
 /**
  * Main nailed class. Controls the initialization and contains all helpers that are needed for the server
@@ -36,12 +34,8 @@ public class Nailed {
     public static final TeamspeakManager teamspeak = new TeamspeakManager();
     public static DedicatedServer server;
 
-    private static final String motd[] = new String[]{"Well, that escalated quickly!", "Let\'s go!", "Oh well...", "Hello world!", "That\'s me!", "Oh god why!?", "Oh i hate the teams!", "FUCK THIS SHIT!", "I hate you!", "Kill them all!", "Blow it up!", "Fix yo laggz bro!", "Where\'s the enderpearl?", "It\'s opensource!", "Gimme starfall!", EnumColor.RANDOM + "FUNKY SHIT!"};
-
     public static void init(DedicatedServer server) {
         Nailed.server = server;
-
-        server.setMOTD(EnumColor.GREEN + "[Nailed]" + EnumColor.RESET + " " + motd[new Random().nextInt(motd.length - 1)]);
 
         eventBus.register(new NailedEventListener());
         eventBus.register(playerRegistry);
@@ -55,9 +49,9 @@ public class Nailed {
         mapLoader.setupLobby();
 
         irc.connect();
-        ipc.start();
+        //ipc.start();
 
-        teamspeak.setEnabled(false); //Disable it, it's broke like a joke
+        //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
     }
 
@@ -78,6 +72,7 @@ public class Nailed {
         handler.registerCommand(new CommandBroadcastChat());
         handler.registerCommand(new CommandTeamleader());
         handler.registerCommand(new CommandReady());
+        handler.registerCommand(new CommandServerMode());
         if (teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }

@@ -1,6 +1,15 @@
 --- ../src_base/minecraft_server/net/minecraft/src/DedicatedServer.java
 +++ ../src_work/minecraft_server/net/minecraft/src/DedicatedServer.java
-@@ -16,9 +16,8 @@
+@@ -7,6 +7,8 @@
+ import java.util.Collections;
+ import java.util.List;
+ import java.util.Random;
++
++import jk_5.nailed.network.NettyServerHandler;
+ import net.minecraft.server.MinecraftServer;
+ 
+ public class DedicatedServer extends MinecraftServer implements IServer {
+@@ -16,9 +18,8 @@
     private RConThreadMain theRConThreadMain;
     private PropertyManager settings;
     private boolean canSpawnStructures;
@@ -11,7 +20,7 @@
  
     public DedicatedServer(File par1File) {
        super(par1File);
-@@ -44,23 +43,6 @@
+@@ -44,23 +45,6 @@
           this.setHostname(this.settings.getStringProperty("server-ip", ""));
        }
  
@@ -35,7 +44,16 @@
        InetAddress var3 = null;
        if(this.getServerHostname().length() > 0) {
           var3 = InetAddress.getByName(this.getServerHostname());
-@@ -92,36 +74,13 @@
+@@ -75,7 +59,7 @@
+       this.getLogAgent().func_98233_a("Starting Minecraft server on " + (this.getServerHostname().length() == 0?"*":this.getServerHostname()) + ":" + this.getServerPort());
+ 
+       try {
+-         this.networkThread = new DedicatedServerListenThread(this, var3, this.getServerPort());
++         this.networkThread = new NettyServerHandler(this, var3, this.getServerPort());
+       } catch (IOException var16) {
+          this.getLogAgent().func_98236_b("**** FAILED TO BIND TO PORT!");
+          this.getLogAgent().logWarningFormatted("The exception was: {0}", new Object[]{var16.toString()});
+@@ -92,36 +76,13 @@
  
        this.setConfigurationManager(new DedicatedPlayerList(this));
        long var4 = System.nanoTime();
@@ -73,7 +91,7 @@
        long var12 = System.nanoTime() - var4;
        String var14 = String.format("%.3fs", new Object[]{Double.valueOf((double)var12 / 1.0E9D)});
        this.getLogAgent().func_98233_a("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
-@@ -140,10 +99,6 @@
+@@ -140,10 +101,6 @@
        return true;
     }
  
@@ -84,7 +102,7 @@
     public EnumGameType getGameType() {
        return this.gameType;
     }
-@@ -185,7 +140,7 @@
+@@ -185,7 +142,7 @@
     }
  
     public boolean getAllowNether() {
@@ -93,7 +111,7 @@
     }
  
     public boolean allowSpawnMonsters() {
-@@ -250,15 +205,6 @@
+@@ -250,21 +207,12 @@
        return var1 != null?var1.getAbsolutePath():"No settings file";
     }
  
@@ -109,7 +127,14 @@
     public String shareToLAN(EnumGameType par1EnumGameType, boolean par2) {
        return "";
     }
-@@ -273,8 +219,6 @@
+ 
+    public boolean isCommandBlockEnabled() {
+-      return this.settings.getBooleanProperty("enable-command-block", false);
++      return true;
+    }
+ 
+    public int getSpawnProtectionSize() {
+@@ -273,8 +221,6 @@
  
     public boolean func_96290_a(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer) {
        if(par1World.provider.dimensionId != 0) {

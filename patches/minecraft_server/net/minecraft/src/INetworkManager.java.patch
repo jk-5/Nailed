@@ -1,0 +1,9 @@
+--- ../src_base/minecraft_server/net/minecraft/src/INetworkManager.java
++++ ../src_work/minecraft_server/net/minecraft/src/INetworkManager.java
+@@ -18,4 +18,6 @@
+    int getNumChunkDataPackets();
+ 
+    void networkShutdown(String var1, Object ... var2);
++
++   java.net.Socket getSocket(); //TODO: very dirty solution
+ }

@@ -37,10 +37,11 @@ public class TeamManager {
             String name = tag.getTag("name").getValue("");
             Team team = new Team(name, tag.name(), color);
             team.setMap(this.map);
+            team.setFriendlyFireEnabled(tag.getTag("frienlyfire").getBooleanValue(false));
             this.teams.add(team);
             ScorePlayerTeam scoreboardTeam = s.func_96527_f(tag.name());                            //teamid
             scoreboardTeam.func_96664_a(name);                                                      //teamname
-            scoreboardTeam.func_96660_a(tag.getTag("frienlyfire").getBooleanValue(false));          //friendlyfire
+            scoreboardTeam.func_96660_a(team.friendlyFireEnabled());                                //friendlyfire
             scoreboardTeam.func_98300_b(tag.getTag("friendlyinvisibles").getBooleanValue(true));    //friendlyinvisibles
             scoreboardTeam.func_96666_b(color.toString());                                          //teamprefix
             scoreboardTeam.func_96662_c(EnumColor.RESET.toString());                                //teamsuffix

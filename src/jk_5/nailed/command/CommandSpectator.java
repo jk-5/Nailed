@@ -38,6 +38,7 @@ public class CommandSpectator extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args) {
         Player p = Nailed.playerRegistry.getPlayer(sender.getCommandSenderName());
         if (p == null) throw new CommandException("I seriously don\'t know who you are!");
+        if(!p.getCurrentMap().getGameThread().isGameRunning()) throw new CommandException("You can\'t join spectator mode when no game is running");
         p.setSpectator(!p.isSpectator());
     }
 }

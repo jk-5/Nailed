@@ -5,9 +5,7 @@ import jk_5.nailed.Nailed;
 import jk_5.nailed.teamspeak3.api.JTS3ServerQuery;
 import jk_5.nailed.teamspeak3.api.TeamspeakActionListener;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * No description given
@@ -66,6 +64,7 @@ public class TeamspeakManager implements TeamspeakActionListener {
         Vector<HashMap<String, String>> dataClientList = this.server.getList(JTS3ServerQuery.LISTMODE_CLIENTLIST, "-info,-times");
         if (dataClientList == null) return;
         for (HashMap<String, String> hm : dataClientList) this.clients.add(new TeamspeakClient(hm));
+        for(TeamspeakClient client : this.clients) System.out.println(client.getNickname());
     }
 
     public TeamspeakClient getClientForUser(String username) {
@@ -107,7 +106,7 @@ public class TeamspeakManager implements TeamspeakActionListener {
         }
     }
 
-    /*private void displayHashMap(HashMap<String, String> hm){
+    private void displayHashMap(HashMap<String, String> hm){
         if (hm == null) return;
 
         Collection<String> cValue = hm.values();
@@ -116,5 +115,5 @@ public class TeamspeakManager implements TeamspeakActionListener {
         Iterator<String> itrKey = cKey.iterator();
 
         while (itrValue.hasNext() && itrKey.hasNext()) System.out.println(itrKey.next() + ": " + itrValue.next());
-    }*/
+    }
 }
