@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Nailed It!{% endblock %}
+
+{% block content %}
+<div class="grid_12">
+    <h1>Welcome to Nailed!</h1>
+    <p>Some introduction text goes here.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent posuere sodales aliquet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam fermentum neque sapien, sed consequat nunc tempus a. Sed mollis ac quam a euismod. Proin lacinia volutpat nisi sit amet scelerisque. Pellentesque adipiscing quis eros ac lobortis. Quisque tortor arcu, porta et tempus nec, vehicula non mi.
+</div>
+
+<div class="grid_6">
+    {% if game_state == 'start' %}
+    <h2>Current games</h2>
+    <p>No game is running right now. Start a game using the button below.</p>
+
+    <a class="button" href="/start">Start</a>
+    {% else %}
+    <h2>Error</h2>
+    <p>Unknown game state</p>
+    {% endif %}
+</div>
+
+<div class="grid_6">
+    <h2>Leaderboard</h2>
+    <table class="leaderboard">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Won</th>
+                <th>Total</th>
+                <th>Kills</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for player in leaderboard %}
+                <tr>
+                    <td class="lb-name">
+                        {{ player.name }}
+
+                        {% if player.op %}
+                        <img src="static/img/op.png" alt="Operator" title="Operator">
+                        {% endif %}
+                    </td>
+                    <td class="lb-won">{{ player.wins }}</td>
+                    <td class="lb-total">{{ player.total }}</td>
+                    <td class="lb-kills">{{ player.kills }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="button" href="/leaderboard">View full leaderboard</a>
+</div>
+{% endblock %}
