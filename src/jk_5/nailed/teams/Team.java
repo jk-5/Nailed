@@ -24,6 +24,7 @@ public class Team {
     private EnumColor color;
     private Player leader = null;
     private boolean ready = false;
+    private boolean friendlyFire = false;
     public ScorePlayerTeam scoreboardTeam = null;
 
     private Map map;
@@ -112,5 +113,13 @@ public class Team {
             this.map.sendMessageToAllPlayers("Team " + this.toString() + " is not ready!");
         }
         this.map.getGameThread().notifyReadyUpdate();
+    }
+
+    public boolean friendlyFireEnabled(){
+        return this.friendlyFire;
+    }
+
+    public void setFriendlyFireEnabled(boolean on){
+        this.friendlyFire = on;
     }
 }

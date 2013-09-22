@@ -47,6 +47,7 @@ public class Mappack {
         instructionMap.put("clearexperience", InstructionResetExperience.class);
         instructionMap.put("sethealth", InstructionSetHealth.class);
         instructionMap.put("setfoodlevel", InstructionSetFoodLevel.class);
+        instructionMap.put("countup", InstructionCountUp.class);
     }
 
     private final List<IInstruction> instructions = Lists.newArrayList();
@@ -62,6 +63,7 @@ public class Mappack {
     private String mapName;
     private boolean spawnHostileMobs;
     private boolean spawnFriendlyMobs;
+    private boolean enablePvp;
 
     private int spawnX;
     private int spawnY;
@@ -81,10 +83,9 @@ public class Mappack {
         this.spawnY = config.getTag("spawnpoint").getTag("y").getIntValue(0);
         this.spawnZ = config.getTag("spawnpoint").getTag("z").getIntValue(0);
         this.mapName = config.getTag("name").getValue(this.internalName);
+        this.enablePvp = config.getTag("map").getTag("pvp").getBooleanValue(true);
         if (this.defaultGamemode == EnumGameType.NOT_SET) this.defaultGamemode = EnumGameType.SURVIVAL;
 
-        Nailed.server.setAllowPvp(config.getTag("map").getTag("pvp").getBooleanValue(true));
-        Nailed.server.setTexturePack(config.getTag("texturepackUrl").getValue(""));
         Nailed.server.setAllowFlight(true);
         Nailed.server.func_104055_i(false);  //setForceGamemode
     }
@@ -175,6 +176,10 @@ public class Mappack {
 
     public int getDifficulty() {
         return this.difficulty;
+    }
+
+    public boolean isPvpEnabled(){
+        return this.enablePvp;
     }
 
     public boolean shouldSpawnHostileMobs() {

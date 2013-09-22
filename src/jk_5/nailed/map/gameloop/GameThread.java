@@ -86,6 +86,7 @@ public class GameThread extends Thread {
     public void setWinner(Team team) {
         if (this.winner != null && !this.interruptWin) return;
         this.winner = team;
+        this.gameRunning = false;
         Nailed.statManager.enableStat("gamewon");
         this.getMap().sendMessageToAllPlayers(EnumColor.GOLD + "Winning team: " + winner.toString());
     }
