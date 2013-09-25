@@ -6,10 +6,11 @@ import jk_5.nailed.config.helper.ConfigFile;
 import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
+import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.irc.IrcConnector;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
-import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakManager;
 import net.minecraft.src.CommandHandler;
@@ -56,8 +57,8 @@ public class Nailed {
     }
 
     public static void onWorldReady() {
-        //Map map1 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
-        //Map map2 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
+        Map map1 = mapLoader.createWorld(mapLoader.getMappack("normalLobby"));
+        Map map2 = mapLoader.createWorld(mapLoader.getMappack("raceforwool"));
 
         mapLoader.setupMapSettings();
     }
