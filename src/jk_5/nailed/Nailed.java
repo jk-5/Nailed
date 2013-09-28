@@ -50,7 +50,7 @@ public class Nailed {
         mapLoader.setupLobby();
 
         irc.connect();
-        //ipc.start();
+        ipc.start();
 
         //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
@@ -74,6 +74,7 @@ public class Nailed {
         handler.registerCommand(new CommandTeamleader());
         handler.registerCommand(new CommandReady());
         handler.registerCommand(new CommandServerMode());
+        handler.registerCommand(CommandReconnectIPC$.MODULE$);
         if (teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }
