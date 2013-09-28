@@ -6,166 +6,37 @@ package jk_5.nailed.util;
  * @author jk-5
  */
 public enum EnumColor {
-    BLACK{
-                @Override
-                public String toString()
-                {
-                    return "\u00a70";
-                }
-            },
-    DARKBLUE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a71";
-                }
-            },
-    DARKGREEN{
-                @Override
-                public String toString()
-                {
-                    return "\u00a72";
-                }
-            },
-    DARKAQUA{
-                @Override
-                public String toString()
-                {
-                    return "\u00a73";
-                }
-            },
-    DARKRED{
-                @Override
-                public String toString()
-                {
-                    return "\u00a74";
-                }
-            },
-    PURPLE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a75";
-                }
-            },
-    GOLD{
-                @Override
-                public String toString()
-                {
-                    return "\u00a76";
-                }
-            },
-    GREY{
-                @Override
-                public String toString()
-                {
-                    return "\u00a77";
-                }
-            },
-    DARKGREY{
-                @Override
-                public String toString()
-                {
-                    return "\u00a78";
-                }
-            },
-    INDIGO{
-                @Override
-                public String toString()
-                {
-                    return "\u00a79";
-                }
-            },
-    GREEN{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7a";
-                }
-            },
-    AQUA{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7b";
-                }
-            },
-    RED{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7c";
-                }
-            },
-    PINK{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7d";
-                }
-            },
-    YELLOW{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7e";
-                }
-            },
+    BLACK("\u00a70"),
+    DARKBLUE("\u00a71"),
+    DARKGREEN("\u00a72"),
+    DARKAQUA("\u00a73"),
+    DARKRED("\u00a74"),
+    PURPLE("\u00a75"),
+    GOLD("\u00a76"),
+    GREY("\u00a77"),
+    DARKGREY("\u00a78"),
+    INDIGO("\u00a79"),
+    GREEN("\u00a7a"),
+    AQUA("\u00a7b"),
+    RED("\u00a7c"),
+    PINK("\u00a7d"),
+    YELLOW("\u00a7e"),
+    WHITE("\u00a7f"),
+    RANDOM("\u00a7k"),
+    BOLD("\u00a7l"),
+    CODE("\u00a7"),
+    STRIKE("\u00a7m"),
+    UNDERLINE("\u00a7n"),
+    ITALICS("\u00a7o"),
+    RESET("\u00a7r");
 
-    WHITE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7f";
-                }
-            },
-    RANDOM{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7k";
-                }
-            },
-    BOLD{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7l";
-                }
-            },
-    CODE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7";
-                }
-            },
-    STRIKE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7m";
-                }
-            },
-    UNDERLINE{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7n";
-                }
-            },
-    ITALICS{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7o";
-                }
-            },
-    RESET{
-                @Override
-                public String toString()
-                {
-                    return "\u00a7r";
-                }
-            }
+    private final String color;
+
+    EnumColor(String color){
+        this.color = color;
+    }
+
+    public String toString(){
+        return this.color;
+    }
 }
