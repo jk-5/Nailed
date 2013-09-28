@@ -7,6 +7,7 @@ import net.minecraft.src.*;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -169,6 +170,10 @@ public class MapLoader {
             }
         }
         return null;
+    }
+
+    public Collection<Mappack> getMappacks(){
+        return this.mappacks;
     }
 
     public Map getLobby() {

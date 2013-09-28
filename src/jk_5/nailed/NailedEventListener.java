@@ -4,8 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import jk_5.nailed.event.player.PlayerChatEvent;
 import jk_5.nailed.event.player.PlayerJoinServerEvent;
 import jk_5.nailed.event.player.PlayerLeaveServerEvent;
-import jk_5.nailed.ipc.packet.Packet21PlayerJoin;
-import jk_5.nailed.ipc.packet.Packet22PlayerLeave;
+import jk_5.nailed.ipc.packet.PacketPlayerJoin;
+import jk_5.nailed.ipc.packet.PacketPlayerLeave;
 import jk_5.nailed.teams.Team;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
@@ -21,13 +21,13 @@ public class NailedEventListener {
     public void onPlayerJoinServer(PlayerJoinServerEvent event) {
         event.player.onLogin();
         ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "joined the game").replace("[", "").replace("]", ""));
-        Nailed.ipc.sendPacket(new Packet21PlayerJoin(event.player.getUsername()));
+        Nailed.ipc.sendPacket(new PacketPlayerJoin(event.player.getUsername()));
     }
 
     @Subscribe
     public void onPlayerLeaveServer(PlayerLeaveServerEvent event) {
         ServerUtils.broadcastChatMessage(event.player.formatChatMessage(EnumColor.YELLOW + "left the game").replace("[", "").replace("]", ""));
-        Nailed.ipc.sendPacket(new Packet22PlayerLeave(event.player.getUsername()));
+        Nailed.ipc.sendPacket(new PacketPlayerLeave(event.player.getUsername()));
     }
 
     @Subscribe
