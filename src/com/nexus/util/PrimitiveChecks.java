@@ -14,10 +14,31 @@
  * under the License
  */
 
-package com.nexus.data.json
+package com.nexus.util;
 
-class ParseException(message: String, offset: Int, line: Int, column: Int) extends RuntimeException(message + " at " + line + ":" + column) {
-  def getOffset = offset
-  def getLine = line
-  def getColumn = column
+import java.lang.Double;
+import java.lang.Float;
+
+/**
+ * No description given
+ *
+ * @author jk-5
+ */
+public class PrimitiveChecks {
+
+    public static boolean isInfinite(float f){
+        return Float.isInfinite(f);
+    }
+
+    public static boolean isNaN(float f){
+        return Float.isNaN(f);
+    }
+
+    public static boolean isInfinite(double d){
+        return Double.isInfinite(d);
+    }
+
+    public static boolean isNaN(double d){
+        return Double.isNaN(d);
+    }
 }

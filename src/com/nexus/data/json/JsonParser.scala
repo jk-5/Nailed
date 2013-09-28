@@ -16,38 +16,30 @@
 
 package com.nexus.data.json
 
-import java.io.Reader
+import java.io.{StringReader, Reader}
+import com.nexus.data.BufferedTextReader
 
 object JsonParser {
   private def isWhiteSpace(ch: Int) = ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r'
-
   private def isDigit(ch: Int) = ch >= '0' && ch <= '9'
-
   private def isHexDigit(ch: Int) = ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F'
+  private def isEndOfText(ch: Int) = ch == -1
 }
 
-class JsonParser(private final val reader: Reader) {
+class JsonParser(private final val _reader: Reader) {
 
-  private final val recorder = new StringBuilder
+  def this(json: String) = this(new StringReader(json))
+
+  private final val reader = new BufferedTextReader(this._reader)
   private var current: Int = 0
-  private var line: Int = 0
-  private var offset: Int = 0
-  private var lineOffset: Int = 0
 
   private[json] def parse: JsonValue = {
-    start
-    skipWhiteSpace
+    read()
+    skipWhiteSpace()
     val result: JsonValue = readValue
-    skipWhiteSpace
-    if (!endOfText) throw this.error("Unexpected character")
-    return result
-  }
-
-  private def start {
-    line = 1
-    offset = -1
-    lineOffset = 0
-    read
+    skipWhiteSpace()
+    if(!JsonParser.isEndOfText(this.current)) throw this.error("Unexpected character")
+    result
   }
 
   private def readValue: JsonValue =
@@ -58,164 +50,168 @@ class JsonParser(private final val reader: Reader) {
       case '"' => readString
       case '[' => readArray
       case '{' => readObject
-      case '-' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => readNumber
+      case '-'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => readNumber
       case _ => throw expected("value")
     }
 
   private def readArray: JsonArray = {
-    read
+    read()
     val array: JsonArray = new JsonArray
-    skipWhiteSpace
+    skipWhiteSpace()
     if (readChar(']')) {
       return array
     }
     do {
-      skipWhiteSpace
+      skipWhiteSpace()
       array.add(readValue)
-      skipWhiteSpace
+      skipWhiteSpace()
     } while (readChar(','))
     if (!readChar(']')) {
       throw expected("',' or ']'")
     }
-    return array
+    array
   }
 
   private def readObject: JsonObject = {
-    read
+    read()
     val `object`: JsonObject = new JsonObject
-    skipWhiteSpace
+    skipWhiteSpace()
     if (readChar('}')) {
       return `object`
     }
     do {
-      skipWhiteSpace
+      skipWhiteSpace()
       val name: String = readName
-      skipWhiteSpace
+      skipWhiteSpace()
       if (!readChar(':')) {
         throw expected("':'")
       }
-      skipWhiteSpace
+      skipWhiteSpace()
       `object`.add(name, readValue)
-      skipWhiteSpace
+      skipWhiteSpace()
     } while (readChar(','))
     if (!readChar('}')) {
       throw expected("',' or '}'")
     }
-    return `object`
+    `object`
   }
 
   private def readNull: JsonValue = {
-    read
+    read()
     readRequiredChar('u')
     readRequiredChar('l')
     readRequiredChar('l')
-    return JsonValue.NULL
+    JsonValue.NULL
   }
 
   private def readTrue: JsonValue = {
-    read
+    read()
     readRequiredChar('r')
     readRequiredChar('u')
     readRequiredChar('e')
-    return JsonValue.TRUE
+    JsonValue.TRUE
   }
 
   private def readFalse: JsonValue = {
-    read
+    read()
     readRequiredChar('a')
     readRequiredChar('l')
     readRequiredChar('s')
     readRequiredChar('e')
-    return JsonValue.FALSE
+    JsonValue.FALSE
   }
 
   private def readRequiredChar(ch: Char) = if (!readChar(ch)) throw expected("'" + ch + "'")
-
   private def readString: JsonValue = {
-    read
-    recorder.setLength(0)
-    while (current != '"') {
+    read()
+    var buffer: StringBuilder = null
+    this.reader.startCapture()
+    while (current != '"') { //IntelliJ complains about current not being updated. It is! Ignore that!
       if (current == '\\') {
-        readEscape
-      }
-      else if (current < 0x20) {
+        if(buffer == null) buffer = new StringBuilder()
+        buffer.append(reader.endCapture)
+        this.readEscape(buffer)
+        this.reader.startCapture()
+      }else if (current < 0x20) {
         throw expected("valid string character")
-      }
-      else {
-        recorder.append(current.asInstanceOf[Char])
-        read
-      }
+      }else read()
     }
-    read
-    return new JsonString(recorder.toString)
+    var capture = this.reader.endCapture
+    if(buffer != null){
+      buffer.append(capture)
+      capture = buffer.toString()
+      buffer.setLength(0)
+    }
+    read()
+    new JsonString(capture)
   }
 
-  private def readEscape {
-    read
+  private def readEscape(buffer: StringBuilder){
+    read()
     current match {
-      case '"' => recorder.append(current.asInstanceOf[Char])
-      case '/' => recorder.append(current.asInstanceOf[Char])
-      case '\\' => recorder.append(current.asInstanceOf[Char])
-      case 'b' => recorder.append('\b')
-      case 'f' => recorder.append('\f')
-      case 'n' => recorder.append('\n')
-      case 'r' => recorder.append('\r')
-      case 't' => recorder.append('\t')
+      case '"' => buffer.append(current.asInstanceOf[Char])
+      case '/' => buffer.append(current.asInstanceOf[Char])
+      case '\\' => buffer.append(current.asInstanceOf[Char])
+      case 'b' => buffer.append('\b')
+      case 'f' => buffer.append('\f')
+      case 'n' => buffer.append('\n')
+      case 'r' => buffer.append('\r')
+      case 't' => buffer.append('\t')
       case 'u' => {
-        val hexChars: Array[Char] = new Array[Char](4)
-        for (i <- 0 until 4) {
-          read
-          if (!JsonParser.isHexDigit(current)) {
-            throw expected("hexadecimal digit")
+          val hexChars: Array[Char] = new Array[Char](4)
+          for(i <- 0 until 4) {
+            read()
+            if (!JsonParser.isHexDigit(current)) {
+              throw expected("hexadecimal digit")
+            }
+            hexChars(i) = current.asInstanceOf[Char]
           }
-          hexChars(i) = current.asInstanceOf[Char]
+          buffer.append(Integer.parseInt(String.valueOf(hexChars), 16).asInstanceOf[Char])
         }
-        recorder.append(Integer.parseInt(String.valueOf(hexChars), 16).asInstanceOf[Char])
-      }
       case _ => throw expected("valid escape sequence")
     }
-    read
+    read()
   }
 
   private def readNumber: JsonValue = {
-    recorder.setLength(0)
-    readAndAppendChar('-')
+    this.reader.startCapture()
+    this.readChar('-')
     val firstDigit: Int = current
-    if (!readAndAppendDigit) {
+    if (!readDigit) {
       throw expected("digit")
     }
     if (firstDigit != '0') {
-      while (readAndAppendDigit) {
+      while (readDigit) {
       }
     }
     readFraction
     readExponent
-    return new JsonNumber(recorder.toString)
+    new JsonNumber(this.reader.endCapture)
   }
 
   private def readFraction: Boolean = {
-    if (!readAndAppendChar('.')) {
+    if (!readChar('.')) {
       return false
     }
-    if (!readAndAppendDigit) {
+    if (!readDigit) {
       throw expected("digit")
     }
-    while (readAndAppendDigit) {
+    while (readDigit) {
     }
-    return true
+    true
   }
 
   private def readExponent: Boolean = {
-    if (!readAndAppendChar('e') && !readAndAppendChar('E')) {
+    if (!readChar('e') && !readChar('E')) {
       return false
     }
-    if (!readAndAppendChar('+')) {
-      readAndAppendChar('-')
+    if (!readChar('+')) {
+      readChar('-')
     }
-    if (!readAndAppendDigit) {
+    if (!readDigit) {
       throw expected("digit")
     }
-    while (readAndAppendDigit) {
+    while (readDigit) {
     }
     true
   }
@@ -224,54 +220,39 @@ class JsonParser(private final val reader: Reader) {
     if (current != '"') {
       throw expected("name")
     }
-    readString
-    recorder.toString
-  }
-
-  private def readAndAppendChar(ch: Char): Boolean = {
-    if (current != ch) {
-      return false
-    }
-    recorder.append(ch)
-    read
-    true
+    readString.asString
   }
 
   private def readChar(ch: Char): Boolean = {
     if (current != ch) {
       return false
     }
-    read
+    read()
     true
   }
 
-  private def readAndAppendDigit: Boolean = {
+  private def readDigit: Boolean = {
     if (!JsonParser.isDigit(current)) return false
-    recorder.append(current.asInstanceOf[Char])
-    read
+    read()
     true
   }
 
-  private def skipWhiteSpace = while (JsonParser.isWhiteSpace(current) && !endOfText) read
+  private def skipWhiteSpace() = while (JsonParser.isWhiteSpace(current) && !JsonParser.isEndOfText(this.current)) read()
 
-  private def read {
-    if (endOfText) throw error("Unexpected end of input")
-    offset += 1
-    if (current == '\n') {
-      line += 1
-      lineOffset = offset
-    }
-    current = reader.read
+  private def read(){
+    if (JsonParser.isEndOfText(this.current)) throw error("Unexpected end of input")
+    current = reader.read()
   }
-
-  private def endOfText = current == -1
 
   private def expected(expected: String): ParseException = {
-    if (endOfText) {
+    if (JsonParser.isEndOfText(this.current)) {
       return error("Unexpected end of input")
     }
-    return error("Expected " + expected)
+    error("Expected " + expected)
   }
 
-  private def error(message: String) = new ParseException(message, offset, line, offset - lineOffset)
+  private def error(message: String): ParseException = {
+    val offset = if(JsonParser.isEndOfText(this.current)) reader.getIndex else reader.getIndex - 1
+    new ParseException(message, offset, reader.getLine, offset - reader.getColumn - 1)
+  }
 }

@@ -17,7 +17,6 @@
 package com.nexus.data.json
 
 import java.io.Writer
-import scala.collection.JavaConversions._
 
 object JsonWriter {
   private final val CONTROL_CHARACTERS_START = 0x0000
@@ -27,7 +26,6 @@ object JsonWriter {
 class JsonWriter(private final val writer: Writer) {
 
   private[json] def write(string: String) = writer.write(string)
-
   private[json] def writeString(string: String) {
     writer.write('"')
     val length: Int = string.length
@@ -71,44 +69,36 @@ class JsonWriter(private final val writer: Writer) {
   }
 
   def writeObject(obj: JsonObject) {
-    writeBeginObject
+    writeBeginObject()
     var first: Boolean = true
     for (member <- obj) {
       if (!first) {
-        writeObjectValueSeparator
+        writeObjectValueSeparator()
       }
       writeString(member.getName)
-      writeNameValueSeparator
+      writeNameValueSeparator()
       member.getValue.write(this)
       first = false
     }
-    writeEndObject
+    writeEndObject()
   }
 
-  protected def writeBeginObject = writer.write('{')
+  def writeBeginObject() = writer.write('{')
+  def writeEndObject() = writer.write('}')
+  def writeNameValueSeparator() = writer.write(':')
+  def writeObjectValueSeparator() = writer.write(',')
+  def writeBeginArray() = writer.write('[')
+  def writeEndArray() = writer.write(']')
+  def writeArrayValueSeparator() = writer.write(',')
 
-  protected def writeEndObject = writer.write('}')
-
-  protected def writeNameValueSeparator = writer.write(':')
-
-  protected def writeObjectValueSeparator = writer.write(',')
-
-  protected def writeBeginArray = writer.write('[')
-
-  protected def writeEndArray = writer.write(']')
-
-  protected def writeArrayValueSeparator = writer.write(',')
-
-  private[json] def writeArray(array: JsonArray) {
-    writeBeginArray
+  private [json] def writeArray(array: JsonArray) {
+    writeBeginArray()
     var first: Boolean = true
     for (value <- array) {
-      if (!first) {
-        writeArrayValueSeparator
-      }
+      if (!first) writeArrayValueSeparator()
       value.write(this)
       first = false
     }
-    writeEndArray
+    writeEndArray()
   }
 }

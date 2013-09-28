@@ -18,24 +18,16 @@ package com.nexus.data.json
 
 class JsonLiteral(private final val value: String) extends JsonValue {
 
-  private[json] def write(writer: JsonWriter) = writer.write(value)
-
+  private [json] def write(writer: JsonWriter) = writer.write(value)
   override def toString = this.value
-
-  override def asBoolean = if (this.isBoolean) this.isTrue else super.asBoolean
-
+  override def asBoolean = if(this.isBoolean) this.isTrue else super.asBoolean
   override def isNull = this == JsonValue.NULL
-
   override def isBoolean = this == JsonValue.TRUE || this == JsonValue.FALSE
-
   override def isTrue = this == JsonValue.TRUE
-
   override def isFalse = this == JsonValue.FALSE
-
   override def hashCode = this.value.hashCode
-
   override def equals(obj: Any) =
-    if (obj == null) false
-    else if (this.getClass ne obj.getClass) false
+    if(obj == null) false
+    else if(this.getClass ne obj.getClass) false
     else this.value == obj.asInstanceOf[JsonLiteral].toString
 }
