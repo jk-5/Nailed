@@ -1,8 +1,8 @@
 package jk_5.nailed;
 
-import jk_5.nailed.event.player.PlayerChatEvent;
-import jk_5.nailed.event.player.PlayerJoinServerEvent;
-import jk_5.nailed.event.player.PlayerLeaveServerEvent;
+import jk_5.nailed.event.PlayerChatEvent;
+import jk_5.nailed.event.PlayerJoinServerEvent;
+import jk_5.nailed.event.PlayerLeaveServerEvent;
 import jk_5.nailed.map.Mappack;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;

@@ -24,7 +24,6 @@ import java.io.File;
  */
 public class Nailed {
     public static final EventBus eventBus = new EventBus();
-    public static final PlayerRegistry playerRegistry = new PlayerRegistry();
     public static final GroupRegistry groupRegistry = new GroupRegistry();
     public static final ConfigFile config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file");
     public static final MapLoader mapLoader = new MapLoader();
@@ -38,7 +37,6 @@ public class Nailed {
         Nailed.server = server;
 
         eventBus.register(new NailedEventListener());
-        eventBus.register(playerRegistry);
 
         mapLoader.loadMaps();
 
@@ -69,7 +67,7 @@ public class Nailed {
         handler.registerCommand(new CommandNewWorld());
         handler.registerCommand(new CommandSpectator());
         handler.registerCommand(new CommandStartGame());
-        handler.registerCommand(new CommandBroadcastChat());
+        handler.registerCommand(CommandBroadcastChat$.MODULE$);
         handler.registerCommand(new CommandTeamleader());
         handler.registerCommand(new CommandReady());
         handler.registerCommand(new CommandServerMode());

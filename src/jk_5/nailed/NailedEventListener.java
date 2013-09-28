@@ -1,9 +1,9 @@
 package jk_5.nailed;
 
 import com.google.common.eventbus.Subscribe;
-import jk_5.nailed.event.player.PlayerChatEvent;
-import jk_5.nailed.event.player.PlayerJoinServerEvent;
-import jk_5.nailed.event.player.PlayerLeaveServerEvent;
+import jk_5.nailed.event.PlayerChatEvent;
+import jk_5.nailed.event.PlayerJoinServerEvent;
+import jk_5.nailed.event.PlayerLeaveServerEvent;
 import jk_5.nailed.ipc.packet.Packet21PlayerJoin;
 import jk_5.nailed.ipc.packet.Packet22PlayerLeave;
 import jk_5.nailed.teams.Team;

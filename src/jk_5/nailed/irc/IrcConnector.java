@@ -2,9 +2,9 @@ package jk_5.nailed.irc;
 
 import com.google.common.eventbus.Subscribe;
 import jk_5.nailed.Nailed;
-import jk_5.nailed.event.player.PlayerChatEvent;
-import jk_5.nailed.event.player.PlayerJoinServerEvent;
-import jk_5.nailed.event.player.PlayerLeaveServerEvent;
+import jk_5.nailed.event.PlayerChatEvent;
+import jk_5.nailed.event.PlayerJoinServerEvent;
+import jk_5.nailed.event.PlayerLeaveServerEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
