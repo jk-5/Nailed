@@ -12,7 +12,7 @@ import jk_5.nailed.ipc.packet.IPCPacket
  *
  * @author jk-5
  */
-class IPCClient extends Thread {
+object IPCClient extends Thread {
 
   this.setDaemon(true)
   this.setName("IPC Client thread")

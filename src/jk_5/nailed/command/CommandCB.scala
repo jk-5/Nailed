@@ -1,6 +1,7 @@
 package jk_5.nailed.command
 
-import net.minecraft.src.{ICommandSender, CommandBase}
+import net.minecraft.src.{CommandException, TileEntityCommandBlock, ICommandSender, CommandBase}
+import jk_5.nailed.Nailed
 
 /**
  * No description given
@@ -9,23 +10,17 @@ import net.minecraft.src.{ICommandSender, CommandBase}
  */
 object CommandCB extends CommandBase {
 
-  def getCommandName = "cb"
-  def getRequiredPermissionLevel = 2
-  def getCommandUsage(sender: ICommandSender) {
-    return "/cb - Command for command block interaction with Nailed";
-  }
-
-  @Override
-  public void processCommand(ICommandSender send, String[] args) {
-    if (send instanceof TileEntityCommandBlock) {
-      TileEntityCommandBlock sender = (TileEntityCommandBlock) send;
-      Map currentMap = Nailed.mapLoader.getMapFromWorld((WorldServer) sender.getWorldObj());
-      if (args[0].equalsIgnoreCase("startgame")) {
-        Nailed.mapLoader.getMap(0).getGameThread().start();
-      } else if (args[0].equalsIgnoreCase("setwinner")) {
-        Team winner = currentMap.getTeamManager().getTeam(args[1]);
-        Nailed.mapLoader.getMap(0).getGameThread().setWinner(winner);
+  @inline def getCommandName = "cb"
+  @inline override def getRequiredPermissionLevel = 2
+  @inline def getCommandUsage(sender: ICommandSender) = "/cb - Command for command block interaction with Nailed";
+  @inline def processCommand(sender: ICommandSender, args: Array[String]) = sender match {
+    case cb: TileEntityCommandBlock => {
+      val currentMap = Nailed.mapLoader.getMap(cb)
+      args(0) match{
+        case "startgame" => currentMap.getGameThread.start()
+        case "setwinner" => currentMap.getGameThread.setWinner(currentMap.getTeamManager.getTeam(args(1)))
       }
-    } else throw new CommandException("This command can only be used by command blocks");
+    }
+    case e => throw new CommandException("This command can only be used by command blocks")
   }
 }

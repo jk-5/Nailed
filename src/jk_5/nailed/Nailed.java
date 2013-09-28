@@ -30,14 +30,13 @@ public class Nailed {
     public static final MapLoader mapLoader = new MapLoader();
     public static final StatManager statManager = new StatManager();
     public static final IrcConnector irc = new IrcConnector();
-    public static final IPCClient ipc = new IPCClient();
     public static final TeamspeakManager teamspeak = new TeamspeakManager();
     public static DedicatedServer server;
 
     public static void init(DedicatedServer server) {
         Nailed.server = server;
 
-        eventBus.register(new NailedEventListener());
+        eventBus.register(NailedEventListener$.MODULE$);
 
         mapLoader.loadMaps();
 
@@ -48,7 +47,7 @@ public class Nailed {
         mapLoader.setupLobby();
 
         irc.connect();
-        ipc.start();
+        IPCClient.start();
 
         //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
@@ -62,7 +61,7 @@ public class Nailed {
     }
 
     public static void registerCommands(CommandHandler handler) {
-        handler.registerCommand(new CommandCB());
+        handler.registerCommand(CommandCB$.MODULE$);
         handler.registerCommand(new CommandGroup());
         handler.registerCommand(new CommandTeam());
         handler.registerCommand(new CommandNewWorld());
