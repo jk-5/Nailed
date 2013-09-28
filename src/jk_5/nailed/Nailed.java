@@ -6,10 +6,11 @@ import jk_5.nailed.config.helper.ConfigFile;
 import jk_5.nailed.groups.GroupAdmin;
 import jk_5.nailed.groups.GroupPlayer;
 import jk_5.nailed.groups.GroupRegistry;
+import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.irc.IrcConnector;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stats.StatManager;
-import jk_5.nailed.ipc.IPCClient;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.teamspeak3.TeamspeakManager;
 import net.minecraft.src.CommandHandler;
@@ -47,15 +48,15 @@ public class Nailed {
         mapLoader.setupLobby();
 
         irc.connect();
-        //ipc.start();
+        ipc.start();
 
         //teamspeak.setEnabled(false); //Disable it, it's broke like a joke
         teamspeak.connect();
     }
 
     public static void onWorldReady() {
-        //Map map1 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
-        //Map map2 = mapLoader.createWorld(mapLoader.getMappack("lobby-normal"));
+        Map map1 = mapLoader.createWorld(mapLoader.getMappack("normalLobby"));
+        Map map2 = mapLoader.createWorld(mapLoader.getMappack("raceforwool"));
 
         mapLoader.setupMapSettings();
     }
@@ -71,6 +72,7 @@ public class Nailed {
         handler.registerCommand(new CommandTeamleader());
         handler.registerCommand(new CommandReady());
         handler.registerCommand(new CommandServerMode());
+        handler.registerCommand(CommandReconnectIPC$.MODULE$);
         if (teamspeak.isEnabled()) handler.registerCommand(new CommandTeamspeak());
     }
 }

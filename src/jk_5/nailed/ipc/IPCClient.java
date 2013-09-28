@@ -28,7 +28,7 @@ public class IPCClient extends Thread {
 
     public IPCClient() {
         try {
-            this.uri = new URI("ws://minecraft.reening.nl:5000/minecraft");
+            this.uri = new URI("ws://krypton.local:5000/minecraft");
         } catch (Exception e) {
             this.uri = null;
         }
@@ -42,6 +42,15 @@ public class IPCClient extends Thread {
         } catch (Exception e) {
             //NOOP
         }
+    }
+
+    public void disconnect() {
+        this.channel.close().syncUninterruptibly();
+    }
+
+    public void reconnect() {
+        this.disconnect();
+        this.start();
     }
 
     public URI getURI() {

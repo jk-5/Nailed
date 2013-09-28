@@ -56,16 +56,7 @@ public class MapLoader {
         return null;
     }
 
-    public Mappack getMappackFromUID(int uid) {
-        for (Mappack map : this.mappacks) {
-            if (map.getUID() == uid) {
-                return map;
-            }
-        }
-        return null;
-    }
-
-    public Map getMap(ICommandSender sender){
+    public Map getMap(ICommandSender sender) {
         return this.getMapFromWorld((WorldServer) sender.func_130014_f_());
     }
 

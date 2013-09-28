@@ -60,6 +60,7 @@ public class Map {
     public void setWorldServer(WorldServer server) {
         this.world = server;
         this.teamManager.setupTeams();
+        System.out.println("constructed map " + this.UID + " with server " + this.world);
     }
 
     public List<Player> getPlayers() {
@@ -74,7 +75,7 @@ public class Map {
         this.sendMessageToAllPlayersWithoutPrefix(EnumColor.GREEN + "[" + this.mappack.getMapName() + "]" + EnumColor.RESET + " " + message);
     }
 
-    public void sendMessageToAllPlayersWithoutPrefix(String message){
+    public void sendMessageToAllPlayersWithoutPrefix(String message) {
         for (Player player : this.getPlayers()) {
             player.sendChatMessage(message);
         }

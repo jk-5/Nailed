@@ -24,11 +24,11 @@ public abstract class Packet {
 
     public abstract void processPacket();
 
-    public int getPacketID() {
+    public final int getPacketID() {
         return packetMap.inverse().get(this.getClass());
     }
 
-    public JsonObject getSendPacket() {
+    public final JsonObject getSendPacket() {
         JsonObject writtenData = new JsonObject();
         this.writePacketData(writtenData);
         JsonObject data = new JsonObject();
