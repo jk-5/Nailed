@@ -17,26 +17,18 @@
 package com.nexus.data.json
 
 class JsonNumber(private final val string: String) extends JsonValue {
-  if (this.string == null) throw new NullPointerException("Input may not be null")
+  if(this.string == null) throw new NullPointerException("Input may not be null")
 
   override def toString: String = string
-
-  private[json] def write(writer: JsonWriter) = writer.write(string)
-
+  private [json] def write(writer: JsonWriter) = writer.write(string)
   override def isNumber = true
-
   override def asInt = string.toInt
-
   override def asLong = string.toLong
-
   override def asFloat = string.toFloat
-
   override def asDouble = string.toDouble
-
   override def hashCode = string.hashCode
-
   override def equals(obj: Any): Boolean =
-    if (obj == null) false
-    else if (this.getClass ne obj.getClass) false
+    if(obj == null) false
+    else if(this.getClass ne obj.getClass) false
     else this.string == obj.toString
 }

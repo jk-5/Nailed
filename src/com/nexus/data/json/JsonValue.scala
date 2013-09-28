@@ -22,7 +22,7 @@ import java.io.Serializable
 import java.io.StringReader
 import java.io.StringWriter
 import java.io.Writer
-import com.google.common.base.Throwables
+import com.nexus.util.PrimitiveChecks
 
 object JsonValue {
   final val TRUE = new JsonLiteral("true")
@@ -30,79 +30,64 @@ object JsonValue {
   final val NULL = new JsonLiteral("null")
 
   def readFrom(reader: Reader) = new JsonParser(reader).parse
-
   def readFrom(text: String): JsonValue =
     try {
       new JsonParser(new StringReader(text)).parse
-    } catch {
-      case e: IOException => throw Throwables.propagate(e)
+    }catch{
+      case e: IOException => throw new RuntimeException(e)
     }
-
   def valueOf(value: Int) = new JsonNumber(value.toString)
-
   def valueOf(value: Long) = new JsonNumber(value.toString)
-
-  def valueOf(value: Float) = new JsonNumber(JsonValue.cutOffPointZero(value.toString))
-
-  def valueOf(value: Double) = new JsonNumber(JsonValue.cutOffPointZero(value.toString))
-
+  def valueOf(f: Float) = {
+    if(PrimitiveChecks.isInfinite(f) || PrimitiveChecks.isNaN(f)) throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON")
+    new JsonNumber(JsonValue.cutOffPointZero(f.toString))
+  }
+  def valueOf(d: Double) = {
+    if(PrimitiveChecks.isInfinite(d) || PrimitiveChecks.isNaN(d)) throw new IllegalArgumentException("Infinite and NaN values not permitted in JSON")
+    new JsonNumber(JsonValue.cutOffPointZero(d.toString))
+  }
   def valueOf(string: String) = if (string == null) JsonValue.NULL else new JsonString(string)
-
   def valueOf(value: Boolean) = if (value) JsonValue.TRUE else JsonValue.FALSE
-
   private def cutOffPointZero(string: String): String =
-    if (string.endsWith(".0")) string.substring(0, string.length - 2)
+    if(string.endsWith(".0")) string.substring(0, string.length - 2)
     else string
 }
 
 abstract class JsonValue extends Serializable {
 
   def isObject = false
-
   def isArray = false
-
   def isNumber = false
-
   def isString = false
-
   def isBoolean = false
-
   def isTrue = false
-
   def isFalse = false
-
   def isNull = false
 
-  def asObject: JsonObject = throw new UnsupportedOperationException("Not an object: " + toString)
-
-  def asArray: JsonArray = throw new UnsupportedOperationException("Not an array: " + toString)
-
-  def asInt: Int = throw new UnsupportedOperationException("Not a number: " + toString)
-
-  def asLong: Long = throw new UnsupportedOperationException("Not a number: " + toString)
-
-  def asFloat: Float = throw new UnsupportedOperationException("Not a number: " + toString)
-
-  def asDouble: Double = throw new UnsupportedOperationException("Not a number: " + toString)
-
-  def asString: String = throw new UnsupportedOperationException("Not a string: " + toString)
-
-  def asBoolean: Boolean = throw new UnsupportedOperationException("Not a boolean: " + toString)
+  def asObject: JsonObject = throw new UnsupportedOperationException("Not an object: " + this.stringify)
+  def asArray: JsonArray = throw new UnsupportedOperationException("Not an array: " + this.stringify)
+  def asInt: Int = throw new UnsupportedOperationException("Not a number: " + this.stringify)
+  def asLong: Long = throw new UnsupportedOperationException("Not a number: " + this.stringify)
+  def asFloat: Float = throw new UnsupportedOperationException("Not a number: " + this.stringify)
+  def asDouble: Double = throw new UnsupportedOperationException("Not a number: " + this.stringify)
+  def asString: String = throw new UnsupportedOperationException("Not a string: " + this.stringify)
+  def asBoolean: Boolean = throw new UnsupportedOperationException("Not a boolean: " + this.stringify)
 
   def writeTo(writer: Writer) = this.write(new JsonWriter(writer))
-
-  override def toString: String = {
+  def stringify: String = {
     val stringWriter: StringWriter = new StringWriter
     val jsonWriter: JsonWriter = new JsonWriter(stringWriter)
-    try {
+    try{
       write(jsonWriter)
-    } catch {
+    }catch{
       case e: IOException => throw new RuntimeException(e)
     }
     stringWriter.toString
   }
 
   override def hashCode = super.hashCode
+  private [json] def write(writer: JsonWriter)
 
-  private[json] def write(writer: JsonWriter)
+  def getMimeType = "application/json"
+  def getResponseData: String = this.stringify
 }

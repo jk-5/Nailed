@@ -17,18 +17,14 @@
 package com.nexus.data.json
 
 class JsonString(private final val string: String) extends JsonValue {
-  if (this.string == null) throw new NullPointerException("String can\'t be null")
+  if(this.string == null) throw new NullPointerException("String can\'t be null")
 
-  private[json] def write(writer: JsonWriter) = writer.writeString(this.string)
-
+  private [json] def write(writer: JsonWriter) = writer.writeString(this.string)
   override def isString = true
-
   override def asString = this.string
-
   override def hashCode = this.string.hashCode
-
   override def equals(obj: Any) =
-    if (obj == null) false
-    else if (this.getClass.ne(obj.getClass)) false
+    if(obj == null) false
+    else if(this.getClass.ne(obj.getClass)) false
     else this.string == obj.asInstanceOf[JsonString].asString
 }
