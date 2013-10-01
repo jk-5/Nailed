@@ -16,11 +16,11 @@ public class TeamspeakManager implements TeamspeakActionListener {
 
     private final JTS3ServerQuery server = new JTS3ServerQuery();
 
-    private boolean enabled = Nailed.config.getTag("teamspeak").getTag("enabled").setComment("Set to false to disable teamspeak integration").getBooleanValue(false);
-    private final String host = Nailed.config.getTag("teamspeak").getTag("host").setComment("IP address / host name for the teamspeak server").getValue("localhost");
-    private final int port = Nailed.config.getTag("teamspeak").getTag("port").setComment("Port for the teamspeak query interface").getIntValue(10011);
-    private final String username = Nailed.config.getTag("teamspeak").getTag("username").setComment("Username for the query interface. Leave empty for none").getValue("");
-    private final String password = Nailed.config.getTag("teamspeak").getTag("password").setComment("Password for the query interface. Leave empty for none").getValue("");
+    private boolean enabled = Nailed.config().getTag("teamspeak").getTag("enabled").setComment("Set to false to disable teamspeak integration").getBooleanValue(false);
+    private final String host = Nailed.config().getTag("teamspeak").getTag("host").setComment("IP address / host name for the teamspeak server").getValue("localhost");
+    private final int port = Nailed.config().getTag("teamspeak").getTag("port").setComment("Port for the teamspeak query interface").getIntValue(10011);
+    private final String username = Nailed.config().getTag("teamspeak").getTag("username").setComment("Username for the query interface. Leave empty for none").getValue("");
+    private final String password = Nailed.config().getTag("teamspeak").getTag("password").setComment("Password for the query interface. Leave empty for none").getValue("");
 
     private final List<TeamspeakClient> clients = Lists.newArrayList();
 
@@ -29,11 +29,13 @@ public class TeamspeakManager implements TeamspeakActionListener {
         if (!this.enabled) return;
         if (!this.server.connectTS3Query(this.host, this.port)) {
             System.out.println("Failed!");
+            this.enabled = false;
             return;
         }
         this.server.loginTS3(this.username, this.password);
         if (!this.server.selectVirtualServer(1)) {
             this.displayError();
+            this.enabled = false;
             return;
         }
         this.server.setTeamspeakActionListener(this);

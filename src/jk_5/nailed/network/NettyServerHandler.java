@@ -36,7 +36,7 @@ public class NettyServerHandler extends NetworkListenThread {
             group = new NioEventLoopGroup(4, new ThreadFactoryBuilder().setNameFormat("Netty IO Thread - %1$d").build());
         }
 
-        socket = new ServerBootstrap().channel(NioServerSocketChannel.class).childHandler(new Pipeline()).group(group).localAddress(host, port).bind().syncUninterruptibly();
+        socket = new ServerBootstrap().channel(NioServerSocketChannel.class).childHandler(Pipeline$.MODULE$).group(group).localAddress(host, port).bind().syncUninterruptibly();
     }
 
     @Override

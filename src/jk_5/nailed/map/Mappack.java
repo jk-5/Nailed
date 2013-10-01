@@ -85,9 +85,6 @@ public class Mappack {
         this.mapName = config.getTag("name").getValue(this.internalName);
         this.enablePvp = config.getTag("map").getTag("pvp").getBooleanValue(true);
         if (this.defaultGamemode == EnumGameType.NOT_SET) this.defaultGamemode = EnumGameType.SURVIVAL;
-
-        Nailed.server.setAllowFlight(true);
-        Nailed.server.func_104055_i(false);  //setForceGamemode
     }
 
     public void readConfig() throws MappackInitializationException {

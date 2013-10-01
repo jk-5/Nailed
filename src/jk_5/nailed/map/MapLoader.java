@@ -78,7 +78,7 @@ public class MapLoader {
             System.out.println("Converting world '" + map.getFolderName() + "'");
             converter.convertMapFormat(map.getFolderName(), new ConvertingProgressUpdate(Nailed.server));
         }
-        WorldServer worldServer = new WorldServer(Nailed.server, new AnvilSaveHandler(mapsFolder, map.getFolderName(), true), map.getFolderName(), map.getUID(), new WorldSettings(1L, mappack.getDefaultGamemode(), false, false, null), Nailed.server.theProfiler, Nailed.server.getLogAgent());
+        WorldServer worldServer = new WorldServer(Nailed.server, new AnvilSaveHandler(mapsFolder, map.getFolderName(), true), map.getFolderName(), map.getUID(), new WorldSettings(1L, mappack.getDefaultGamemode(), false, false, WorldType.DEFAULT), Nailed.server.theProfiler, Nailed.server.getLogAgent());
         worldServer.setScoreboard(new Scoreboard());
         worldServer.difficultySetting = mappack.getDifficulty();
         worldServer.setAllowedSpawnTypes(mappack.shouldSpawnHostileMobs(), mappack.shouldSpawnFriendlyMobs());

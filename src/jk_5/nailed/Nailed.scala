@@ -7,10 +7,11 @@ import jk_5.nailed.map.MapLoader
 import jk_5.nailed.map.stats.StatManager
 import jk_5.nailed.irc.IrcConnector
 import jk_5.nailed.teamspeak3.TeamspeakManager
-import net.minecraft.src.{CommandHandler, DedicatedServer}
+import net.minecraft.src._
 import jk_5.nailed.groups.{GroupRegistry, GroupAdmin, GroupPlayer}
 import jk_5.nailed.ipc.IPCClient
 import jk_5.nailed.command._
+import scala.collection.JavaConversions._
 
 /**
  * No description given
@@ -48,6 +49,9 @@ object Nailed {
   }
 
   def onWorldReady() {
+    this.server.setAllowFlight(true);
+    this.server.func_104055_i(false);  //setForceGamemode
+
     val map1 = this.mapLoader.createWorld(mapLoader.getMappack("normalLobby"))
     val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
 
@@ -55,6 +59,15 @@ object Nailed {
   }
 
   def registerCommands(handler: CommandHandler){
+    val handler = this.server.getCommandManager.asInstanceOf[ServerCommandManager]
+    handler.getCommands.foreach(command => command match {
+        case c: CommandDefaultGameMode => handler.getCommands.remove(c)
+        case c: CommandShowSeed => handler.getCommands.remove(c)
+        case c: ServerCommandScoreboard => handler.getCommands.remove(c)
+        case c: CommandServerWhitelist => handler.getCommands.remove(c)
+        case _ =>
+      }
+    )
     handler.registerCommand(CommandCB)
     handler.registerCommand(new CommandGroup())
     handler.registerCommand(new CommandTeam())

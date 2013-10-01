@@ -39,7 +39,6 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
     private String dcReason;
     private Object[] dcArgs;
     private Socket socketAdaptor;
-    private PacketWriter writer;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -47,7 +46,6 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
         address = ctx.channel().remoteAddress();
         socketAdaptor = NettySocketAdaptor.adapt((SocketChannel) ctx.channel());
         connection = new NetLoginHandler(server, this);
-        writer = new PacketWriter();
         connected = true;
         serverConnection.register((NetLoginHandler) connection);
     }
@@ -107,9 +105,6 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
     }
 
     private void queue0(Packet packet) {
-        if (packet instanceof Packet255KickDisconnect) {
-            writer.lastFlush = 0;
-        }
         ctx.writeAndFlush(packet);
         if (packet instanceof Packet252SharedKey) {
             Cipher encrypt = NettyServerHandler.getCipher(Cipher.ENCRYPT_MODE, secret);

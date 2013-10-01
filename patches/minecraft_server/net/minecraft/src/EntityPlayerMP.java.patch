@@ -32,7 +32,7 @@
  
     public boolean func_96122_a(EntityPlayer par1EntityPlayer) {
 -      return !this.mcServer.isPVPEnabled()?false:super.func_96122_a(par1EntityPlayer);
-+       return !NailedEventFactory.canPlayerAttackPlayer(this, par1EntityPlayer) ? false:(!this.mcServer.isPVPEnabled()?false:super.func_96122_a(par1EntityPlayer));
++       return NailedEventFactory.canPlayerAttackPlayer(this, par1EntityPlayer); //Check super for friendlyfire?
     }
  
     public void travelToTheEnd(int par1) {
