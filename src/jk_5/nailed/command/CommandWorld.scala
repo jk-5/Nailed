@@ -1,7 +1,5 @@
 package jk_5.nailed.command
 
-import net.minecraft.src.{ICommandSender, CommandBase}
-import jk_5.nailed.players.PlayerRegistry
 import jk_5.nailed.Nailed
 
 /**
@@ -9,13 +7,10 @@ import jk_5.nailed.Nailed
  *
  * @author jk-5
  */
-object CommandWorld extends CommandBase {
+object CommandWorld extends TCommand {
+  val commandName = "goto"
+  override val permissionLevel = 2
 
-  @inline def getCommandName = "goto"
-  @inline override def getRequiredPermissionLevel = 2
-  @inline def getCommandUsage(sender: ICommandSender) = "/goto"
-  def processCommand(sender: ICommandSender, args: Array[String]){
-    val p = PlayerRegistry.getPlayer(sender.getCommandSenderName)
-    if(p.isDefined) Nailed.mapLoader.getMap(args(0).toInt).travelPlayerToMap(p)
-  }
+  @inline override def getCommandUsage = "/goto"
+  def processCommand(sender: CommandSender, args: Array[String]) = if(sender.isValidPlayer) Nailed.mapLoader.getMap(args(0).toInt).travelPlayerToMap(sender.player)
 }

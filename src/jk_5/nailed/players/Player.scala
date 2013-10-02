@@ -6,7 +6,7 @@ import jk_5.nailed.team.Team
 import jk_5.nailed.Nailed
 import net.minecraft.server.MinecraftServer
 import jk_5.nailed.util.EnumColor
-import jk_5.nailed.groups.Group
+import jk_5.nailed.groups.{GroupRegistry, Group}
 import net.minecraft.src._
 
 /**
@@ -19,7 +19,7 @@ case class Player(private final val username: String) {
   private var teamspeakClient: TeamspeakClient = _
   private var currentMap: Map = _
   private var team = Team.UNKNOWN
-  private var group = Nailed.groupRegistry.getDefaultGroup
+  private var group = GroupRegistry.getDefaultGroup
   private var spectator = false
 
   def onLogin(){

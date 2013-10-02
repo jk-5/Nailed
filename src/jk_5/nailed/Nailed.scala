@@ -49,16 +49,18 @@ object Nailed {
   }
 
   def onWorldReady() {
-    this.server.setAllowFlight(true);
-    this.server.func_104055_i(false);  //setForceGamemode
+    this.registerCommands()
 
-    val map1 = this.mapLoader.createWorld(mapLoader.getMappack("normalLobby"))
-    val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
+    this.server.setAllowFlight(true)
+    this.server.func_104055_i(false)  //setForceGamemode
+
+    //val map1 = this.mapLoader.createWorld(mapLoader.getMappack("normalLobby"))
+    //val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
 
     this.mapLoader.setupMapSettings()
   }
 
-  def registerCommands(handler: CommandHandler){
+  def registerCommands(){
     val handler = this.server.getCommandManager.asInstanceOf[ServerCommandManager]
     handler.getCommands.foreach(command => command match {
         case c: CommandDefaultGameMode => handler.getCommands.remove(c)
@@ -69,16 +71,16 @@ object Nailed {
       }
     )
     handler.registerCommand(CommandCB)
-    handler.registerCommand(new CommandGroup())
-    handler.registerCommand(new CommandTeam())
+    handler.registerCommand(CommandGroup)
+    handler.registerCommand(CommandTeam)
     handler.registerCommand(CommandWorld)
-    handler.registerCommand(new CommandSpectator())
-    handler.registerCommand(new CommandStartGame())
+    handler.registerCommand(CommandSpectator)
+    handler.registerCommand(CommandStartGame)
     handler.registerCommand(CommandBroadcastChat)
-    handler.registerCommand(new CommandTeamleader())
-    handler.registerCommand(new CommandReady())
-    handler.registerCommand(new CommandServerMode())
+    handler.registerCommand(CommandTeamleader)
+    handler.registerCommand(CommandReady)
+    handler.registerCommand(CommandServerMode)
     handler.registerCommand(CommandReconnectIPC)
-    if (teamspeak.isEnabled) handler.registerCommand(new CommandTeamspeak())
+    if (teamspeak.isEnabled) handler.registerCommand(CommandTeamspeak)
   }
 }

@@ -1,26 +1,24 @@
 package jk_5.nailed.command
 
-import net.minecraft.src.{CommandException, TileEntityCommandBlock, ICommandSender, CommandBase}
-import jk_5.nailed.Nailed
-
 /**
  * No description given
  *
  * @author jk-5
  */
-object CommandCB extends CommandBase {
+object CommandCB extends TCommand {
+  val commandName = "cb"
+  override val permissionLevel = 2
 
-  @inline def getCommandName = "cb"
-  @inline override def getRequiredPermissionLevel = 2
-  @inline def getCommandUsage(sender: ICommandSender) = "/cb - Command for command block interaction with Nailed";
-  @inline def processCommand(sender: ICommandSender, args: Array[String]) = sender match {
-    case cb: TileEntityCommandBlock => {
-      val currentMap = Nailed.mapLoader.getMap(cb)
+  @inline override def getCommandUsage = "/cb - Command for command block interaction with Nailed"
+  @inline def processCommand(sender: CommandSender, args: Array[String]){
+    if(sender.isCommandBlock){
       args(0) match{
-        case "startgame" => currentMap.getGameThread.start()
-        case "setwinner" => currentMap.getGameThread.setWinner(currentMap.getTeamManager.getTeam(args(1)))
+        case "startgame" => sender.map.getGameThread.start()
+        case "setwinner" => {
+          if(sender.map.getTeamManager.getTeam(args(1)).isEmpty) throw new CommandException("The team you entered does not exist!")
+          sender.map.getGameThread.setWinner(sender.map.getTeamManager.getTeam(args(1)).get)
+        }
       }
-    }
-    case e => throw new CommandException("This command can only be used by command blocks")
+    }else throw new CommandException("This command can only be used by command blocks")
   }
 }
