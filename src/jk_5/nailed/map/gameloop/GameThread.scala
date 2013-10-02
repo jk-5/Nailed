@@ -2,9 +2,10 @@ package jk_5.nailed.map.gameloop
 
 import jk_5.nailed.team.Team
 import jk_5.nailed.map.Map
-import scala.collection.JavaConversions._
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.Nailed
+import jk_5.nailed.map.stats.StatManager
+import scala.collection.{mutable, JavaConversions}
 
 /**
  * No description given
@@ -19,7 +20,7 @@ class GameThread(private final val map: Map) extends Thread {
   private var watchUnready = false
   private var interruptWin = false
   private var winner: Team = null
-  private final val instructions: List[IInstruction] = this.map.getMappack.getInstructions
+  private final val instructions: mutable.Buffer[IInstruction] = JavaConversions.asScalaBuffer(this.map.getMappack.getInstructions)
 
   override def run(){
     if(this.instructions.size == 0) return
@@ -66,7 +67,7 @@ class GameThread(private final val map: Map) extends Thread {
     if(this.winner != null && !this.interruptWin) return
     this.winner = team
     this.gameRunning = false
-    Nailed.statManager.enableStat("gamewon")
+    StatManager.enableStat("gamewon")
     this.getMap.sendMessageToAllPlayers(EnumColor.GOLD + "Winning team: " + this.winner.toString)
   }
 
