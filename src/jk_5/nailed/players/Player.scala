@@ -30,7 +30,9 @@ case class Player(private final val username: String) {
 
   def setTeamspeakName(name: String){
     if(TeamspeakManager.isEnabled) return
+    val changed = this.teamspeakName != name
     this.teamspeakName = name
+    if(!changed) return
     if(this.teamspeakName != null) this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakName)
     else this.sendChatMessage(EnumColor.AQUA + "There was no teamspeak client found with the same username as you. Change your teamspeak username so it matches your ingame name or do /ts setname")
   }

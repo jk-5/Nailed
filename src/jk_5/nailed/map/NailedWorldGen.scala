@@ -25,7 +25,7 @@ class VoidChunkProvider(private final val world: World) extends ChunkProviderFla
   }
 }
 
-class VoidWorldChunkManager(private final val world: World) extends WorldChunkManager {
+class VoidWorldChunkManager(private final val world: World) extends WorldChunkManager(world) {
   override def findBiomePosition(x: Int, z: Int, range: Int, biomes: util.List[_], rand: Random): ChunkPosition = {
     var ret = super.findBiomePosition(x, z, range, biomes, rand)
     if (x == 0 && z == 0 && !world.getWorldInfo.isInitialized) {

@@ -20,7 +20,6 @@ object NailedEventFactory {
   var mode = sys.props.get("nailed.mode").getOrElse("play")
 
   def playerLoggedIn(entity: EntityPlayerMP, world: WorldServer){
-    println("Event!")
     val p = PlayerRegistry.getOrCreatePlayer(entity.getCommandSenderName)
     if(p.getUsername.equals("Clank26") || p.getUsername.equals("PostVillageCore")) p.setGroup(GroupRegistry.getGroup("admin").get)
     Nailed.eventBus.post(new PlayerJoinServerEvent(p))
