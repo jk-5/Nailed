@@ -3,6 +3,7 @@ package jk_5.nailed.map
 import scala.collection.immutable
 import java.util.concurrent.atomic.AtomicInteger
 import jk_5.nailed.map.gameloop.instructions._
+import jk_5.nailed.map.gameloop.IInstruction
 
 /**
  * No description given
@@ -32,5 +33,5 @@ object InstructionManager {
     "setfoodlevel" -> classOf[InstructionSetFoodLevel],
     "countup" -> classOf[InstructionCountUp]
   )
-  def getInstruction(name: String) = this.instructionMap.get(name).get.newInstance()
+  def getInstruction(name: String): IInstruction = this.instructionMap.get(name).get.newInstance().asInstanceOf[IInstruction]
 }

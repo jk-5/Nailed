@@ -7,6 +7,7 @@ import jk_5.nailed.groups.GroupRegistry
 import jk_5.nailed.event.{PlayerChatEvent, PlayerLeaveServerEvent, PlayerJoinServerEvent}
 import java.net.InetAddress
 import java.util.Random
+import jk_5.nailed.map.Map
 
 /**
  * No description given
@@ -19,6 +20,7 @@ object NailedEventFactory {
   var mode = sys.props.get("nailed.mode").getOrElse("play")
 
   def playerLoggedIn(entity: EntityPlayerMP, world: WorldServer){
+    println("Event!")
     val p = PlayerRegistry.getOrCreatePlayer(entity.getCommandSenderName)
     if(p.getUsername.equals("Clank26") || p.getUsername.equals("PostVillageCore")) p.setGroup(GroupRegistry.getGroup("admin").get)
     Nailed.eventBus.post(new PlayerJoinServerEvent(p))
@@ -34,15 +36,12 @@ object NailedEventFactory {
     Nailed.eventBus.post(new PlayerChatEvent(p, msg))
   }
 
-  @inline def isOp(username: String) = PlayerRegistry.getPlayer(username).get.getGroup.getGroupID.equalsIgnoreCase("admin")
+  @inline def isOp(username: String) = PlayerRegistry.getPlayer(username).exists(_.isAdmin)
 
-  def getSpawnPoint(world: World): ChunkCoordinates = {
-    Nailed.mapLoader.getMapFromWorld(world.asInstanceOf[WorldServer]).getMappack.getSpawnPoint
-  }
-
+  def getSpawnPoint(map: Map): ChunkCoordinates = map.getMappack.getSpawn
   def getSpawnPoint(playerEntity: EntityPlayerMP): ChunkCoordinates = {
-    val player = PlayerRegistry.getPlayer(playerEntity.getCommandSenderName).getOrElse(null)
-    var spawn = this.getSpawnPoint(player.getCurrentMap.getWorld)
+    val player = PlayerRegistry.getOrCreatePlayer(playerEntity.getCommandSenderName)
+    var spawn = player.getCurrentMap.getMappack.getSpawn
     if(player != null && player.getTeam != null && player.getTeam.shouldOverrideSpawnpoint){
       spawn = player.getTeam.getSpawnpoint
     }
@@ -54,7 +53,7 @@ object NailedEventFactory {
     false
   }
 
-  def canPlayerAttackPlayer(a: EntityPlayerMP, b: EntityPlayerMP): Boolean = {
+  def canPlayerAttackPlayer(a: EntityPlayer, b: EntityPlayer): Boolean = {
     val oA = PlayerRegistry.getPlayer(a.getCommandSenderName)
     val oB = PlayerRegistry.getPlayer(b.getCommandSenderName)
     if(oA.isEmpty || oB.isEmpty) return false

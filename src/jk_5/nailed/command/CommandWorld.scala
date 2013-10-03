@@ -1,6 +1,6 @@
 package jk_5.nailed.command
 
-import jk_5.nailed.Nailed
+import jk_5.nailed.map.MapLoader
 
 /**
  * No description given
@@ -9,8 +9,8 @@ import jk_5.nailed.Nailed
  */
 object CommandWorld extends TCommand {
   val commandName = "goto"
-  override val permissionLevel = 2
+  this.permissionLevel = 2
 
   @inline override def getCommandUsage = "/goto"
-  def processCommand(sender: CommandSender, args: Array[String]) = if(sender.isValidPlayer) Nailed.mapLoader.getMap(args(0).toInt).travelPlayerToMap(sender.player)
+  def processCommand(sender: CommandSender, args: Array[String]) = if(sender.isValidPlayer) MapLoader.getMap(args(0).toInt).foreach(_.travelPlayerToMap(sender.player))
 }

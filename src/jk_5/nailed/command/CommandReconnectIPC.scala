@@ -9,7 +9,7 @@ import jk_5.nailed.ipc.IPCClient
  */
 object CommandReconnectIPC extends TCommand {
   val commandName = "reconnectipc"
-  override val permissionLevel = 2
+  this.permissionLevel = 2
   @inline override def getCommandUsage = "/reconnectipc - Reconnects to the ipc server"
   @inline def processCommand(sender: CommandSender, args: Array[String]) = IPCClient.reconnect()
 }

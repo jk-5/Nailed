@@ -3,7 +3,6 @@ package jk_5.nailed.ipc
 import jk_5.nailed.ipc.packet.{IPCPacket, PacketInitConnection}
 import io.netty.channel._
 import io.netty.handler.codec.http.websocketx._
-import jk_5.nailed.Nailed
 import io.netty.handler.codec.http.{FullHttpResponse, DefaultHttpHeaders}
 
 /**
@@ -13,7 +12,7 @@ import io.netty.handler.codec.http.{FullHttpResponse, DefaultHttpHeaders}
  */
 class IPCHandler extends SimpleChannelInboundHandler[AnyRef] {
 
-  private final val handshaker: WebSocketClientHandshaker = WebSocketClientHandshakerFactory.newHandshaker(Nailed.ipc.getURI, WebSocketVersion.V13, null, false, new DefaultHttpHeaders)
+  private final val handshaker: WebSocketClientHandshaker = WebSocketClientHandshakerFactory.newHandshaker(IPCClient.getURI, WebSocketVersion.V13, null, false, new DefaultHttpHeaders)
   private var handshakeFuture: ChannelPromise = null
 
   @inline def getHandshakeFuture = this.handshakeFuture

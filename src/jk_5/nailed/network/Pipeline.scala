@@ -13,8 +13,8 @@ import jk_5.nailed.network.codec.{PacketDecoder, PacketEncoder}
 object Pipeline extends ChannelInitializer[SocketChannel] {
 
   def initChannel(ch: SocketChannel){
-    try{ch.config().setOption(ChannelOption.IP_TOS, 0x18)}
-    try{ch.config().setOption(ChannelOption.TCP_NODELAY, false)}
+    try{ch.config().setOption(ChannelOption.IP_TOS.asInstanceOf[ChannelOption[Any]], 0x18)}
+    try{ch.config().setOption(ChannelOption.TCP_NODELAY.asInstanceOf[ChannelOption[Any]], false)}
     val pipeline = ch.pipeline()
     pipeline.addLast("timer", new ReadTimeoutHandler(30))
     pipeline.addLast("decoder", new PacketDecoder)

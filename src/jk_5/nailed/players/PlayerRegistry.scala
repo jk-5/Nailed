@@ -1,8 +1,8 @@
 package jk_5.nailed.players
 
 import scala.collection.mutable
-import jk_5.nailed.Nailed
 import net.minecraft.src.ICommandSender
+import jk_5.nailed.map.MapLoader
 
 /**
  * No description given
@@ -21,7 +21,7 @@ object PlayerRegistry {
     else{
       val player = new Player(username)
       this.players.put(username, player)
-      player.setCurrentMap(Nailed.mapLoader.getLobby)
+      player.setCurrentMap(MapLoader.getLobby)
       player
     }
 }

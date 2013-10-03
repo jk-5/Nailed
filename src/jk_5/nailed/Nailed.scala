@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus
 import jk_5.nailed.config.helper.ConfigFile
 import java.io.File
 import jk_5.nailed.map.MapLoader
-import jk_5.nailed.map.stats.StatManager
 import jk_5.nailed.irc.IrcConnector
 import jk_5.nailed.teamspeak3.TeamspeakManager
 import net.minecraft.src._
@@ -21,10 +20,7 @@ import scala.collection.JavaConversions._
 object Nailed {
   final val eventBus = new EventBus
   final val config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file")
-  final val mapLoader = new MapLoader
-  final val statManager = new StatManager
   final val irc = new IrcConnector
-  final val teamspeak = new TeamspeakManager
 
   var server: DedicatedServer = _
 
@@ -33,19 +29,18 @@ object Nailed {
 
     this.eventBus.register(NailedEventListener)
 
-    this.mapLoader.loadMaps()
+    MapLoader.loadMaps()
 
     GroupRegistry.registerGroup("player", new GroupPlayer())
     GroupRegistry.registerGroup("admin", new GroupAdmin())
     GroupRegistry.setDefaultGroup("player")
 
-    this.mapLoader.setupLobby()
+    MapLoader.setupLobby()
 
     this.irc.connect()
     IPCClient.start()
 
-    //this.teamspeak.setEnabled(false); //Disable it, it's broke like a joke
-    this.teamspeak.connect()
+    TeamspeakManager.connect()
   }
 
   def onWorldReady() {
@@ -57,12 +52,12 @@ object Nailed {
     //val map1 = this.mapLoader.createWorld(mapLoader.getMappack("normalLobby"))
     //val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
 
-    this.mapLoader.setupMapSettings()
+    MapLoader.setLobbyWorld(this.server.worldServerForDimension(0))
   }
 
   def registerCommands(){
     val handler = this.server.getCommandManager.asInstanceOf[ServerCommandManager]
-    handler.getCommands.foreach(command => command match {
+    handler.getCommands.foreach(command => command._2 match {
         case c: CommandDefaultGameMode => handler.getCommands.remove(c)
         case c: CommandShowSeed => handler.getCommands.remove(c)
         case c: ServerCommandScoreboard => handler.getCommands.remove(c)
@@ -81,6 +76,6 @@ object Nailed {
     handler.registerCommand(CommandReady)
     handler.registerCommand(CommandServerMode)
     handler.registerCommand(CommandReconnectIPC)
-    if (teamspeak.isEnabled) handler.registerCommand(CommandTeamspeak)
+    if (TeamspeakManager.isEnabled) handler.registerCommand(CommandTeamspeak)
   }
 }

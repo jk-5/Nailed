@@ -1,6 +1,6 @@
 package jk_5.nailed.players
 
-import jk_5.nailed.teamspeak3.TeamspeakClient
+import jk_5.nailed.teamspeak3.TeamspeakManager
 import jk_5.nailed.map.Map
 import jk_5.nailed.team.Team
 import jk_5.nailed.Nailed
@@ -16,22 +16,22 @@ import net.minecraft.src._
  */
 case class Player(private final val username: String) {
 
-  private var teamspeakClient: TeamspeakClient = _
+  private var teamspeakName: String = null
   private var currentMap: Map = _
   private var team = Team.UNKNOWN
   private var group = GroupRegistry.getDefaultGroup
   private var spectator = false
 
   def onLogin(){
-    if(!Nailed.config.getTag("teamspeak").getTag("enabled").getBooleanValue(false)) return
-    if(this.teamspeakClient != null) return
-    this.setTeamspeakClient(Nailed.teamspeak.getClientForUser(this.username))
+    if(!Nailed.config.getTag("teamspeak").getTag("enabled").getBooleanValue(default = false)) return
+    if(this.teamspeakName != null) return
+    this.teamspeakName = if(TeamspeakManager.getClientForUser(this.username).isDefined) this.username else null
   }
 
-  def setTeamspeakClient(ts: TeamspeakClient){
-    if(!Nailed.teamspeak.isEnabled) return
-    this.teamspeakClient = ts
-    if(this.teamspeakClient != null) this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakClient.getNickname)
+  def setTeamspeakName(name: String){
+    if(TeamspeakManager.isEnabled) return
+    this.teamspeakName = name
+    if(this.teamspeakName != null) this.sendChatMessage(EnumColor.AQUA + "You are now linked to your teamspeak account " + this.teamspeakName)
     else this.sendChatMessage(EnumColor.AQUA + "There was no teamspeak client found with the same username as you. Change your teamspeak username so it matches your ingame name or do /ts setname")
   }
 
@@ -54,7 +54,7 @@ case class Player(private final val username: String) {
     if(entity == null) return
     if(spectator){
       this.spectator = true
-      this.getCurrentMap.getWorld.getScoreboard.func_96521_a(this.username, this.currentMap.getTeamManager.spectatorTeam) //join
+      this.getCurrentMap.getWorld.getScoreboard.func_96521_a(this.username, this.currentMap.getTeamManager.getSpectatorTeam) //join
       entity.addPotionEffect(new PotionEffect(Potion.invisibility.getId, 1000000, 0, true))
       entity.capabilities.allowEdit = false
       entity.capabilities.disableDamage = true
@@ -84,7 +84,7 @@ case class Player(private final val username: String) {
   @inline def getUsername = this.username
   @inline def getGroup = this.group
   @inline def getEntity: Option[EntityPlayerMP] = Option(MinecraftServer.getServer.getConfigurationManager.getPlayerEntity(this.username))
-  @inline def getTeamspeakClient = this.teamspeakClient
+  @inline def getTeamspeakName = this.teamspeakName
   @inline def getTeam = this.team
   @inline def getChatFormattedName = this.group.getNameColor + this.username + EnumColor.RESET.toString
   @inline def getCurrentMap = this.currentMap

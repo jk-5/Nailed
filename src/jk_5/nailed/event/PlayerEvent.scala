@@ -1,6 +1,5 @@
 package jk_5.nailed.event
 
-import jk_5.nailed.event.NailedEvent
 import jk_5.nailed.players.Player
 
 /**
@@ -9,6 +8,6 @@ import jk_5.nailed.players.Player
  * @author jk-5
  */
 class PlayerEvent(var player: Player) extends NailedEvent
-class PlayerChatEvent(private var player: Player, var message: String) extends PlayerEvent(player)
-class PlayerJoinServerEvent(private var player: Player) extends PlayerEvent(player)
-class PlayerLeaveServerEvent(private var player: Player) extends PlayerEvent(player)
+class PlayerChatEvent(player: Player, var message: String) extends PlayerEvent(player)
+class PlayerJoinServerEvent(player: Player) extends PlayerEvent(player)
+class PlayerLeaveServerEvent(player: Player) extends PlayerEvent(player)

@@ -6,10 +6,12 @@ import jk_5.nailed.event.PlayerChatEvent;
 import jk_5.nailed.event.PlayerJoinServerEvent;
 import jk_5.nailed.event.PlayerLeaveServerEvent;
 import jk_5.nailed.players.Player;
+import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.EnumColor;
 import jk_5.nailed.util.ServerUtils;
 import net.minecraft.server.MinecraftServer;
 import org.jibble.pircbot.PircBot;
+import scala.Option;
 
 /**
  * No description given
@@ -18,14 +20,14 @@ import org.jibble.pircbot.PircBot;
  */
 public class IrcConnector extends PircBot implements Runnable {
 
-    public String server = Nailed.config.getTag("irc").getTag("server").setComment("IP/Hostname for the Irc server").getValue("");
-    public int port = Nailed.config.getTag("irc").getTag("port").setComment("Port for the Irc server").getIntValue(6667);
-    public String serverPassword = Nailed.config.getTag("irc").getTag("serverPassword").setComment("IRC server password").getValue("");
-    public String channel = Nailed.config.getTag("irc").getTag("channel").getTag("name").setComment("IRC channel").getValue("#nailed");
-    public String channelPass = Nailed.config.getTag("irc").getTag("channel").getTag("password").setComment("IRC channel password").getValue("");
+    public String server = Nailed.config().getTag("irc").getTag("server").setComment("IP/Hostname for the Irc server").getValue("");
+    public int port = Nailed.config().getTag("irc").getTag("port").setComment("Port for the Irc server").getIntValue(6667);
+    public String serverPassword = Nailed.config().getTag("irc").getTag("serverPassword").setComment("IRC server password").getValue("");
+    public String channel = Nailed.config().getTag("irc").getTag("channel").getTag("name").setComment("IRC channel").getValue("#nailed");
+    public String channelPass = Nailed.config().getTag("irc").getTag("channel").getTag("password").setComment("IRC channel password").getValue("");
 
     public IrcConnector() {
-        Nailed.eventBus.register(this);
+        Nailed.eventBus().register(this);
     }
 
     public void connect() {
@@ -38,29 +40,29 @@ public class IrcConnector extends PircBot implements Runnable {
     @Subscribe
     @SuppressWarnings("unused")
     public void onChat(PlayerChatEvent event) {
-        this.sendMessage(this.channel, "<" + event.player.getUsername() + "> " + event.message);
+        this.sendMessage(this.channel, "<" + event.player().getUsername() + "> " + event.message());
     }
 
     @Subscribe
     @SuppressWarnings("unused")
     public void onJoin(PlayerJoinServerEvent event) {
-        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has joined the game");
+        this.sendMessage(this.channel, "* " + event.player().getUsername() + " has joined the game");
     }
 
     @Subscribe
     @SuppressWarnings("unused")
     public void onLeave(PlayerLeaveServerEvent event) {
-        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has left the game");
+        this.sendMessage(this.channel, "* " + event.player().getUsername() + " has left the game");
     }
 
     @Override
     public void onMessage(String channel, String sender, String login, String hostname, String message) {
         if (message.startsWith("!msg")) {
             String args[] = message.split(" ", 3);
-            Player p = Nailed.playerRegistry.getPlayer(args[1]);
-            if (p == null) this.sendMessage(channel, sender + ": Player " + args[1] + " was not found!");
+            Option<Player> p = PlayerRegistry.getPlayer(args[1]);
+            if (p.isEmpty()) this.sendMessage(channel, sender + ": Player " + args[1] + " was not found!");
             else
-                p.sendChatMessage(EnumColor.GREY + "[" + channel + "] [" + sender + " -> " + EnumColor.GOLD + p.getUsername() + EnumColor.GREY + "] " + EnumColor.RESET + args[2]);
+                p.get().sendChatMessage(EnumColor.GREY + "[" + channel + "] [" + sender + " -> " + EnumColor.GOLD + p.get().getUsername() + EnumColor.GREY + "] " + EnumColor.RESET + args[2]);
         } else if (message.equals("!players")) {
             this.sendMessage(channel, "Players currently in game: " + MinecraftServer.getServer().getConfigurationManager().getPlayerListAsString());
         } else

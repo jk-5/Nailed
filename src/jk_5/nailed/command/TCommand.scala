@@ -4,10 +4,9 @@ import net.minecraft.src._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.{mutable, JavaConversions}
 import java.util
-import jk_5.nailed.util.EmptyJavaList
 import jk_5.nailed.players.PlayerRegistry
-import jk_5.nailed.Nailed
 import net.minecraft.server.MinecraftServer
+import jk_5.nailed.map.MapLoader
 
 /**
  * No description given
@@ -18,21 +17,21 @@ object Command{
   def getMatched(args: Array[String], possible: String*): mutable.Buffer[String] = {
     val lastWord = args.last
     val ret = mutable.ArrayBuffer[String]()
-    possible.filter(_.startsWith(lastWord)).foreach(s => ret += s)
+    possible.filter(_.toLowerCase.startsWith(lastWord.toLowerCase)).foreach(s => ret += s)
     ret
   }
 
   def getMatched(args: Array[String], possible: Iterable[String]): mutable.Buffer[String] = {
     val lastWord = args.last
     val ret = mutable.ArrayBuffer[String]()
-    possible.filter(_.startsWith(lastWord)).foreach(s => ret += s)
+    possible.filter(_.toLowerCase.startsWith(lastWord.toLowerCase)).foreach(s => ret += s)
     ret
   }
 
   @inline def getAllUsernames = MinecraftServer.getServer.getAllUsernames
 }
 
-trait TCommand extends ICommand {
+trait TCommand extends CommandProxy {
   type WrongUsageException = net.minecraft.src.WrongUsageException
   type CommandException = net.minecraft.src.CommandException
   type CommandSender = jk_5.nailed.command.CommandSender
@@ -48,9 +47,9 @@ trait TCommand extends ICommand {
   final def getCommandName = this.commandName
   override final def getCommandAliases = JavaConversions.bufferAsJavaList(this.aliases)
   final def addTabCompletionOptions(sender: ICommandSender, args: Array[String]): util.List[_] = {
-    if(!this.canCommandSenderUseCommand(sender)) return new EmptyJavaList[String]
+    if(!this.canCommandSenderUseCommand(sender)) return new util.ArrayList[String](0)
     val res = this.addAutocomplete(new CommandSender(sender), args)
-    if(res == null) new EmptyJavaList[String] else JavaConversions.bufferAsJavaList(res)
+    if(res == null) new util.ArrayList[String](0) else JavaConversions.bufferAsJavaList(res)
   }
   final def canCommandSenderUseCommand(sender: ICommandSender) = this.canCommandSenderUseCommand(new CommandSender(sender))
   final def processCommand(sender: ICommandSender, args: Array[String]) = if(this.canCommandSenderUseCommand(sender)) this.processCommand(new CommandSender(sender), args)
@@ -64,7 +63,7 @@ trait TCommand extends ICommand {
 }
 
 class CommandSender(private final val sender: ICommandSender){
-  private final val worldMap = Nailed.mapLoader.getMap(this.sender)
+  private final val worldMap = MapLoader.getMap(this.sender)
 
   @inline implicit def toCommandSender: ICommandSender = this.sender
 

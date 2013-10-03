@@ -3,9 +3,9 @@ package jk_5.nailed.map.gameloop
 import jk_5.nailed.team.Team
 import jk_5.nailed.map.Map
 import jk_5.nailed.util.EnumColor
-import jk_5.nailed.Nailed
 import jk_5.nailed.map.stats.StatManager
-import scala.collection.{mutable, JavaConversions}
+import scala.collection.mutable
+import jk_5.nailed.teamspeak3.TeamspeakManager
 
 /**
  * No description given
@@ -20,7 +20,7 @@ class GameThread(private final val map: Map) extends Thread {
   private var watchUnready = false
   private var interruptWin = false
   private var winner: Team = null
-  private final val instructions: mutable.Buffer[IInstruction] = JavaConversions.asScalaBuffer(this.map.getMappack.getInstructions)
+  private final val instructions: mutable.Buffer[IInstruction] = this.map.getMappack.instructions.toBuffer
 
   override def run(){
     if(this.instructions.size == 0) return
@@ -52,8 +52,8 @@ class GameThread(private final val map: Map) extends Thread {
     }
     for(player <- this.map.getPlayers){
       if(player.getEntity.isDefined) player.getEntity.get.setSpawnChunk(null, false)
-      if(Nailed.teamspeak.isEnabled && player.getTeamspeakClient != null)
-        Nailed.teamspeak.moveClientToChannel(player.getTeamspeakClient, 14) //FIXME: lobby!
+      if(TeamspeakManager.isEnabled && player.getTeamspeakName != null)
+        TeamspeakManager.moveClientToChannel(TeamspeakManager.getClientForUser(player.getTeamspeakName).get, 14) //FIXME: lobby!
     }
     this.gameRunning = false
   }

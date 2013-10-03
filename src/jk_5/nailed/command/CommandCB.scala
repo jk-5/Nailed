@@ -7,7 +7,7 @@ package jk_5.nailed.command
  */
 object CommandCB extends TCommand {
   val commandName = "cb"
-  override val permissionLevel = 2
+  this.permissionLevel = 2
 
   @inline override def getCommandUsage = "/cb - Command for command block interaction with Nailed"
   @inline def processCommand(sender: CommandSender, args: Array[String]){

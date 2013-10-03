@@ -20,7 +20,7 @@ object IPCClient extends Thread {
   private final val uri: URI = new URI("ws://minecraft.reening.nl:5000/server")
   private var channel: Channel = null
 
-  @inline def sendPacket(p: IPCPacket) = this.channel.writeAndFlush(p)
+  @inline def sendPacket(p: IPCPacket) = if(this.channel != null && this.channel.isOpen) this.channel.writeAndFlush(p)
   @inline def disconnect() = if(this.channel.isActive && this.channel.isOpen) this.channel.close()
   @inline def reconnect() = {this.disconnect(); this.start()}
   @inline def getURI = this.uri

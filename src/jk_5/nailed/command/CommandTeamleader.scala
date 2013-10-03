@@ -12,7 +12,7 @@ import scala.collection.mutable
  */
 object CommandTeamleader extends TCommand {
   val commandName = "teamleader"
-  override val permissionLevel = 2
+  this.permissionLevel = 2
 
   override def getCommandUsage = "/teamleader - Sets the teamleaders"
   def processCommand(sender: CommandSender, args: Array[String]){

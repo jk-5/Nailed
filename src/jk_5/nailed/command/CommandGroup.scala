@@ -11,7 +11,7 @@ import jk_5.nailed.util.EnumColor
  */
 object CommandGroup extends TCommand {
   val commandName = "group"
-  override val permissionLevel = 2
+  this.permissionLevel = 2
 
   override def getCommandUsage = "/group - Sets the group of a player"
   def processCommand(sender: CommandSender, args: Array[String]) = args.length match{

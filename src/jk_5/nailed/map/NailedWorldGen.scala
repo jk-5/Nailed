@@ -30,7 +30,7 @@ class VoidWorldChunkManager(private final val world: World) extends WorldChunkMa
     var ret = super.findBiomePosition(x, z, range, biomes, rand)
     if (x == 0 && z == 0 && !world.getWorldInfo.isInitialized) {
       if (ret == null) ret = new ChunkPosition(0, 0, 0)
-      val spawn = NailedEventFactory.getSpawnPoint(this.world)
+      val spawn = NailedEventFactory.getSpawnPoint(MapLoader.getMapFromWorld(this.world.asInstanceOf[WorldServer]))
       world.setBlock(spawn.posX, spawn.posY, spawn.posZ, Block.bedrock.blockID)
       printf("Building spawn platform at: %d, %d, %d\n", spawn.posX, spawn.posY, spawn.posZ)
     }

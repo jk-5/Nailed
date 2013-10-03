@@ -6,6 +6,7 @@ import net.minecraft.src.WorldServer
 import jk_5.nailed.players.{Player, PlayerRegistry}
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.Nailed
+import java.io.File
 
 /**
  * No description given
@@ -36,14 +37,15 @@ class Map(private final val mappack: Mappack) {
   }
 
   @inline def sendMessageToAllPlayersWithoutPrefix(msg: String) = this.getPlayers.foreach(_.sendChatMessage(msg))
-  @inline def sendMessageToAllPlayers(msg: String) = this.sendMessageToAllPlayersWithoutPrefix(EnumColor.GREEN + "[" + this.getMappack.getMapName + "] " + EnumColor.RESET + msg)
+  @inline def sendMessageToAllPlayers(msg: String) = this.sendMessageToAllPlayersWithoutPrefix(EnumColor.GREEN + "[" + this.getMappack.mapName + "] " + EnumColor.RESET + msg)
 
   @inline def getScoreboard = this.getWorld.getScoreboard
   @inline def getWorld = this.world
   @inline def getUID = this.UID
   @inline def getMappack = this.mappack
   @inline def getTeamManager = this.teamManager
-  @inline def getFolderName = "map%d%s".format(this.getUID, this.getMappack.getInternalName)
+  @inline def getFolderName = "map%d%s".format(this.getUID, this.getMappack.internalName)
   @inline def getGameThread = this.gameThread
   @inline def getPlayers = PlayerRegistry.getPlayers.filter(_.getCurrentMap == this)
+  @inline def getWorldFolder = new File(MapLoader.mapsFolder, this.getFolderName)
 }

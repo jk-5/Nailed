@@ -99,8 +99,8 @@ class ConfigFile(var file: File, val reader: Reader) extends ConfigTagParent {
     this.loading = false
   }
 
-  def setReadOnly(ro: Boolean): ConfigFile = {
-    readonly = ro
+  def setReadOnly(readonly: Boolean): ConfigFile = {
+    this.readonly = readonly
     this
   }
 
