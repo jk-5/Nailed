@@ -48,8 +48,8 @@ object NailedEventFactory {
   }
 
   def canPlayerPickup(entity: EntityPlayer): Boolean = {
-    PlayerRegistry.getPlayer(entity.getCommandSenderName).map(p => !p.isSpectator)
-    false
+    val p = PlayerRegistry.getPlayer(entity.getCommandSenderName)
+    p.isDefined && !p.get.isSpectator
   }
 
   def canPlayerAttackPlayer(a: EntityPlayer, b: EntityPlayer): Boolean = {
