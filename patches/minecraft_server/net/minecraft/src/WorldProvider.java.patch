@@ -3,7 +3,7 @@
 @@ -1,4 +1,6 @@
  package net.minecraft.src;
 +
-+import jk_5.nailed.map.gen.NailedWorldGen;
++import jk_5.nailed.map.NailedWorldGen;
  
  public abstract class WorldProvider {
     public static final float[] field_111203_a = new float[]{1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};

@@ -1,16 +1,17 @@
 --- ../src_base/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
 +++ ../src_work/minecraft_server/net/minecraft/src/ServerConfigurationManager.java
-@@ -12,6 +12,9 @@
+@@ -12,6 +12,10 @@
  import java.util.Map;
  import java.util.Set;
  import java.util.Map.Entry;
 +
 +import jk_5.nailed.Nailed;
 +import jk_5.nailed.NailedEventFactory;
++import jk_5.nailed.map.MapLoader;
  import net.minecraft.server.MinecraftServer;
  
  public abstract class ServerConfigurationManager {
-@@ -20,7 +23,6 @@
+@@ -20,7 +24,6 @@
     public final List playerEntityList = new ArrayList();
     private final BanList bannedPlayers = new BanList(new File("banned-players.txt"));
     private final BanList bannedIPs = new BanList(new File("banned-ips.txt"));
@@ -18,7 +19,7 @@
     private Set whiteListedPlayers = new HashSet();
     private IPlayerFileData playerNBTManagerObj;
     private boolean whiteListEnforced;
-@@ -58,7 +60,6 @@
+@@ -58,7 +61,6 @@
        var7.sendPacket(new Packet16BlockItemSwitch(par2EntityPlayerMP.inventory.currentItem));
        this.func_96456_a((ServerScoreboard)var5.getScoreboard(), par2EntityPlayerMP);
        this.updateTimeAndWeatherForPlayer(par2EntityPlayerMP, var5);
@@ -26,7 +27,7 @@
        this.playerLoggedIn(par2EntityPlayerMP);
        var7.setPlayerLocation(par2EntityPlayerMP.posX, par2EntityPlayerMP.posY, par2EntityPlayerMP.posZ, par2EntityPlayerMP.rotationYaw, par2EntityPlayerMP.rotationPitch);
        this.mcServer.getNetworkThread().addPlayer(var7);
-@@ -151,6 +152,7 @@
+@@ -151,6 +153,7 @@
        this.sendPacketToAllPlayers(new Packet201PlayerInfo(par1EntityPlayerMP.getCommandSenderName(), true, 1000));
        this.playerEntityList.add(par1EntityPlayerMP);
        WorldServer var2 = this.mcServer.worldServerForDimension(par1EntityPlayerMP.dimension);
@@ -34,7 +35,7 @@
        var2.spawnEntityInWorld(par1EntityPlayerMP);
        this.func_72375_a(par1EntityPlayerMP, (WorldServer)null);
  
-@@ -165,6 +167,7 @@
+@@ -165,6 +168,7 @@
     }
  
     public void playerLoggedOut(EntityPlayerMP par1EntityPlayerMP) {
@@ -42,7 +43,7 @@
        this.writePlayerData(par1EntityPlayerMP);
        WorldServer var2 = par1EntityPlayerMP.getServerForPlayer();
        if(par1EntityPlayerMP.ridingEntity != null) {
-@@ -236,56 +239,70 @@
+@@ -236,56 +240,70 @@
     }
  
     public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP par1EntityPlayerMP, int par2, boolean par3) {
@@ -100,7 +101,7 @@
 +   }
 +
 +   public EntityPlayerMP recreatePlayerEntity(EntityPlayerMP entityPlayerMP, int par2, boolean par3, jk_5.nailed.map.Map map) {
-+      jk_5.nailed.map.Map fromMap = Nailed.mapLoader.getMapFromWorld(entityPlayerMP.getServerForPlayer());
++      jk_5.nailed.map.Map fromMap = MapLoader.getMapFromWorld(entityPlayerMP.getServerForPlayer());
 +      jk_5.nailed.map.Map toMap = map == null ? fromMap : map;
 +      WorldServer toWorld = toMap.getWorld();
 +      System.out.println(toWorld);
@@ -163,7 +164,7 @@
     }
  
     public void transferPlayerToDimension(EntityPlayerMP par1EntityPlayerMP, int par2) {
-@@ -426,21 +443,13 @@
+@@ -426,21 +444,13 @@
        return this.bannedIPs;
     }
  
@@ -187,7 +188,7 @@
     }
  
     public EntityPlayerMP getPlayerEntity(String par1Str) {
-@@ -592,10 +601,6 @@
+@@ -592,10 +602,6 @@
        return this.whiteListedPlayers;
     }
  
