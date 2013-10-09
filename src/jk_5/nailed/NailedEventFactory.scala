@@ -67,12 +67,12 @@ object NailedEventFactory {
     true
   }
 
-  @inline def flushWorlds() = {}
-  @inline def saveWorlds() = {}
+  @inline def flushWorlds() = {}    //Unused. See https://github.com/jk-5/Nailed/tree/fe7fde821711b227806c76d193eb4d2f38dc9cb8
+  @inline def saveWorlds() = {}     //Unused. See https://github.com/jk-5/Nailed/tree/fe7fde821711b227806c76d193eb4d2f38dc9cb8
   @inline def isServerPublic = this.mode.equals("play")
   @inline def isServerPublicForAddress(address: InetAddress): Boolean = this.isServerPublic || address.getHostName.equalsIgnoreCase("localhost")
-  @inline def getProtocolVersion(address: InetAddress) = if(isServerPublicForAddress(address)) 74 else 5
-  @inline def getMCVersionForList(address: InetAddress) = if(isServerPublicForAddress(address)) "1.6.2" else "Offline"
+  @inline def getProtocolVersion(address: InetAddress) = if(isServerPublicForAddress(address)) 78 else 5
+  @inline def getMCVersionForList(address: InetAddress) = if(isServerPublicForAddress(address)) Nailed.server.getMinecraftVersion else "Offline"
   @inline def getMotdForList: String =
     if(mode.equals("dev")) EnumColor.GREEN + "[Nailed]" + EnumColor.RESET + " Development Mode"
     else if(mode.equals("build")) EnumColor.GREEN + "[Nailed]" + EnumColor.RESET + " Build Mode"

@@ -5,13 +5,14 @@
 +
 +import jk_5.nailed.NailedEventFactory;
  
- public class EntityXPOrb extends Entity {
-    public int xpColor;
-@@ -134,6 +136,7 @@
- 
-    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
-       if(!this.worldObj.isRemote) {
-+         if(!NailedEventFactory.canPlayerPickup(par1EntityPlayer)) return;
-          if(this.field_70532_c == 0 && par1EntityPlayer.xpCooldown == 0) {
-             par1EntityPlayer.xpCooldown = 2;
-             this.playSound("random.orb", 0.1F, 0.5F * ((this.rand.nextFloat() - this.rand.nextFloat()) * 0.7F + 1.8F));
+ public class EntityXPOrb extends Entity
+ {
+@@ -206,7 +208,7 @@
+      */
+     public void onCollideWithPlayer(EntityPlayer par1EntityPlayer)
+     {
+-        if (!this.worldObj.isRemote)
++        if (!this.worldObj.isRemote && NailedEventFactory.canPlayerPickup(par1EntityPlayer))
+         {
+             if (this.field_70532_c == 0 && par1EntityPlayer.xpCooldown == 0)
+             {

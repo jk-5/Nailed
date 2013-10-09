@@ -5,24 +5,22 @@
 +
 +import jk_5.nailed.map.NailedWorldGen;
  
- public abstract class WorldProvider {
-    public static final float[] field_111203_a = new float[]{1.0F, 0.75F, 0.5F, 0.25F, 0.0F, 0.25F, 0.5F, 0.75F};
-@@ -30,16 +32,11 @@
-    }
+ public abstract class WorldProvider
+ {
+@@ -71,6 +73,7 @@
+         {
+             this.worldChunkMgr = new WorldChunkManager(this.worldObj);
+         }
++        this.worldChunkMgr = NailedWorldGen.getWorldChunkManager(this.worldObj);
+     }
  
-    protected void registerWorldChunkManager() {
--      if(this.worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT) {
--         FlatGeneratorInfo var1 = FlatGeneratorInfo.createFlatGeneratorFromString(this.worldObj.getWorldInfo().getGeneratorOptions());
--         this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.biomeList[var1.getBiome()], 0.5F, 0.5F);
--      } else {
--         this.worldChunkMgr = new WorldChunkManager(this.worldObj);
--      }
-+      this.worldChunkMgr = NailedWorldGen.getWorldChunkManager(this.worldObj);
-    }
+     /**
+@@ -78,7 +81,7 @@
+      */
+     public IChunkProvider createChunkGenerator()
+     {
+-        return (IChunkProvider)(this.terrainType == WorldType.FLAT ? new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c) : new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
++        return NailedWorldGen.getChunkProvider(this.worldObj);
+     }
  
-    public IChunkProvider createChunkGenerator() {
--      return (IChunkProvider)(this.terrainType == WorldType.FLAT?new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c):new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
-+      return NailedWorldGen.getChunkProvider(this.worldObj);
-    }
- 
-    public boolean canCoordinateBeSpawn(int par1, int par2) {
+     /**

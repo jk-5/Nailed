@@ -9,7 +9,7 @@ import net.minecraft.src.{Packet, ChatMessageComponent}
  * @author jk-5
  */
 object ServerUtils {
-  def broadcastChatMessage(msg: String) = MinecraftServer.getServer.getConfigurationManager.sendChatMsg(ChatMessageComponent.func_111066_d(msg))
+  def broadcastChatMessage(msg: String) = MinecraftServer.getServer.getConfigurationManager.sendChatMsg(ChatMessageComponent.createFromText(msg))
   def broadcastChatMessage(p: Packet) = MinecraftServer.getServer.getConfigurationManager.sendPacketToAllPlayers(p)
 }
 

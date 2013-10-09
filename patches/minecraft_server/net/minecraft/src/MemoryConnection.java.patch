@@ -8,12 +8,13 @@
  import java.net.SocketAddress;
  import java.util.List;
  
-@@ -73,4 +74,8 @@
-          this.readPacketCache.add(par1Packet);
-       }
-    }
+@@ -120,4 +121,9 @@
+             this.readPacketCache.add(par1Packet);
+         }
+     }
 +
-+   public Socket getSocket(){
-+       return null;
-+   }
++    public Socket getSocket()
++    {
++        return null;
++    }
  }

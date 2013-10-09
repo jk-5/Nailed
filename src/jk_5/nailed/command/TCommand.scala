@@ -74,5 +74,5 @@ class CommandSender(private final val sender: ICommandSender){
   @inline def isInvalidPlayer = !this.isValidPlayer
   @inline def player = PlayerRegistry.getPlayer(this.sender).get
   @inline def map = this.worldMap
-  @inline def sendChatMessage(msg: String) = this.sender.sendChatToPlayer(ChatMessageComponent.func_111066_d(msg))
+  @inline def sendChatMessage(msg: String) = this.sender.sendChatToPlayer(ChatMessageComponent.createFromText(msg))
 }

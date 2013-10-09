@@ -7,12 +7,12 @@
  
  import java.util.Iterator;
  
-@@ -180,7 +182,7 @@
-       if(!this.worldObj.isRemote) {
-          ItemStack var2 = this.getEntityItem();
-          int var3 = var2.stackSize;
--         if(this.delayBeforeCanPickup == 0 && par1EntityPlayer.inventory.addItemStackToInventory(var2)) {
-+         if(this.delayBeforeCanPickup == 0 && NailedEventFactory.canPlayerPickup(par1EntityPlayer) && par1EntityPlayer.inventory.addItemStackToInventory(var2)) {
-             if(var2.itemID == Block.wood.blockID) {
-                par1EntityPlayer.triggerAchievement(AchievementList.mineWood);
-             }
+@@ -282,7 +284,7 @@
+      */
+     public void onCollideWithPlayer(EntityPlayer par1EntityPlayer)
+     {
+-        if (!this.worldObj.isRemote)
++        if (!this.worldObj.isRemote && NailedEventFactory.canPlayerPickup(par1EntityPlayer))
+         {
+             ItemStack var2 = this.getEntityItem();
+             int var3 = var2.stackSize;

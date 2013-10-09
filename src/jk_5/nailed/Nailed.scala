@@ -47,7 +47,7 @@ object Nailed {
     this.registerCommands()
 
     this.server.setAllowFlight(true)
-    this.server.func_104055_i(false)  //setForceGamemode
+    this.server.setForceGamemode(false)
 
     //val map1 = this.mapLoader.createWorld(mapLoader.getMappack("normalLobby"))
     //val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
