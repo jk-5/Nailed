@@ -3,6 +3,8 @@ package jk_5.nailed.ipc.packet
 import com.nexus.data.json.{JsonArray, JsonObject}
 import jk_5.nailed.Nailed
 import scala.collection.JavaConversions._
+import jk_5.nailed.players.PlayerRegistry
+import jk_5.nailed.map.MapLoader
 
 /**
  * No description given
@@ -13,13 +15,9 @@ class PacketInitConnection extends IPCPacket {
 
   def write(data: JsonObject){
     val players = new JsonArray
-    for(player <- Nailed.playerRegistry.getPlayers){
-      players.add(player.getUsername)
-    }
+    PlayerRegistry.getPlayers.foreach(p => players.add(p.getUsername))
     val mappacks = new JsonArray
-    for(mappack <- Nailed.mapLoader.getMappacks){
-      mappacks.add(mappack.getMapName)
-    }
+    MapLoader.getMappacks.foreach(m => mappacks.add(m.mapName))
     data.add("players", players).add("mappacks", mappacks)
   }
   @inline def read(data: JsonObject) = NoOp

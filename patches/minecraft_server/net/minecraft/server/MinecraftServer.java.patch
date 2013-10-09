@@ -1,95 +1,78 @@
 --- ../src_base/minecraft_server/net/minecraft/server/MinecraftServer.java
 +++ ../src_work/minecraft_server/net/minecraft/server/MinecraftServer.java
-@@ -12,6 +12,9 @@
+@@ -12,6 +12,8 @@
  import java.util.List;
  import java.util.logging.Level;
  import java.util.logging.Logger;
 +
 +import jk_5.nailed.Nailed;
-+import jk_5.nailed.NailedEventFactory;
  import net.minecraft.src.AnvilSaveConverter;
  import net.minecraft.src.AxisAlignedBB;
  import net.minecraft.src.CallableIsServerModded;
-@@ -138,7 +141,7 @@
-       this.userMessage = par1Str;
-    }
+@@ -206,7 +208,7 @@
+         this.userMessage = par1Str;
+     }
  
--   protected void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str) {
-+   protected void loadAllWorlds(String par1Str, String par2Str, long par3) {
-       this.convertMapIfNeeded(par1Str);
-       this.setUserMessage("menu.loadingLevel");
-       this.worldServers = new WorldServer[3];
-@@ -147,8 +150,8 @@
-       WorldInfo var9 = var7.loadWorldInfo();
-       WorldSettings var8;
-       if(var9 == null) {
--         var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
--         var8.func_82750_a(par6Str);
-+         var8 = new WorldSettings(par3, this.getGameType(), false, this.isHardcore(), null);
-+         var8.func_82750_a("");
-       } else {
-          var8 = new WorldSettings(var9);
-       }
-@@ -184,6 +187,8 @@
+-    protected void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str)
++    protected void loadAllWorlds(String par1Str, String par2Str, long par3)
+     {
+         this.convertMapIfNeeded(par1Str);
+         this.setUserMessage("menu.loadingLevel");
+@@ -218,8 +220,8 @@
  
-          this.serverConfigManager.setPlayerManager(this.worldServers);
-       }
-+
-+      Nailed.onWorldReady();
+         if (var9 == null)
+         {
+-            var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+-            var8.func_82750_a(par6Str);
++            var8 = new WorldSettings(par3, this.getGameType(), false, this.isHardcore(), WorldType.DEFAULT);
++            var8.func_82750_a("");
+         }
+         else
+         {
+@@ -270,7 +272,7 @@
  
-       this.setDifficultyForAllWorlds(this.getDifficulty());
-       this.initialWorldChunkLoad();
-@@ -218,8 +223,6 @@
-       this.clearCurrentTask();
-    }
- 
--   public abstract boolean canStructuresSpawn();
+             this.serverConfigManager.setPlayerManager(this.worldServers);
+         }
 -
-    public abstract EnumGameType getGameType();
++        Nailed.onWorldReady();
+         this.setDifficultyForAllWorlds(this.getDifficulty());
+         this.initialWorldChunkLoad();
+     }
+@@ -308,8 +310,6 @@
  
-    public abstract int getDifficulty();
-@@ -258,6 +261,7 @@
-                }
+         this.clearCurrentTask();
+     }
+-
+-    public abstract boolean canStructuresSpawn();
+ 
+     public abstract EnumGameType getGameType();
+ 
+@@ -762,6 +762,7 @@
              }
-          }
-+         NailedEventFactory.saveWorlds();
-       }
-    }
  
-@@ -281,7 +285,7 @@
-             WorldServer var2 = this.worldServers[var1];
-             var2.flush();
-          }
+             DedicatedServer var16 = new DedicatedServer(new File(var4));
++            Nailed.init(var16);
+             var1 = var16.getLogAgent();
+ 
+             if (var3 != null)
+@@ -787,11 +788,6 @@
+             if (var7)
+             {
+                 var16.canCreateBonusChest(true);
+-            }
 -
-+         NailedEventFactory.flushWorlds();
-          if(this.usageSnooper != null && this.usageSnooper.isSnooperRunning()) {
-             this.usageSnooper.stopSnooper();
-          }
-@@ -539,6 +543,7 @@
-          }
+-            if (var2)
+-            {
+-                var16.func_120011_ar();
+             }
  
-          DedicatedServer var16 = new DedicatedServer(new File(var4));
-+         Nailed.init(var16);
-          var1 = var16.getLogAgent();
-          if(var3 != null) {
-             var16.setServerOwner(var3);
-@@ -558,10 +563,6 @@
+             var16.startServerThread();
+@@ -950,7 +946,7 @@
  
-          if(var7) {
-             var16.canCreateBonusChest(true);
--         }
--
--         if(var2) {
--            var16.func_120011_ar();
-          }
+     public String getServerModName()
+     {
+-        return "vanilla";
++        return "nailed";
+     }
  
-          var16.startServerThread();
-@@ -648,7 +649,7 @@
-    }
- 
-    public String getServerModName() {
--      return "vanilla";
-+      return "nailed";
-    }
- 
-    public CrashReport addServerInfoToCrashReport(CrashReport par1CrashReport) {
+     /**

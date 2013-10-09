@@ -12,7 +12,7 @@ import jk_5.nailed.ipc.packet.IPCPacket
  *
  * @author jk-5
  */
-class IPCClient extends Thread {
+object IPCClient extends Thread {
 
   this.setDaemon(true)
   this.setName("IPC Client thread")
@@ -20,8 +20,8 @@ class IPCClient extends Thread {
   private final val uri: URI = new URI("ws://minecraft.reening.nl:5000/server")
   private var channel: Channel = null
 
-  @inline def sendPacket(p: IPCPacket) = this.channel.writeAndFlush(p)
-  @inline def disconnect() = if(this.channel.isActive && this.channel.isOpen) this.channel.close()
+  @inline def sendPacket(p: IPCPacket) = if(this.channel != null && this.channel.isOpen) this.channel.writeAndFlush(p)
+  @inline def disconnect() = if(this.channel != null && this.channel.isActive && this.channel.isOpen) this.channel.close()
   @inline def reconnect() = {this.disconnect(); this.start()}
   @inline def getURI = this.uri
 

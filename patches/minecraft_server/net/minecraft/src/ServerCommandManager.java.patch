@@ -1,47 +1,11 @@
 --- ../src_base/minecraft_server/net/minecraft/src/ServerCommandManager.java
 +++ ../src_work/minecraft_server/net/minecraft/src/ServerCommandManager.java
-@@ -1,14 +1,16 @@
- package net.minecraft.src;
+@@ -35,8 +35,6 @@
  
- import java.util.Iterator;
-+
-+import jk_5.nailed.Nailed;
- import net.minecraft.server.MinecraftServer;
- 
- public class ServerCommandManager extends CommandHandler implements IAdminCommand {
-    public ServerCommandManager() {
-+      Nailed.registerCommands(this);
-       this.registerCommand(new CommandTime());
-       this.registerCommand(new CommandGameMode());
-       this.registerCommand(new CommandDifficulty());
--      this.registerCommand(new CommandDefaultGameMode());
-       this.registerCommand(new CommandKill());
-       this.registerCommand(new CommandToggleDownfall());
-       this.registerCommand(new CommandWeather());
-@@ -18,7 +20,6 @@
-       this.registerCommand(new CommandEffect());
-       this.registerCommand(new CommandEnchant());
-       this.registerCommand(new CommandServerEmote());
--      this.registerCommand(new CommandShowSeed());
-       this.registerCommand(new CommandHelp());
-       this.registerCommand(new CommandDebug());
-       this.registerCommand(new CommandServerMessage());
-@@ -29,10 +30,7 @@
-       this.registerCommand(new ServerCommandTestFor());
-       this.registerCommand(new CommandSpreadPlayers());
-       this.registerCommand(new CommandPlaySound());
--      this.registerCommand(new ServerCommandScoreboard());
-       if(MinecraftServer.getServer().isDedicatedServer()) {
--         this.registerCommand(new CommandServerOp());
--         this.registerCommand(new CommandServerDeop());
-          this.registerCommand(new CommandServerStop());
-          this.registerCommand(new CommandServerSaveAll());
-          this.registerCommand(new CommandServerSaveOff());
-@@ -44,7 +42,6 @@
-          this.registerCommand(new CommandServerPardon());
-          this.registerCommand(new CommandServerKick());
-          this.registerCommand(new CommandServerList());
--         this.registerCommand(new CommandServerWhitelist());
-       } else {
-          this.registerCommand(new CommandServerPublishLocal());
-       }
+         if (MinecraftServer.getServer().isDedicatedServer())
+         {
+-            this.registerCommand(new CommandServerOp());
+-            this.registerCommand(new CommandServerDeop());
+             this.registerCommand(new CommandServerStop());
+             this.registerCommand(new CommandServerSaveAll());
+             this.registerCommand(new CommandServerSaveOff());
