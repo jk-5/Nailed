@@ -1,11 +1,11 @@
 --- ../src_base/minecraft_server/net/minecraft/src/ServerCommandManager.java
 +++ ../src_work/minecraft_server/net/minecraft/src/ServerCommandManager.java
-@@ -31,8 +31,6 @@
-       this.registerCommand(new CommandPlaySound());
-       this.registerCommand(new ServerCommandScoreboard());
-       if(MinecraftServer.getServer().isDedicatedServer()) {
--         this.registerCommand(new CommandServerOp());
--         this.registerCommand(new CommandServerDeop());
-          this.registerCommand(new CommandServerStop());
-          this.registerCommand(new CommandServerSaveAll());
-          this.registerCommand(new CommandServerSaveOff());
+@@ -35,8 +35,6 @@
+ 
+         if (MinecraftServer.getServer().isDedicatedServer())
+         {
+-            this.registerCommand(new CommandServerOp());
+-            this.registerCommand(new CommandServerDeop());
+             this.registerCommand(new CommandServerStop());
+             this.registerCommand(new CommandServerSaveAll());
+             this.registerCommand(new CommandServerSaveOff());

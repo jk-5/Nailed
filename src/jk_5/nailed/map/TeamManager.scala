@@ -28,24 +28,24 @@ class TeamManager(private final val map: Map) {
       team.setMap(this.map)
       team.setFriendlyFireEnabled(tag.getTag("friendlyfire").getBooleanValue(default = false))
       this.teams.add(team)
-      val scoreboardTeam = scoreboard.func_96527_f(tag.name)
-      scoreboardTeam.func_96664_a(tag.getTag("name").getValue(""))
-      scoreboardTeam.func_96660_a(team.friendlyFireEnabled)
-      scoreboardTeam.func_98300_b(tag.getTag("frienlyinvisibles").getBooleanValue(default = true))
-      scoreboardTeam.func_96666_b(color.toString)
-      scoreboardTeam.func_96662_c(EnumColor.RESET.toString)
+      val scoreboardTeam = scoreboard.createTeam(tag.name)
+      scoreboardTeam.setTeamName(tag.getTag("name").getValue(""))
+      scoreboardTeam.setAllowFriendlyFire(team.friendlyFireEnabled)
+      scoreboardTeam.setSeeFriendlyInvisiblesEnabled(tag.getTag("frienlyinvisibles").getBooleanValue(default = true))
+      scoreboardTeam.setNamePrefix(color.toString)
+      scoreboardTeam.setNameSuffix(EnumColor.RESET.toString)
       team.setScoreboardTeam(scoreboardTeam)
     }
     this.createSpectatorTeam()
   }
 
   private def createSpectatorTeam(){
-    this.spectatorTeam = this.map.getScoreboard.func_96527_f("spectator")
-    this.spectatorTeam.func_96664_a("Spectator")
-    this.spectatorTeam.func_96660_a(false)
-    this.spectatorTeam.func_98300_b(true)
-    this.spectatorTeam.func_96666_b(EnumColor.AQUA.toString)
-    this.spectatorTeam.func_96662_c(EnumColor.RESET.toString)
+    this.spectatorTeam = this.map.getScoreboard.createTeam("spectator")
+    this.spectatorTeam.setTeamName("Spectator")
+    this.spectatorTeam.setAllowFriendlyFire(false)
+    this.spectatorTeam.setSeeFriendlyInvisiblesEnabled(true)
+    this.spectatorTeam.setNamePrefix(EnumColor.AQUA.toString)
+    this.spectatorTeam.setNameSuffix(EnumColor.RESET.toString)
   }
 
   @inline def getTeam(teamId: String) = this.teams.find(_.getTeamID == teamId)

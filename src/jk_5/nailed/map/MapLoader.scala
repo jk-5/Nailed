@@ -81,7 +81,7 @@ object MapLoader {
   }
 
   def getMap(uid: Int): Option[Map] = this.maps.find(_.getUID == uid)
-  def getMap(sender: ICommandSender): Map = this.getMapFromWorld(sender.func_130014_f_.asInstanceOf[WorldServer])
+  def getMap(sender: ICommandSender): Map = this.getMapFromWorld(sender.getEntityWorld.asInstanceOf[WorldServer])
 
   def createWorld(mappack: Mappack): Map = {
     val map = new Map(mappack)
@@ -97,7 +97,7 @@ object MapLoader {
       converter.convertMapFormat(map.getFolderName, new ConvertingProgressUpdate(Nailed.server))
     }
     val worldServer = new WorldServer(Nailed.server, new AnvilSaveHandler(mapsFolder, map.getFolderName, true), map.getFolderName, map.getUID, new WorldSettings(1L, mappack.getDefaultGamemode, false, false, WorldType.DEFAULT), Nailed.server.theProfiler, Nailed.server.getLogAgent)
-    worldServer.setScoreboard(new Scoreboard)
+    worldServer.worldScoreboard = new Scoreboard
     worldServer.difficultySetting = mappack.getDifficulty
     worldServer.setAllowedSpawnTypes(mappack.shouldSpawnHostileMobs, mappack.shouldSpawnFriendlyMobs)
     this.handles += worldServer

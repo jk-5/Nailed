@@ -38,8 +38,8 @@ case class Player(private final val username: String) {
   }
 
   def setTeam(team: Team){
-    if(this.team != null) this.currentMap.getWorld.getScoreboard.func_96524_g(this.username) //leave
-    if(team.getScoreboardTeam.isDefined) this.currentMap.getWorld.getScoreboard.func_96521_a(this.username, team.getScoreboardTeam.get)
+    if(this.team != null) this.currentMap.getWorld.getScoreboard.removePlayerFromTeams(this.username)
+    if(team.getScoreboardTeam.isDefined) this.currentMap.getWorld.getScoreboard.addPlayerToTeam(this.username, team.getScoreboardTeam.get)
     this.team = team
   }
 
@@ -56,7 +56,7 @@ case class Player(private final val username: String) {
     if(entity == null) return
     if(spectator){
       this.spectator = true
-      this.getCurrentMap.getWorld.getScoreboard.func_96521_a(this.username, this.currentMap.getTeamManager.getSpectatorTeam) //join
+      this.getCurrentMap.getWorld.getScoreboard.addPlayerToTeam(this.username, this.currentMap.getTeamManager.getSpectatorTeam)
       entity.addPotionEffect(new PotionEffect(Potion.invisibility.getId, 1000000, 0, true))
       entity.capabilities.allowEdit = false
       entity.capabilities.disableDamage = true
@@ -66,7 +66,7 @@ case class Player(private final val username: String) {
       this.sendChatMessage(EnumColor.GREEN + "You are in spectator mode. To disable, type " + EnumColor.YELLOW + "/spectator" + EnumColor.GREEN + " again")
     }else{
       this.spectator = false
-      this.currentMap.getWorld.getScoreboard.func_96524_g(this.username) //leave
+      this.currentMap.getWorld.getScoreboard.removePlayerFromTeams(this.username)
       entity.removePotionEffect(Potion.invisibility.getId)
       entity.capabilities.allowEdit = true
       entity.capabilities.disableDamage = false
@@ -80,7 +80,7 @@ case class Player(private final val username: String) {
 
   @inline def playSound(name: String, volume: Float, pitch: Float) = this.getEntity.foreach(e=> this.sendPacket(new Packet62LevelSound(name, e.posX, e.posY, e.posZ, volume, pitch)))
 
-  @inline def sendChatMessage(msg: String) = this.getEntity.foreach(_.sendChatToPlayer(ChatMessageComponent.func_111066_d(msg)))
+  @inline def sendChatMessage(msg: String) = this.getEntity.foreach(_.sendChatToPlayer(ChatMessageComponent.createFromText(msg)))
   @inline def sendPacket(packet: Packet) = this.getEntity.foreach(_.playerNetServerHandler.sendPacket(packet))
 
   @inline def getUsername = this.username

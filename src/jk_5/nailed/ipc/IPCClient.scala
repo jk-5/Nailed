@@ -21,7 +21,7 @@ object IPCClient extends Thread {
   private var channel: Channel = null
 
   @inline def sendPacket(p: IPCPacket) = if(this.channel != null && this.channel.isOpen) this.channel.writeAndFlush(p)
-  @inline def disconnect() = if(this.channel.isActive && this.channel.isOpen) this.channel.close()
+  @inline def disconnect() = if(this.channel != null && this.channel.isActive && this.channel.isOpen) this.channel.close()
   @inline def reconnect() = {this.disconnect(); this.start()}
   @inline def getURI = this.uri
 

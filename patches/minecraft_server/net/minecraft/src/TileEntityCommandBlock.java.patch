@@ -3,40 +3,23 @@
 @@ -1,5 +1,6 @@
  package net.minecraft.src;
  
-+import jk_5.nailed.Nailed;
++import jk_5.nailed.map.stats.StatManager;
  import net.minecraft.server.MinecraftServer;
  
- public class TileEntityCommandBlock extends TileEntity implements ICommandSender {
-@@ -10,6 +11,16 @@
-    public void setCommand(String par1Str) {
-       this.command = par1Str;
-       this.onInventoryChanged();
-+   }
-+
-+   public TileEntityCommandBlock(){
-+      Nailed.statManager.updateCommandBlock(this);
-+   }
-+
-+   @Override
-+   public void onInventoryChanged(){
-+      Nailed.statManager.updateCommandBlock(this);
-+      super.onInventoryChanged();
-    }
+ public class TileEntityCommandBlock extends TileEntity implements ICommandSender
+@@ -60,6 +61,7 @@
+     public void setCommandSenderName(String par1Str)
+     {
+         this.commandSenderName = par1Str;
++        StatManager.updateCommandBlock(this);
+     }
  
-    public int executeCommandOnPowered(World par1World) {
-@@ -32,6 +43,7 @@
- 
-    public void setCommandSenderName(String par1Str) {
-       this.commandSenderName = par1Str;
-+      Nailed.statManager.updateCommandBlock(this);
-    }
- 
-    public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent) {}
-@@ -53,6 +65,7 @@
-       this.succesCount = par1NBTTagCompound.getInteger("SuccessCount");
-       if(par1NBTTagCompound.hasKey("CustomName")) {
-          this.commandSenderName = par1NBTTagCompound.getString("CustomName");
-+         Nailed.statManager.updateCommandBlock(this);
-       }
-    }
+     public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent) {}
+@@ -95,6 +97,7 @@
+         if (par1NBTTagCompound.hasKey("CustomName"))
+         {
+             this.commandSenderName = par1NBTTagCompound.getString("CustomName");
++            StatManager.updateCommandBlock(this);
+         }
+     }
  

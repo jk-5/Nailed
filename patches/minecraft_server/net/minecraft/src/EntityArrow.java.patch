@@ -7,11 +7,11 @@
  
  import java.util.List;
  
-@@ -344,6 +346,7 @@
+@@ -455,6 +457,7 @@
+     {
+         if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0)
+         {
++            if(!NailedEventFactory.canPlayerPickup(par1EntityPlayer)) return;
+             boolean var2 = this.canBePickedUp == 1 || this.canBePickedUp == 2 && par1EntityPlayer.capabilities.isCreativeMode;
  
-    public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
-       if(!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0) {
-+         if(!NailedEventFactory.canPlayerPickup(par1EntityPlayer)) return;
-          boolean var2 = this.canBePickedUp == 1 || this.canBePickedUp == 2 && par1EntityPlayer.capabilities.isCreativeMode;
-          if(this.canBePickedUp == 1 && !par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.arrow, 1))) {
-             var2 = false;
+             if (this.canBePickedUp == 1 && !par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.arrow, 1)))

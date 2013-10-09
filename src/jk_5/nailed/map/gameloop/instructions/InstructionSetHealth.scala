@@ -21,6 +21,6 @@ class InstructionSetHealth extends IInstruction {
   def execute(controller: GameThread) {
     val team = controller.getMap.getTeamManager.getTeam(this.team)
     if(team.isEmpty) return
-    controller.getMap.getPlayers.filter(p => p.getEntity.isDefined && p.getTeam.eq(team.get)).map(_.getEntity.get).foreach(_.setEntityHealth(this.health))
+    controller.getMap.getPlayers.filter(p => p.getEntity.isDefined && p.getTeam.eq(team.get)).map(_.getEntity.get).foreach(_.setHealth(this.health))
   }
 }
