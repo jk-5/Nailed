@@ -25,12 +25,18 @@ class IrcHandler(private final val bot: IrcBot) extends SimpleChannelInboundHand
 
   def channelRead0(ctx: ChannelHandlerContext, msg: String){
     val data = msg.split(" ", 4)
-    val opcode = data(1)
-    opcode match{
-      case "004" => {
-        stage = 2
-        this.callListener(_.onConnect())
-      } //Connected!
+    this.stage match{
+      case 1 => {
+        if(data.length == 0) return
+        val opcode = data(1)
+        opcode match{
+          case "004" => {
+            stage = 2
+            this.callListener(_.onConnect())
+            println("connected")
+          } //Connected!
+        }
+      }
     }
     println(msg)
   }
