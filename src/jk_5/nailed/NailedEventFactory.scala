@@ -16,7 +16,7 @@ import jk_5.nailed.map.Map
  */
 object NailedEventFactory {
 
-  private final val motd = Array[String]("Well, that escalated quickly!", "Let\'s go!", "Oh well...", "Hello world!", "That\'s me!", "Oh god why!?", "Oh i hate the teams!", "FUCK THIS SHIT!", "I hate you!", "Kill them all!", "Blow it up!", "Fix yo laggz bro!", "Where\'s the enderpearl?", "It\'s opensource!", "Gimme starfall!", EnumColor.RANDOM + "FUNKY SHIT!", "Now 99% bug-free!")
+  private final val motd = Array[String]("Well, that escalated quickly!", "Let\'s go!", "Oh well...", "Hello world!", "That\'s me!", "Oh god why!?", "Oh i hate the teams!", "FUCK THIS SHIT!", "I hate you!", "Kill them all!", "Blow it up!", "Fix yo laggz bro!", "Where\'s the enderpearl?", "It\'s opensource!", "Gimme starfall!", EnumColor.RANDOM + "FUNKY SHIT!", "Now 99% bug-free!", "Using netty!", "Booo!", "1.6.4 now!")
   var mode = sys.props.get("nailed.mode").getOrElse("play")
 
   def playerLoggedIn(entity: EntityPlayerMP, world: WorldServer){
