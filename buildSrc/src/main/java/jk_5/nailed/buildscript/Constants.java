@@ -24,8 +24,8 @@ public class Constants {
     // urls
     public static final String MC_VERSION = "1.6.4";
     public static final String MC_SERVER_URL = String.format("http://s3.amazonaws.com/Minecraft.Download/versions/%1$s/minecraft_server.%1$s.jar", MC_VERSION);
-    public static final String FERNFLOWER_URL = "https://github.com/nailed/nailed/raw/master/mcplibs/fernflower.jar";
-    public static final String EXCEPTOR_URL = "https://github.com/nailed/nailed/raw/master/mcplibs/mcinjector.jar";
+    public static final String FERNFLOWER_URL = "https://github.com/nailed/nailed/raw/buildscript/mcplibs/fernflower.jar";
+    public static final String EXCEPTOR_URL = "https://github.com/nailed/nailed/raw/buildscript/mcplibs/mcinjector.jar";
 
     // things in the cache dir.
     public static final String CACHE_DIR = "caches/minecraft";
