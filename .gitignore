@@ -1,8 +1,12 @@
 *.py[co]
 *.sw[op]
 *.iml
+*.ipr
+*.iws
 .idea
 .DS_Store
+.gradle
+build
 out
 mcp
 runtime
