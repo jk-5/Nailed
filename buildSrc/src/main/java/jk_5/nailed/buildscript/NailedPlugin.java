@@ -68,7 +68,7 @@ public class NailedPlugin implements Plugin<Project> {
         task2.setSrg(Constants.cacheFile(project, Constants.PACKAGED_SRG));
         task2.setExceptorCfg(Constants.cacheFile(project, Constants.PACKAGED_EXC));
         task2.addTransformer(Constants.projectFile(project, Constants.NAILED_RES, "nailed_at.cfg"));
-        task2.dependsOn("downloadExceptor", "fixMappings");
+        task2.dependsOn("downloadExceptor", "fixMappings", "downloadServer");
 
         DecompileTask task3 = makeTask("decompile", DecompileTask.class);
         task3.setInJar(Constants.cacheFile(project, Constants.JAR_SRG));

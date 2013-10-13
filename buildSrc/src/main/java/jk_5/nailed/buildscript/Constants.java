@@ -28,7 +28,7 @@ public class Constants {
     public static final String EXCEPTOR_URL = "https://github.com/nailed/nailed/raw/buildscript/mcplibs/mcinjector.jar";
 
     // things in the cache dir.
-    public static final String CACHE_DIR = "caches/minecraft";
+    public static final String CACHE_DIR = "caches/nailed";
     public static final String JAR_SERVER_FRESH = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_server/%1$s/minecraft_server-%1$s.jar", MC_VERSION);
     public static final String JAR_SRG = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/minecraft_srg-%1$s.jar", MC_VERSION);
     public static final String ZIP_DECOMP = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_decomp/%1$s/minecraft_decomp-%1$s.zip", MC_VERSION);
