@@ -28,7 +28,7 @@ public class NailedPlugin implements Plugin<Project> {
         createSourceCopyTasks();
 
         Task task = makeTask("setupNailed", DefaultTask.class);
-        task.dependsOn("nailedPatches", "copyNailedSources", "generateProjects");
+        task.dependsOn("nailedPatches");
         task.setGroup("Nailed");
     }
 
@@ -76,51 +76,46 @@ public class NailedPlugin implements Plugin<Project> {
         task3.setFernFlower(Constants.cacheFile(project, Constants.FERNFLOWER));
         task3.setPatch(Constants.cacheFile(project, Constants.PACKAGED_PATCH));
         task3.setAstyleConfig(Constants.projectFile(project, Constants.ASTYLE_CFG));
-        task3.dependsOn("downloadFernFlower", "deobfuscateJar", "extractWorkspace", "fixMappings");
+        task3.dependsOn("downloadFernFlower", "deobfuscateJar", "fixMappings");
     }
 
     private void createSourceManipTasks() {
         NailedCleanupTask cleanTask = makeTask("cleanup", NailedCleanupTask.class);
-        cleanTask.setDir(new File(Constants.WORKSPACE, "Nailed/src/main/minecraft"));
+        cleanTask.setDir(new File(Constants.MINECRAFT_WORK_DIR));
         cleanTask.dependsOn("copySources");
 
         PatchTask patch = makeTask("nailedPatches", PatchTask.class);
         patch.setPatchDir(Constants.projectFile(project, Constants.PATCH_DIR));
-        patch.setFilesDir(new File(Constants.WORKSPACE, "Nailed/src/main/minecraft"));
+        patch.setFilesDir(new File(Constants.MINECRAFT_WORK_DIR));
         patch.dependsOn("cleanup");
     }
 
     private void createSourceCopyTasks() {
-        // copy Start.java
-        Copy copyTask = makeTask("copyStart", Copy.class);
-        copyTask.from(Constants.projectFile(project, Constants.MAPPINGS_DIR, "patches"));
-        copyTask.include("Start.java");
-        copyTask.into(new File(Constants.ECLIPSE_CLEAN, "src/main/java"));
+        // Copy minecraft sources to CLEAN
+        System.out.println(Constants.cacheFile(project, Constants.ZIP_DECOMP));
+        System.out.println(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources"));
+        System.out.println(Constants.cacheFile(project, Constants.ZIP_DECOMP).exists());
+        System.out.println(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources").exists());
+        Copy copyTask = makeTask("extractMinecraftSources", Copy.class);
+        copyTask.include("net/**");
+        copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
+        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "java"));
         copyTask.dependsOn("decompile");
 
-        // copy the sources from CLEAN to Nailed
+        copyTask = makeTask("extractMinecraftResources", Copy.class);
+        copyTask.exclude("net/**");
+        copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
+        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources"));
+        copyTask.dependsOn("decompile");
+
+        // Copy CLEAN to WORK
         copyTask = makeTask("copySources", Copy.class);
-        copyTask.from(project.fileTree(new File(Constants.ECLIPSE_CLEAN, "src/main/java")));
-        copyTask.into(new File(Constants.WORKSPACE, "Nailed/src/main/minecraft"));
-        copyTask.dependsOn("copyStart");
-
-        // extract eclipse workspace
-        copyTask = makeTask("extractWorkspace", Copy.class);
-        copyTask.from(project.zipTree(Constants.projectFile(project, Constants.ECLIPSE)));
-        copyTask.into("eclipse");
-
-        copyTask = makeTask("copyNailedSources", Copy.class);
-        copyTask.from(project.fileTree(Constants.projectFile(project, Constants.NAILED_SRC)));
-        copyTask.into(new File(Constants.WORKSPACE, "Nailed/src/main/nailed"));
-        copyTask.dependsOn("decompile");
+        copyTask.from(project.fileTree(new File(Constants.MINECRAFT_CLEAN_DIR)));
+        copyTask.into(new File(Constants.MINECRAFT_WORK_DIR));
+        copyTask.dependsOn("extractMinecraftSources", "extractMinecraftResources");
     }
 
     private void createOtherNailedTasks() {
-        ProjectTask projecter = makeTask("generateProjects", ProjectTask.class);
-        projecter.setCleanDir(new File("eclipse/Clean"));
-        projecter.setDirtyDir(new File("eclipse/Nailed"));
-        projecter.dependsOn("extractWorkspace");
-
         CompressLZMA compressTask = makeTask("compressDeobfData", CompressLZMA.class);
         compressTask.setInputFile(Constants.cacheFile(project, Constants.PACKAGED_SRG));
         compressTask.setOutputFile(new File("deobfuscationData.lzma"));
@@ -128,8 +123,8 @@ public class NailedPlugin implements Plugin<Project> {
 
         GeneratePatches genPatcher = makeTask("genPatches", GeneratePatches.class);
         genPatcher.setPatchDir(Constants.file(Constants.PATCH_DIR));
-        genPatcher.setOriginalDir(Constants.file(Constants.ECLIPSE_CLEAN, "src", "main", "java"));
-        genPatcher.setChangedDir(Constants.file(Constants.WORKSPACE, "Nailed", "src", "main", "minecraft"));
+        genPatcher.setOriginalDir(Constants.file(Constants.MINECRAFT_CLEAN_DIR));
+        genPatcher.setChangedDir(Constants.file(Constants.MINECRAFT_WORK_DIR));
         genPatcher.setGroup("Nailed");
 
         Delete clean = makeTask("clean", Delete.class);

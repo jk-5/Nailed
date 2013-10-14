@@ -1,5 +1,6 @@
 package jk_5.nailed.buildscript.tasks;
 
+import com.beust.jcommander.internal.Maps;
 import com.github.abrarsyed.jastyle.ASFormatter;
 import com.github.abrarsyed.jastyle.OptParser;
 import com.google.common.base.Joiner;
@@ -123,7 +124,7 @@ public class DecompileTask extends CachedTask {
 
         while ((entry = zin.getNextEntry()) != null) {
             // no META or dirs. wel take care of dirs later.
-            if (entry.getName().contains("META-INF")) {
+            if (entry.getName().contains("META-INF") || entry.getName().startsWith("argo") || entry.getName().startsWith("com") || entry.getName().startsWith("org")) {
                 continue;
             }
 
@@ -137,7 +138,7 @@ public class DecompileTask extends CachedTask {
                 // fix
                 fileStr = FFPatcher.processFile(new File(entry.getName()).getName(), fileStr);
 
-                sourceMap.put(entry.getName(), fileStr);
+                sourceMap.put("minecraft_server/" + entry.getName(), fileStr);
             }
         }
 
@@ -152,7 +153,7 @@ public class DecompileTask extends CachedTask {
         List<ContextualPatch.PatchReport> errors = patch.patch(false);
         for (ContextualPatch.PatchReport report : errors) {
             // catch failed patches
-            if (report.getStatus().isSuccess()) {
+            if (report.getStatus() == ContextualPatch.PatchStatus.Failure) {
                 getLogger().log(LogLevel.ERROR, "Patching failed: " + report.getTarget(), report.getFailure());
 
                 // now spit the hunks
@@ -164,9 +165,7 @@ public class DecompileTask extends CachedTask {
                 }
 
                 throw report.getFailure();
-            }
-            // catch fuzzed patches
-            else if (report.getStatus() == ContextualPatch.PatchStatus.Fuzzed) {
+            }else if (report.getStatus() == ContextualPatch.PatchStatus.Fuzzed) {
                 getLogger().log(LogLevel.INFO, "Patching fuzzed: " + report.getTarget(), report.getFailure());
 
                 // set the boolean for later use
@@ -179,11 +178,8 @@ public class DecompileTask extends CachedTask {
                         getLogger().info("Hunk %d fuzzed %d!", hunk.getIndex(), hunk.getFuzz());
                     }
                 }
-            }
-
-            // sucesful patches
-            else {
-                getLogger().info("Patch succeeded: " + report.getTarget());
+            }else {
+                getLogger().log(LogLevel.ERROR, "Patch succeeded: " + report.getTarget());
             }
         }
 
@@ -199,21 +195,25 @@ public class DecompileTask extends CachedTask {
         Reader reader;
         Writer writer;
 
+        HashMap<String, String> newSources = new HashMap<String, String>();
+
         for (String file : sourceMap.keySet()) {
+            getLogger().info("Loading text");
             String text = sourceMap.get(file);
+            getLogger().info("Loaded");
 
-            getLogger().debug("Processing file: " + file);
+            getLogger().info("Processing file: " + file);
 
-            getLogger().debug("processing comments");
+            getLogger().info("processing comments");
             text = McpCleanup.stripComments(text);
 
-            getLogger().debug("fixing imports comments");
+            getLogger().info("fixing imports comments");
             text = McpCleanup.fixImports(text);
 
-            getLogger().debug("various other cleanup");
+            getLogger().info("various other cleanup");
             text = McpCleanup.cleanup(text);
 
-            getLogger().debug("formatting source");
+            getLogger().info("formatting source");
             reader = new StringReader(text);
             writer = new StringWriter();
             formatter.format(reader, writer);
@@ -221,9 +221,11 @@ public class DecompileTask extends CachedTask {
             writer.flush();
             writer.close();
             text = writer.toString();
-
-            sourceMap.put(file, text);
+            newSources.put(file.split("minecraft_server", 2)[1], text);
         }
+
+        sourceMap.clear();
+        sourceMap = newSources;
     }
 
     private void saveJar(File output) throws IOException {
@@ -270,7 +272,6 @@ public class DecompileTask extends CachedTask {
         @Override
         public List<String> getData(String target) {
             target = strip(target);
-            //System.out.println(target);
 
             if (fileMap.containsKey(target)) {
                 String[] lines = fileMap.get(target).split("\r\n|\r|\n");

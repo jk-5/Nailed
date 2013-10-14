@@ -37,12 +37,9 @@ public class Constants {
     public static final String FERNFLOWER = "caches/fernflower.jar";
     public static final String EXCEPTOR = "caches/exceptor.jar";
 
-    // eclipse folders
-    public static final String WORKSPACE = "eclipse";
-    public static final String ECLIPSE_CLEAN = WORKSPACE + "/Clean";
-    public static final String ECLIPSE_RUN = WORKSPACE + "/run";
-
     // src dirs
+    public static final String MINECRAFT_CLEAN_DIR = "src/clean";
+    public static final String MINECRAFT_WORK_DIR = "src/minecraft";
     public static final String NAILED_SRC = "src/main/scala";
     public static final String NAILED_RES = "src/main/resources";
     public static final String PATCH_DIR = "patches/minecraft_server";
@@ -58,7 +55,7 @@ public class Constants {
     public static final String ASTYLE_CFG = MAPPINGS_DIR + "/astyle.cfg";
 
     // various useful files
-    public static final String MCP_PATCH = MAPPINGS_DIR + "/patches/minecraft_ff.patch";
+    public static final String MCP_PATCH = MAPPINGS_DIR + "/patches/minecraft_server_ff.patch";
     public static final String PACKAGED_PATCH = Constants.CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/packaged-%1$s.patch", Constants.MC_VERSION);
     public static final String MERGE_CFG = "mcp_merge.cfg";
     public static final String ECLIPSE = "eclipse-workspace-dev.zip";
