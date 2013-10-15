@@ -42,7 +42,7 @@ public class Constants {
     public static final String MINECRAFT_WORK_DIR = "src/minecraft";
     public static final String NAILED_SRC = "src/main/scala";
     public static final String NAILED_RES = "src/main/resources";
-    public static final String PATCH_DIR = "patches/minecraft_server";
+    public static final String PATCH_DIR = "patches";
 
     // mappings
     public static final String MAPPINGS_DIR = "conf";

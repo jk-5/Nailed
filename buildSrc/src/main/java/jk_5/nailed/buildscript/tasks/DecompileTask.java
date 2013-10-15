@@ -79,6 +79,9 @@ public class DecompileTask extends CachedTask {
         getLogger().info("Cleaning source");
         applyMcpCleanup(astyleConfig);
 
+        getLogger().info("Renaming source");
+        renameSources();
+
         getLogger().info("Saving Jar");
         saveJar(outZip);
     }
@@ -228,6 +231,10 @@ public class DecompileTask extends CachedTask {
         sourceMap = newSources;
     }
 
+    private void renameSources(){
+
+    }
+
     private void saveJar(File output) throws IOException {
         ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(outZip));
 
@@ -240,7 +247,7 @@ public class DecompileTask extends CachedTask {
 
         // write in sources
         for (Map.Entry<String, String> entry : sourceMap.entrySet()) {
-            zout.putNextEntry(new ZipEntry(entry.getKey()));
+            zout.putNextEntry(new ZipEntry(entry.getKey().substring(1)));
             zout.write(entry.getValue().getBytes());
             zout.closeEntry();
         }

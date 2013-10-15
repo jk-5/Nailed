@@ -58,7 +58,7 @@ public class GeneratePatches extends DefaultTask {
 
         Diff diff = Diff.diff(file, changedFile, true);
 
-        if (diff.isEmpty()) {
+        if (!diff.isEmpty()) {
             String unidiff = diff.toUnifiedDiff(relative, relative, Files.newReader(file, Charset.defaultCharset()), Files.newReader(changedFile, Charset.defaultCharset()), 3);
 
             patchFile.getParentFile().mkdirs();

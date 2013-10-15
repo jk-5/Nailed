@@ -13,6 +13,7 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -46,8 +47,9 @@ public class PatchTask extends DefaultTask {
 
             List<ContextualPatch.PatchReport> errors = patch.patch(false);
             for (ContextualPatch.PatchReport report : errors) {
-                // catch failed patches
-                if (report.getStatus().isSuccess()) {
+                if(report.getStatus().isSuccess()){
+                    getLogger().info("Patch succeeded: " + report.getTarget());
+                }else if (report.getStatus() == ContextualPatch.PatchStatus.Failure) {
                     getLogger().log(LogLevel.ERROR, "Patching failed: " + report.getTarget(), report.getFailure());
 
                     // now spit the hunks
@@ -57,9 +59,7 @@ public class PatchTask extends DefaultTask {
                             getLogger().error("Hunk %d failed!", hunk.getIndex());
                         }
                     }
-                }
-                // catch fuzzed patches
-                else if (report.getStatus() == ContextualPatch.PatchStatus.Fuzzed) {
+                }else if (report.getStatus() == ContextualPatch.PatchStatus.Fuzzed) {
                     getLogger().log(LogLevel.INFO, "Patching fuzzed: " + report.getTarget(), report.getFailure());
 
                     // set the boolean for later use
@@ -73,12 +73,16 @@ public class PatchTask extends DefaultTask {
                         }
                     }
                 }
-
-                // sucesful patches
-                else {
-                    getLogger().info("Patch succeeded: " + report.getTarget());
-                }
             }
+        }
+
+        for(File file : this.filesDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".original~");
+            }
+        })){
+            file.delete();
         }
     }
 

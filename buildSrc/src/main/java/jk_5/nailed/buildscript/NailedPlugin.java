@@ -7,6 +7,7 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.Delete;
+import org.gradle.api.tasks.Exec;
 
 import java.io.File;
 import java.util.HashMap;
@@ -92,16 +93,13 @@ public class NailedPlugin implements Plugin<Project> {
 
     private void createSourceCopyTasks() {
         // Copy minecraft sources to CLEAN
-        System.out.println(Constants.cacheFile(project, Constants.ZIP_DECOMP));
-        System.out.println(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources"));
-        System.out.println(Constants.cacheFile(project, Constants.ZIP_DECOMP).exists());
-        System.out.println(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources").exists());
         Copy copyTask = makeTask("extractMinecraftSources", Copy.class);
         copyTask.include("net/**");
         copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
         copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "java"));
         copyTask.dependsOn("decompile");
 
+        // Copy minecraft resources to CLEAN
         copyTask = makeTask("extractMinecraftResources", Copy.class);
         copyTask.exclude("net/**");
         copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
@@ -122,13 +120,13 @@ public class NailedPlugin implements Plugin<Project> {
         compressTask.dependsOn("fixMappings");
 
         GeneratePatches genPatcher = makeTask("genPatches", GeneratePatches.class);
-        genPatcher.setPatchDir(Constants.file(Constants.PATCH_DIR));
-        genPatcher.setOriginalDir(Constants.file(Constants.MINECRAFT_CLEAN_DIR));
-        genPatcher.setChangedDir(Constants.file(Constants.MINECRAFT_WORK_DIR));
+        genPatcher.setPatchDir(Constants.projectFile(project, Constants.PATCH_DIR));
+        genPatcher.setOriginalDir(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR));
+        genPatcher.setChangedDir(Constants.projectFile(project, Constants.MINECRAFT_WORK_DIR));
         genPatcher.setGroup("Nailed");
 
         Delete clean = makeTask("clean", Delete.class);
-        clean.delete("eclipse");
+        clean.delete(Constants.projectFile(project, Constants.MINECRAFT_WORK_DIR));
         clean.setGroup("Clean");
     }
 
