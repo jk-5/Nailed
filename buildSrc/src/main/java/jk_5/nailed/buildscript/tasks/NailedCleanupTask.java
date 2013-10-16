@@ -25,6 +25,7 @@ public class NailedCleanupTask extends DefaultTask {
     private static final Pattern AFTER = Pattern.compile("(?m)(?:\\r\\n|\\r|\\n)((?:\\r\\n|\\r|\\n)[ \\t]+(case|default))"); // Fixes newline after case body before new case
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doStuff() throws IOException {
         processDir(dir);
     }

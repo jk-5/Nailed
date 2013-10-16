@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class SourceRemapper {
+public class SourceRemapper {
     Map<String, Map<String, String>> methods = new HashMap<String, Map<String, String>>();
     Map<String, Map<String, String>> fields = new HashMap<String, Map<String, String>>();
     Map<String, String> params = new HashMap<String, String>();
@@ -25,7 +25,7 @@ class SourceRemapper {
     private static final Pattern METHOD = Pattern.compile("^( {4}|\\t)(?:[\\w$.\\[\\]]+ )*(func_[0-9]+_[a-zA-Z_]+)\\(");
     private static final Pattern FIELD = Pattern.compile("^( {4}|\\t)(?:[\\w$.\\[\\]]+ )*(field_[0-9]+_[a-zA-Z_]+) *(?:=|;)");
 
-    SourceRemapper(Map<String, File> files) throws IOException {
+    public SourceRemapper(Map<String, File> files) throws IOException {
         CSVReader reader = getReader(files.get("methods"));
         for (String[] s : reader.readAll()) {
             Map<String, String> temp = new HashMap<String, String>();
@@ -34,7 +34,6 @@ class SourceRemapper {
             methods.put(s[0], temp);
         }
 
-
         reader = getReader(files.get("fields"));
         for (String[] s : reader.readAll()) {
             Map<String, String> temp = new HashMap<String, String>();
@@ -42,7 +41,6 @@ class SourceRemapper {
             temp.put("javadoc", s[3]);
             fields.put(s[0], temp);
         }
-
 
         reader = getReader(files.get("params"));
         for (String[] s : reader.readAll()) {
@@ -159,13 +157,13 @@ class SourceRemapper {
         return temp;
     }
 
-    public void remapFile(File file) throws IOException {
-        String text = Files.toString(file, Charset.defaultCharset());
+    public String remap(String text) throws IOException {
         Matcher matcher;
 
         String prevLine = null;
         ArrayList<String> newLines = new ArrayList<String>();
-        for (String line : Files.readLines(file, Charset.defaultCharset())) {
+        String[] lines = text.split("\r\n|\r|\n");
+        for (String line : lines) {
 
             // check method
             matcher = METHOD.matcher(line);
@@ -239,8 +237,6 @@ class SourceRemapper {
                 matcher.replaceFirst(fields.get(matcher.group()).get("name"));
             }
         }
-
-        // write file
-        Files.write(text, file, Charset.defaultCharset());
+        return text;
     }
 }

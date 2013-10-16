@@ -38,8 +38,9 @@ public class Constants {
     public static final String EXCEPTOR = "caches/exceptor.jar";
 
     // src dirs
-    public static final String MINECRAFT_CLEAN_DIR = "src/clean";
-    public static final String MINECRAFT_WORK_DIR = "src/minecraft";
+    public static final String MINECRAFT_CLEAN_DIR = "minecraft/clean";
+    public static final String MINECRAFT_WORK_DIR = "minecraft/work";
+    public static final String MINECRAFT_RESOURCES_DIR = "minecraft/resources";
     public static final String NAILED_SRC = "src/main/scala";
     public static final String NAILED_RES = "src/main/resources";
     public static final String PATCH_DIR = "patches";

@@ -70,6 +70,7 @@ public class MergeMappingsTask extends CachedTask {
     File outEXC;
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException {
         // read SRG.
         // using this lib because SpecialSource needs it anyways.
@@ -265,9 +266,7 @@ public class MergeMappingsTask extends CachedTask {
 
         @Override
         public String getResult() {
-            // remove the last newline before making it a string
-            return builder.substring(0, builder.length() - Constants.NEWLINE.length()).toString();
+            return builder.substring(0, builder.length() - Constants.NEWLINE.length());
         }
     }
-
 }

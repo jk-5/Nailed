@@ -23,6 +23,7 @@ public class DownloadTask extends CachedTask {
     private File output;
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException {
         File outputFile = getProject().file(output);
         outputFile.getParentFile().mkdirs();
@@ -39,8 +40,6 @@ public class DownloadTask extends CachedTask {
         int data = inStream.read();
         while (data != -1) {
             outStream.write(data);
-
-            // read next
             data = inStream.read();
         }
 

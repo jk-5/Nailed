@@ -80,8 +80,6 @@ public abstract class CachedTask extends DefaultTask {
                         return true;
                     }
                 }
-
-                // no problems? all of em are here? skip the task.
                 return false;
             }
 

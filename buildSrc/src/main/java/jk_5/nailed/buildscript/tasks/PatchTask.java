@@ -35,6 +35,7 @@ public class PatchTask extends DefaultTask {
     private ArrayList<ContextualPatch> loadedPatches = new ArrayList<ContextualPatch>();
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException, PatchException {
         // fix and create patches.
         processDir(patchDir);

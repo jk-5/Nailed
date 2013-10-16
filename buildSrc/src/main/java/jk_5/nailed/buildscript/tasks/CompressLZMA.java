@@ -23,6 +23,7 @@ public class CompressLZMA extends DefaultTask {
     private File outputFile;
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException {
         final LzmaInputStream in = new LzmaInputStream(new BufferedInputStream(new FileInputStream(outputFile)), new Decoder());
         final OutputStream out = new BufferedOutputStream(new FileOutputStream(inputFile));

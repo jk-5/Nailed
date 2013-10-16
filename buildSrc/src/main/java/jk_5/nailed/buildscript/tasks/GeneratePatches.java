@@ -30,6 +30,7 @@ public class GeneratePatches extends DefaultTask {
     File originalDir;
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException, PatchException {
         patchDir.mkdirs();
 

@@ -29,7 +29,7 @@ public class NailedPlugin implements Plugin<Project> {
         createSourceCopyTasks();
 
         Task task = makeTask("setupNailed", DefaultTask.class);
-        task.dependsOn("nailedPatches");
+        task.dependsOn("nailedPatches", "createProject");
         task.setGroup("Nailed");
     }
 
@@ -96,14 +96,14 @@ public class NailedPlugin implements Plugin<Project> {
         Copy copyTask = makeTask("extractMinecraftSources", Copy.class);
         copyTask.include("net/**");
         copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
-        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "java"));
+        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR));
         copyTask.dependsOn("decompile");
 
         // Copy minecraft resources to CLEAN
         copyTask = makeTask("extractMinecraftResources", Copy.class);
         copyTask.exclude("net/**");
         copyTask.from(project.zipTree(Constants.cacheFile(project, Constants.ZIP_DECOMP)));
-        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_CLEAN_DIR, "resources"));
+        copyTask.into(Constants.projectFile(project, Constants.MINECRAFT_RESOURCES_DIR));
         copyTask.dependsOn("decompile");
 
         // Copy CLEAN to WORK
@@ -125,9 +125,11 @@ public class NailedPlugin implements Plugin<Project> {
         genPatcher.setChangedDir(Constants.projectFile(project, Constants.MINECRAFT_WORK_DIR));
         genPatcher.setGroup("Nailed");
 
-        Delete clean = makeTask("clean", Delete.class);
-        clean.delete(Constants.projectFile(project, Constants.MINECRAFT_WORK_DIR));
-        clean.setGroup("Clean");
+        makeTask("createProject", ProjectTask.class);
+
+        /*Delete clean = makeTask("clean", Delete.class);
+        clean.delete(Constants.projectFile(project, "minecraft"));
+        clean.setGroup("Clean");*/
     }
 
     private <T extends Task> T makeTask(String name, Class<T> type) {

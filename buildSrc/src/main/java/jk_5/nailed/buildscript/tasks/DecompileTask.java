@@ -1,9 +1,9 @@
 package jk_5.nailed.buildscript.tasks;
 
-import com.beust.jcommander.internal.Maps;
 import com.github.abrarsyed.jastyle.ASFormatter;
 import com.github.abrarsyed.jastyle.OptParser;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import groovy.lang.Closure;
@@ -13,6 +13,7 @@ import jk_5.nailed.buildscript.Constants;
 import jk_5.nailed.buildscript.patching.ContextualPatch;
 import jk_5.nailed.buildscript.sourcemanip.FFPatcher;
 import jk_5.nailed.buildscript.sourcemanip.McpCleanup;
+import jk_5.nailed.buildscript.sourcemanip.SourceRemapper;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
@@ -21,10 +22,7 @@ import org.gradle.process.JavaExecSpec;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -63,6 +61,7 @@ public class DecompileTask extends CachedTask {
      * This method outputs to the cleanSrc
      */
     @TaskAction
+    @SuppressWarnings("unused")
     protected void doMCPStuff() throws Throwable {
         // define files.
         File temp = new File(getTemporaryDir(), inJar.getName());
@@ -83,7 +82,7 @@ public class DecompileTask extends CachedTask {
         renameSources();
 
         getLogger().info("Saving Jar");
-        saveJar(outZip);
+        saveJar();
     }
 
     private void decompile(final File inJar, final File outJar, final File fernFlower) {
@@ -122,7 +121,7 @@ public class DecompileTask extends CachedTask {
     private void readJarAndFix(final File jar) throws IOException {
         // begin reading jar
         final ZipInputStream zin = new ZipInputStream(new FileInputStream(jar));
-        ZipEntry entry = null;
+        ZipEntry entry;
         String fileStr;
 
         while ((entry = zin.getNextEntry()) != null) {
@@ -231,11 +230,23 @@ public class DecompileTask extends CachedTask {
         sourceMap = newSources;
     }
 
-    private void renameSources(){
+    private void renameSources() throws IOException {
+        Map<String, File> files = Maps.newHashMap();
+        files.put("methods", Constants.projectFile(getProject(), Constants.METHOD_CSV));
+        files.put("fields", Constants.projectFile(getProject(), Constants.FIELDS_CSV));
+        files.put("params", Constants.projectFile(getProject(), Constants.PARAMS_CSV));
+        SourceRemapper remapper = new SourceRemapper(files);
 
+        HashMap<String, String> newSources = new HashMap<String, String>();
+        for (String file : sourceMap.keySet()) {
+            getLogger().info("Renaming " + file);
+            newSources.put(file, remapper.remap(sourceMap.get(file)));
+        }
+        sourceMap.clear();
+        sourceMap = newSources;
     }
 
-    private void saveJar(File output) throws IOException {
+    private void saveJar() throws IOException {
         ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(outZip));
 
         // write in resources
@@ -261,8 +272,6 @@ public class DecompileTask extends CachedTask {
     private static class ContextProvider implements ContextualPatch.IContextProvider {
         private Map<String, String> fileMap;
 
-        private final int STRIP = 0;
-
         public ContextProvider(Map<String, String> fileMap) {
             this.fileMap = fileMap;
         }
@@ -270,9 +279,9 @@ public class DecompileTask extends CachedTask {
         private String strip(String target) {
             target = target.replace('\\', '/');
             int index = 0;
-            for (int x = 0; x < STRIP; x++) {
+            /*for (int x = 0; x < 0; x++) {
                 index = target.indexOf('/', index) + 1;
-            }
+            }*/
             return target.substring(index);
         }
 
@@ -283,9 +292,7 @@ public class DecompileTask extends CachedTask {
             if (fileMap.containsKey(target)) {
                 String[] lines = fileMap.get(target).split("\r\n|\r|\n");
                 List<String> ret = new ArrayList<String>();
-                for (String line : lines) {
-                    ret.add(line);
-                }
+                ret.addAll(Arrays.asList(lines));
                 return ret;
             }
 

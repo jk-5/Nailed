@@ -16,6 +16,7 @@ import org.gradle.process.JavaExecSpec;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProcessJarTask extends CachedTask {
     @Getter
@@ -50,15 +51,14 @@ public class ProcessJarTask extends CachedTask {
     /**
      * adds an access transformer to the deobfuscation of this
      *
-     * @param obj
+     * @param obj - File or path representing the AT
      */
-    public void addTransformer(Object... obj) {
-        for (Object object : obj) {
-            ats.add(object);
-        }
+    public void addTransformer(Object... obj){
+        this.ats.addAll(Arrays.asList(obj));
     }
 
     @TaskAction
+    @SuppressWarnings("unused")
     public void doTask() throws IOException {
         // make stuff into files.
         File tempObfJar = new File(getTemporaryDir(), "obfed.jar"); // courtesy of gradle temp dir.
