@@ -75,7 +75,7 @@ public class NailedPlugin implements Plugin<Project> {
         task3.setFernFlower(Constants.cacheFile(project, Constants.FERNFLOWER));
         task3.setPatch(Constants.cacheFile(project, Constants.PACKAGED_PATCH));
         task3.setAstyleConfig(Constants.projectFile(project, Constants.ASTYLE_CFG));
-        task3.dependsOn("downloadFernFlower", "deobfuscateJar", "fixMappings");
+        task3.dependsOn("downloadFernFlower", "deobfuscateJar");
     }
 
     private void createSourceManipTasks() {

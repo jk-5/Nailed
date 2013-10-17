@@ -72,8 +72,6 @@ public class MergeMappingsTask extends CachedTask {
     @TaskAction
     @SuppressWarnings("unused")
     public void doTask() throws IOException {
-        // read SRG.
-        // using this lib because SpecialSource needs it anyways.
         CSVReader reader = new CSVReader(new FileReader(packageCSV), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, CSVParser.DEFAULT_ESCAPE_CHARACTER, 1, false);
         for (String[] line : reader.readAll()) {
             packages.put(line[0], line[1]);
@@ -91,13 +89,10 @@ public class MergeMappingsTask extends CachedTask {
 
     private void fixSRG(File inSRG, File outSRG) throws IOException {
         Files.touch(inSRG);
-
         StringBuilder outText = new StringBuilder();
 
-        // start reading lines.
         BufferedReader reader = Files.newReader(inSRG, Charset.defaultCharset());
 
-        // itterate through lines
         String line;
         String[] sections;
         while ((line = reader.readLine()) != null) {
@@ -121,30 +116,24 @@ public class MergeMappingsTask extends CachedTask {
         }
         getLogger().info("READ SRG");
 
-        // don't forget to close.
         reader.close();
 
-        // write the new text.
         Files.write(outText.toString(), outSRG, Charset.defaultCharset());
         getLogger().info("WROTE SRG");
-
     }
 
-    // thanks shartte. This code is stolen directly from him/her
     private void fixExceptor(File inExc, File outExc) throws IOException {
         Files.touch(outExc);
 
         Properties mappings = new Properties();
         Properties mappingsOut = new Properties();
 
-        // Try to load the mappings
         mappings.load(Files.newInputStreamSupplier(inExc).getInput());
 
         for (Map.Entry entry : mappings.entrySet()) {
             Matcher matcher = METHOD_SIG_PATTERN.matcher((String) entry.getKey());
 
             if (!matcher.matches()) {
-                // There are some new fields in MCP for MC 1.6 that are not straight up method signatures
                 mappingsOut.put(entry.getKey(), entry.getValue());
                 continue;
             }
@@ -158,13 +147,11 @@ public class MergeMappingsTask extends CachedTask {
             if (exceptionsAndParams.length > 0 && !Strings.isNullOrEmpty(exceptions = exceptionsAndParams[0])) {
                 String[] excs = exceptions.split(",");
 
-                // repackage exceptions
                 for (int i = 0; i < excs.length; i++) {
                     excs[i] = repackageClass(excs[i]);
                 }
                 exceptionsAndParams[0] = Joiner.on(',').join(excs);
             }
-            // add an element to make sure there are 3
             while (exceptionsAndParams.length < 2) {
                 exceptionsAndParams = ObjectArrays.concat(exceptionsAndParams, "");
             }
@@ -205,7 +192,6 @@ public class MergeMappingsTask extends CachedTask {
 
         StringBuilder out = new StringBuilder("(");
 
-        // add in changed parameters
         Matcher match = SIG_PATTERN.matcher(params);
         while (match.find()) {
             if (match.group().length() > 1) {

@@ -67,7 +67,7 @@ public class DecompileTask extends CachedTask {
         File temp = new File(getTemporaryDir(), inJar.getName());
 
         getLogger().info("Decompiling Jar");
-        //decompile(inJar, getTemporaryDir(), fernFlower);
+        decompile(inJar, getTemporaryDir(), fernFlower);
 
         getLogger().info("Loading decompiled jar");
         readJarAndFix(temp);
