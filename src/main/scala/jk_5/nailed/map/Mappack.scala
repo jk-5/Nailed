@@ -4,10 +4,10 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.io._
 import scala.collection.{immutable, mutable}
 import jk_5.nailed.map.gameloop.IInstruction
-import net.minecraft.src.{ChunkCoordinates, EnumGameType}
 import jk_5.nailed.config.helper.ConfigFile
-import com.google.common.base.Strings
 import jk_5.nailed.util.FileUtils
+import net.minecraft.util.ChunkCoordinates
+import net.minecraft.world.EnumGameType
 
 /**
  * No description given

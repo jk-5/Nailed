@@ -1,6 +1,7 @@
 package jk_5.nailed.map.stats
 
-import net.minecraft.src.{Block, TileEntityCommandBlock}
+import net.minecraft.tileentity.TileEntityCommandBlock
+import net.minecraft.block.Block
 
 /**
  * No description given

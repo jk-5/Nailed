@@ -2,8 +2,8 @@ package jk_5.nailed.map
 
 import scala.collection.{JavaConversions, mutable}
 import jk_5.nailed.team.Team
-import net.minecraft.src.ScorePlayerTeam
 import jk_5.nailed.util.EnumColor
+import net.minecraft.scoreboard.ScorePlayerTeam
 
 /**
  * No description given

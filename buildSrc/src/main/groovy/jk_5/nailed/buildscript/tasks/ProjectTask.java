@@ -21,7 +21,7 @@ public class ProjectTask extends DefaultTask {
     private final ArrayList<String> deps = new ArrayList<String>();
 
     @InputFile
-    private final File jsonFile = Constants.projectFile(getProject(), "jsons/" + Constants.MC_VERSION + "-dev.json");
+    private final File jsonFile = Constants.projectFile(getProject(), "jsons/" + Constants.MC_VERSION + ".json");
     @OutputFile
     private final File gradleFile = Constants.projectFile(getProject(), "build.gradle");
 
@@ -80,7 +80,18 @@ public class ProjectTask extends DefaultTask {
         out.append("            srcDirs 'minecraft/resources', 'src/main/resources'").append(Constants.NEWLINE);
         out.append("        }").append(Constants.NEWLINE);
         out.append("    }").append(Constants.NEWLINE);
-        out.append('}').append(Constants.NEWLINE);
+        out.append('}').append(Constants.NEWLINE).append(Constants.NEWLINE);
+
+        out.append("jar {").append(Constants.NEWLINE);
+        out.append("    from configurations.compile.collect {").append(Constants.NEWLINE);
+        out.append("        it.isDirectory() ? it : zipTree(it).matching {").append(Constants.NEWLINE);
+        out.append("            exclude 'META-INF', 'META-INF/**', '*META-INF*', 'meta-inf'").append(Constants.NEWLINE);
+        out.append("        }").append(Constants.NEWLINE);
+        out.append("    }").append(Constants.NEWLINE);
+        out.append("    manifest {").append(Constants.NEWLINE);
+        out.append("        attributes 'Main-Class': 'jk_5.nailed.launch.ServerLauncher'").append(Constants.NEWLINE);
+        out.append("    }").append(Constants.NEWLINE);
+        out.append("}").append(Constants.NEWLINE);
 
         Files.write(out.toString(), this.gradleFile, Charset.defaultCharset());
     }

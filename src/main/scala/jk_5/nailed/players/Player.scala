@@ -7,7 +7,10 @@ import jk_5.nailed.Nailed
 import net.minecraft.server.MinecraftServer
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.groups.{GroupRegistry, Group}
-import net.minecraft.src._
+import net.minecraft.potion.{Potion, PotionEffect}
+import net.minecraft.network.packet.{Packet62LevelSound, Packet}
+import net.minecraft.util.ChatMessageComponent
+import net.minecraft.entity.player.EntityPlayerMP
 
 /**
  * No description given
@@ -81,11 +84,11 @@ case class Player(private final val username: String) {
   @inline def playSound(name: String, volume: Float, pitch: Float) = this.getEntity.foreach(e=> this.sendPacket(new Packet62LevelSound(name, e.posX, e.posY, e.posZ, volume, pitch)))
 
   @inline def sendChatMessage(msg: String) = this.getEntity.foreach(_.sendChatToPlayer(ChatMessageComponent.createFromText(msg)))
-  @inline def sendPacket(packet: Packet) = this.getEntity.foreach(_.playerNetServerHandler.sendPacket(packet))
+  @inline def sendPacket(packet: Packet) = this.getEntity.foreach(_.playerNetServerHandler.sendPacketToPlayer(packet))
 
   @inline def getUsername = this.username
   @inline def getGroup = this.group
-  @inline def getEntity: Option[EntityPlayerMP] = Option(MinecraftServer.getServer.getConfigurationManager.getPlayerEntity(this.username))
+  @inline def getEntity: Option[EntityPlayerMP] = Option(MinecraftServer.getServer.getConfigurationManager.getPlayerForUsername(this.username))
   @inline def getTeamspeakName = this.teamspeakName
   @inline def getTeam = this.team
   @inline def getChatFormattedName = this.group.getNameColor + this.username + EnumColor.RESET.toString

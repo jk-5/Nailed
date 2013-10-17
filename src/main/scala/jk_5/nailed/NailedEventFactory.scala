@@ -2,12 +2,14 @@ package jk_5.nailed
 
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.players.PlayerRegistry
-import net.minecraft.src._
 import jk_5.nailed.groups.GroupRegistry
 import jk_5.nailed.event.{PlayerChatEvent, PlayerLeaveServerEvent, PlayerJoinServerEvent}
 import java.net.InetAddress
 import java.util.Random
 import jk_5.nailed.map.Map
+import net.minecraft.world.WorldServer
+import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
+import net.minecraft.util.ChunkCoordinates
 
 /**
  * No description given

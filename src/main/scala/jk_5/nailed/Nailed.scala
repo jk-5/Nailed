@@ -6,11 +6,13 @@ import java.io.File
 import jk_5.nailed.map.MapLoader
 import jk_5.nailed.irc.IrcConnector
 import jk_5.nailed.teamspeak3.TeamspeakManager
-import net.minecraft.src._
 import jk_5.nailed.groups.{GroupRegistry, GroupAdmin, GroupPlayer}
 import jk_5.nailed.ipc.IPCClient
 import jk_5.nailed.command._
 import scala.collection.JavaConversions._
+import net.minecraft.server.dedicated.DedicatedServer
+import net.minecraft.command.{CommandServerWhitelist, CommandShowSeed, CommandDefaultGameMode, ServerCommandManager}
+import net.minecraft.scoreboard.ServerCommandScoreboard
 
 /**
  * No description given

@@ -2,11 +2,11 @@ package jk_5.nailed.map
 
 import java.util.concurrent.atomic.AtomicInteger
 import jk_5.nailed.map.gameloop.GameThread
-import net.minecraft.src.WorldServer
 import jk_5.nailed.players.{Player, PlayerRegistry}
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.Nailed
 import java.io.File
+import net.minecraft.world.WorldServer
 
 /**
  * No description given
@@ -27,7 +27,7 @@ class Map(private final val mappack: Mappack) {
   def travelPlayerToMap(player: Player){
     val entity = player.getEntity
     if(entity.isEmpty) return
-    Nailed.server.getConfigurationManager.recreatePlayerEntity(entity.get, 0, true, this)
+    Nailed.server.getConfigurationManager.respawnPlayer(entity.get, 0, true, this)
   }
 
   def setWorldServer(server: WorldServer){

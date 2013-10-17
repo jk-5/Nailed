@@ -1,9 +1,9 @@
 package jk_5.nailed.command;
 
-import net.minecraft.src.ICommand;
+import net.minecraft.command.ICommand;
 
 /**
- * No description given
+ * Because scala acts weird while overriding this method. Okay then.
  *
  * @author jk-5
  */

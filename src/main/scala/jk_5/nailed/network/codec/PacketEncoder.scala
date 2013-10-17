@@ -1,12 +1,12 @@
 package jk_5.nailed.network.codec
 
-import net.minecraft.src.Packet
 import io.netty.handler.codec.{EncoderException, MessageToMessageEncoder}
 import java.util
 import io.netty.channel.ChannelHandlerContext
 import java.io.IOException
 import io.netty.buffer.ByteBufOutputStream
 import io.netty.channel.ChannelHandler.Sharable
+import net.minecraft.network.packet.Packet
 
 /**
  * No description given

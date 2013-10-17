@@ -2,7 +2,7 @@ package jk_5.nailed.map.gameloop.instructions
 
 import jk_5.nailed.map.gameloop.GameThread
 import jk_5.nailed.map.gameloop.IInstruction
-import net.minecraft.src.EnumGameType
+import net.minecraft.world.EnumGameType
 
 /**
  * No description given

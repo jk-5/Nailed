@@ -6,8 +6,6 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.tasks.Copy;
-import org.gradle.api.tasks.Delete;
-import org.gradle.api.tasks.Exec;
 
 import java.io.File;
 import java.util.HashMap;
@@ -82,13 +80,13 @@ public class NailedPlugin implements Plugin<Project> {
 
     private void createSourceManipTasks() {
         NailedCleanupTask cleanTask = makeTask("cleanup", NailedCleanupTask.class);
-        cleanTask.setDir(new File(Constants.MINECRAFT_WORK_DIR));
-        cleanTask.dependsOn("copySources");
+        cleanTask.setDir(new File(Constants.MINECRAFT_CLEAN_DIR));
+        //cleanTask.dependsOn("copySources");
 
         PatchTask patch = makeTask("nailedPatches", PatchTask.class);
         patch.setPatchDir(Constants.projectFile(project, Constants.PATCH_DIR));
         patch.setFilesDir(new File(Constants.MINECRAFT_WORK_DIR));
-        patch.dependsOn("cleanup");
+        patch.dependsOn("copySources");
     }
 
     private void createSourceCopyTasks() {
@@ -110,7 +108,7 @@ public class NailedPlugin implements Plugin<Project> {
         copyTask = makeTask("copySources", Copy.class);
         copyTask.from(project.fileTree(new File(Constants.MINECRAFT_CLEAN_DIR)));
         copyTask.into(new File(Constants.MINECRAFT_WORK_DIR));
-        copyTask.dependsOn("extractMinecraftSources", "extractMinecraftResources");
+        copyTask.dependsOn("extractMinecraftSources", "extractMinecraftResources", "cleanup");
     }
 
     private void createOtherNailedTasks() {

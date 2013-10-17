@@ -3,7 +3,8 @@ package jk_5.nailed.team
 import jk_5.nailed.util.EnumColor
 import jk_5.nailed.players.{PlayerRegistry, Player}
 import jk_5.nailed.map.Map
-import net.minecraft.src.{ChunkCoordinates, ScorePlayerTeam}
+import net.minecraft.scoreboard.ScorePlayerTeam
+import net.minecraft.util.ChunkCoordinates
 
 /**
  * No description given

@@ -1,8 +1,8 @@
 package jk_5.nailed.players
 
 import scala.collection.mutable
-import net.minecraft.src.ICommandSender
 import jk_5.nailed.map.MapLoader
+import net.minecraft.command.ICommandSender
 
 /**
  * No description given

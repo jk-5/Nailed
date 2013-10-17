@@ -6,8 +6,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
 import jk_5.nailed.network.codec.CipherDecoder;
 import jk_5.nailed.network.codec.CipherEncoder;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.NetLoginHandler;
+import net.minecraft.network.NetServerHandler;
+import net.minecraft.network.packet.NetHandler;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet252SharedKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.*;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -118,7 +123,7 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
 
     public void processReadPackets() {
         for (int i = 1000; !syncPackets.isEmpty() && i >= 0; i--) {
-            if (connection instanceof NetLoginHandler ? ((NetLoginHandler) connection).finishedProcessing : ((NetServerHandler) connection).connectionClosed) {
+            if (connection instanceof NetLoginHandler ? ((NetLoginHandler) connection).connectionComplete : ((NetServerHandler) connection).connectionClosed) {
                 syncPackets.clear();
                 break;
             }
@@ -129,7 +134,7 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
         }
     }
 
-    public SocketAddress getRemoteAddress() {
+    public SocketAddress getSocketAddress() {
         return address;
     }
 
@@ -140,7 +145,7 @@ public class NettyNetworkManager extends SimpleChannelInboundHandler<Packet> imp
         }
     }
 
-    public int getNumChunkDataPackets() {
+    public int packetSize() {
         return 0;
     }
 

@@ -5,11 +5,9 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import jk_5.nailed.network.codec.PacketDecoder;
+import net.minecraft.network.NetLoginHandler;
+import net.minecraft.network.NetworkListenThread;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.src.NetLoginHandler;
-import net.minecraft.src.NetworkListenThread;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -45,20 +43,20 @@ public class NettyServerHandler extends NetworkListenThread {
     }
 
     @Override
-    public void handleNetworkListenThread() {
-        super.handleNetworkListenThread(); // pulse PlayerConnections
+    public void networkTick() {
+        super.networkTick();
         for (int i = 0; i < pending.size(); ++i) {
             NetLoginHandler connection = pending.get(i);
 
             try {
                 connection.tryLogin();
             } catch (Exception ex) {
-                connection.kickUser("Server-side network error, See log for details");
+                connection.raiseErrorAndDisconnect("Server-side network error, See log for details");
                 System.err.println("Error while handling packet:");
                 ex.printStackTrace();
             }
 
-            if (connection.finishedProcessing) {
+            if (connection.connectionComplete) {
                 pending.remove(i--);
             }
         }

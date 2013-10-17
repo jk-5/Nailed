@@ -7,13 +7,13 @@ import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import groovy.lang.Closure;
+import jk_5.nailed.buildscript.sourcemanip.SourceRemapper;
 import lombok.Getter;
 import lombok.Setter;
 import jk_5.nailed.buildscript.Constants;
 import jk_5.nailed.buildscript.patching.ContextualPatch;
 import jk_5.nailed.buildscript.sourcemanip.FFPatcher;
 import jk_5.nailed.buildscript.sourcemanip.McpCleanup;
-import jk_5.nailed.buildscript.sourcemanip.SourceRemapper;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.OutputFile;
@@ -67,7 +67,7 @@ public class DecompileTask extends CachedTask {
         File temp = new File(getTemporaryDir(), inJar.getName());
 
         getLogger().info("Decompiling Jar");
-        decompile(inJar, getTemporaryDir(), fernFlower);
+        //decompile(inJar, getTemporaryDir(), fernFlower);
 
         getLogger().info("Loading decompiled jar");
         readJarAndFix(temp);

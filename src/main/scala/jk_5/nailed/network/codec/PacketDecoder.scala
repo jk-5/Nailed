@@ -6,12 +6,11 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ReplayingDecoder
 import jk_5.nailed.network.ReadState
 import net.minecraft.server.MinecraftServer
-import net.minecraft.src.Packet
-import net.minecraft.src.Packet254ServerPing
 import java.io.DataInput
 import java.io.EOFException
 import java.io.IOException
 import java.util
+import net.minecraft.network.packet.{Packet254ServerPing, Packet}
 
 /**
  * No description given

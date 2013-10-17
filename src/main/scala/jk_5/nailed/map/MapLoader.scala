@@ -1,12 +1,16 @@
 package jk_5.nailed.map
 
 import java.io._
-import net.minecraft.src._
 import jk_5.nailed.Nailed
 import scala.collection.mutable
 import jk_5.nailed.config.helper.ConfigFile
 import java.util.zip.{ZipEntry, ZipInputStream}
 import org.apache.commons.io.IOUtils
+import net.minecraft.world.{WorldType, MinecraftException, WorldSettings, WorldServer}
+import net.minecraft.command.ICommandSender
+import net.minecraft.world.chunk.storage.{AnvilSaveHandler, AnvilSaveConverter}
+import net.minecraft.server.ConvertingProgressUpdate
+import net.minecraft.scoreboard.Scoreboard
 
 /**
  * No description given

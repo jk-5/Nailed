@@ -1,7 +1,8 @@
 package jk_5.nailed.util
 
 import net.minecraft.server.MinecraftServer
-import net.minecraft.src.{Packet, ChatMessageComponent}
+import net.minecraft.network.packet.Packet
+import net.minecraft.util.ChatMessageComponent
 
 /**
  * No description given

@@ -1,7 +1,7 @@
 package jk_5.nailed.map.stats
 
 import scala.collection.mutable.ArrayBuffer
-import net.minecraft.src.TileEntityCommandBlock
+import net.minecraft.tileentity.TileEntityCommandBlock
 
 /**
  * No description given

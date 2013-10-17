@@ -3,7 +3,6 @@ package jk_5.nailed.buildscript.sourcemanip;
 import au.com.bytecode.opencsv.CSVParser;
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import jk_5.nailed.buildscript.Constants;
 
@@ -14,7 +13,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SourceRemapper {
+public class JavaSourceRemapper {
     Map<String, Map<String, String>> methods = new HashMap<String, Map<String, String>>();
     Map<String, Map<String, String>> fields = new HashMap<String, Map<String, String>>();
     Map<String, String> params = new HashMap<String, String>();
@@ -25,7 +24,7 @@ public class SourceRemapper {
     private static final Pattern METHOD = Pattern.compile("^( {4}|\\t)(?:[\\w$.\\[\\]]+ )*(func_[0-9]+_[a-zA-Z_]+)\\(");
     private static final Pattern FIELD = Pattern.compile("^( {4}|\\t)(?:[\\w$.\\[\\]]+ )*(field_[0-9]+_[a-zA-Z_]+) *(?:=|;)");
 
-    public SourceRemapper(Map<String, File> files) throws IOException {
+    public JavaSourceRemapper(Map<String, File> files) throws IOException {
         CSVReader reader = getReader(files.get("methods"));
         for (String[] s : reader.readAll()) {
             Map<String, String> temp = new HashMap<String, String>();
@@ -163,8 +162,8 @@ public class SourceRemapper {
         String prevLine = null;
         ArrayList<String> newLines = new ArrayList<String>();
         String[] lines = text.split("\r\n|\r|\n");
+        System.out.println("Lines " + lines.length);
         for (String line : lines) {
-
             // check method
             matcher = METHOD.matcher(line);
 
@@ -172,19 +171,15 @@ public class SourceRemapper {
                 String name = matcher.group(2);
 
                 if (methods.containsKey(name) && methods.get(name).containsKey("name")) {
-                    ;
-                }
-                {
                     line = line.replace(name, methods.get(name).get("name"));
 
-                    // get javadoc
-                    if (methods.get(name).containsKey("javadoc")) {
+                    /*if (methods.get(name).containsKey("javadoc")) {
                         line = buildJavadoc(matcher.group(1), methods.get(name).get("javadoc"), true) + line;
 
                         if (!Strings.isNullOrEmpty(prevLine) && !prevLine.endsWith("{")) {
                             line = Constants.NEWLINE + line;
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -197,14 +192,13 @@ public class SourceRemapper {
                 if (fields.containsKey(name)) {
                     line = line.replace(name, fields.get(name).get("name"));
 
-                    // get javadoc
-                    if (fields.get(name).get("javadoc") != null) {
+                    /*if (fields.get(name).get("javadoc") != null) {
                         line = buildJavadoc(matcher.group(1), fields.get(name).get("javadoc"), false) + line;
 
                         if (!Strings.isNullOrEmpty(prevLine) && !prevLine.endsWith("{")) {
                             line = Constants.NEWLINE + line;
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -214,27 +208,25 @@ public class SourceRemapper {
 
         text = Joiner.on(Constants.NEWLINE).join(newLines) + Constants.NEWLINE;
 
-        // FAR all parameters
         matcher = PARAM.matcher(text);
         while (matcher.find()) {
             if (params.containsKey(matcher.group())) {
-                matcher.replaceFirst(params.get(matcher.group()));
+                text = matcher.replaceFirst(params.get(matcher.group()));
+                matcher = PARAM.matcher(text);
             }
         }
-
-        // FAR all methods
         matcher = METHOD_SMALL.matcher(text);
         while (matcher.find()) {
             if (methods.containsKey(matcher.group())) {
-                matcher.replaceFirst(methods.get(matcher.group()).get("name"));
+                text = matcher.replaceFirst(methods.get(matcher.group()).get("name"));
+                matcher = METHOD_SMALL.matcher(text);
             }
         }
-
-        // FAR all fields
         matcher = FIELD_SMALL.matcher(text);
         while (matcher.find()) {
             if (fields.containsKey(matcher.group())) {
-                matcher.replaceFirst(fields.get(matcher.group()).get("name"));
+                text = matcher.replaceFirst(fields.get(matcher.group()).get("name"));
+                matcher = FIELD_SMALL.matcher(text);
             }
         }
         return text;

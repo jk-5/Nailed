@@ -40,18 +40,6 @@
       "url" : "http://repo.maven.apache.org/maven2"
     },
     {
-      "name": "lzma:lzma:0.0.1"
-    },
-    {
-      "name": "argo:argo:2.25_fixed"
-    },
-    {
-      "name": "net.sourceforge.argo:argo:2.25",
-      "children" : ["sources"],
-      "url" : "http://repo.maven.apache.org/maven2",
-      "comment" : "grumble grumble grumble, y u no use proper version/artifact id grumble"
-    },
-    {
       "name": "org.bouncycastle:bcprov-jdk15on:1.47",
       "children" : ["sources"],
       "url" : "http://repo.maven.apache.org/maven2"

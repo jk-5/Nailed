@@ -1,12 +1,15 @@
 package jk_5.nailed.command
 
-import net.minecraft.src._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.{mutable, JavaConversions}
 import java.util
 import jk_5.nailed.players.PlayerRegistry
 import net.minecraft.server.MinecraftServer
 import jk_5.nailed.map.MapLoader
+import net.minecraft.command.ICommandSender
+import net.minecraft.tileentity.TileEntityCommandBlock
+import net.minecraft.entity.player.EntityPlayerMP
+import net.minecraft.util.ChatMessageComponent
 
 /**
  * No description given
@@ -32,8 +35,8 @@ object Command{
 }
 
 trait TCommand extends CommandProxy {
-  type WrongUsageException = net.minecraft.src.WrongUsageException
-  type CommandException = net.minecraft.src.CommandException
+  type WrongUsageException = net.minecraft.command.WrongUsageException
+  type CommandException = net.minecraft.command.CommandException
   type CommandSender = jk_5.nailed.command.CommandSender
   type AutocompleteList = scala.collection.mutable.Buffer[String]
 
@@ -45,7 +48,7 @@ trait TCommand extends CommandProxy {
 
   final def getCommandUsage(sender: ICommandSender): String = this.getCommandUsage(new CommandSender(sender))
   final def getCommandName = this.commandName
-  override final def getCommandAliases = JavaConversions.bufferAsJavaList(this.aliases)
+  final def getCommandAliases = JavaConversions.bufferAsJavaList(this.aliases)
   final def addTabCompletionOptions(sender: ICommandSender, args: Array[String]): util.List[_] = {
     if(!this.canCommandSenderUseCommand(sender)) return new util.ArrayList[String](0)
     val res = this.addAutocomplete(new CommandSender(sender), args)

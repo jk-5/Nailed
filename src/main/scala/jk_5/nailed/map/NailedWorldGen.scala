@@ -1,9 +1,13 @@
 package jk_5.nailed.map
 
-import net.minecraft.src._
 import java.util
 import java.util.Random
 import jk_5.nailed.NailedEventFactory
+import net.minecraft.world.{WorldServer, ChunkPosition, World}
+import net.minecraft.world.gen.ChunkProviderFlat
+import net.minecraft.world.chunk.Chunk
+import net.minecraft.world.biome.WorldChunkManager
+import net.minecraft.block.Block
 
 /**
  * No description given
