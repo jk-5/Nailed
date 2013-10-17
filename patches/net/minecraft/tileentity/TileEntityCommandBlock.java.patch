@@ -1,0 +1,25 @@
+--- /net/minecraft/tileentity/TileEntityCommandBlock.java
++++ /net/minecraft/tileentity/TileEntityCommandBlock.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.tileentity;
+ 
++import jk_5.nailed.map.stats.StatManager;
+ import net.minecraft.command.ICommandManager;
+ import net.minecraft.command.ICommandSender;
+ import net.minecraft.nbt.NBTTagCompound;
+@@ -57,6 +58,7 @@
+      */
+     public void setCommandSenderName(String par1Str) {
+         this.commandSenderName = par1Str;
++        StatManager.updateCommandBlock(this);
+     }
+ 
+     public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent) {}
+@@ -88,6 +90,7 @@
+ 
+         if (par1NBTTagCompound.hasKey("CustomName")) {
+             this.commandSenderName = par1NBTTagCompound.getString("CustomName");
++            StatManager.updateCommandBlock(this);
+         }
+     }
+ 

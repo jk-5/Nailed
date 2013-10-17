@@ -1,0 +1,76 @@
+--- /net/minecraft/server/MinecraftServer.java
++++ /net/minecraft/server/MinecraftServer.java
+@@ -12,6 +12,8 @@
+ import java.util.List;
+ import java.util.logging.Level;
+ import java.util.logging.Logger;
++
++import jk_5.nailed.Nailed;
+ import net.minecraft.command.CommandBase;
+ import net.minecraft.command.ICommandManager;
+ import net.minecraft.command.ICommandSender;
+@@ -196,7 +198,7 @@
+         this.userMessage = par1Str;
+     }
+ 
+-    protected void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str) {
++    protected void loadAllWorlds(String par1Str, String par2Str, long par3) {
+         this.convertMapIfNeeded(par1Str);
+         this.setUserMessage("menu.loadingLevel");
+         this.worldServers = new WorldServer[3];
+@@ -206,8 +208,8 @@
+         WorldSettings var8;
+ 
+         if (var9 == null) {
+-            var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+-            var8.func_82750_a(par6Str);
++            var8 = new WorldSettings(par3, this.getGameType(), false, this.isHardcore(), WorldType.DEFAULT);
++            var8.func_82750_a("");
+         } else {
+             var8 = new WorldSettings(var9);
+         }
+@@ -246,6 +248,7 @@
+             this.serverConfigManager.setPlayerManager(this.worldServers);
+         }
+ 
++        Nailed.onWorldReady();
+         this.setDifficultyForAllWorlds(this.getDifficulty());
+         this.initialWorldChunkLoad();
+     }
+@@ -280,8 +283,6 @@
+         this.clearCurrentTask();
+     }
+ 
+-    public abstract boolean canStructuresSpawn();
+-
+     public abstract EnumGameType getGameType();
+ 
+     /**
+@@ -646,6 +647,7 @@
+             }
+ 
+             DedicatedServer var16 = new DedicatedServer(new File(var4));
++            Nailed.init(var16);
+             var1 = var16.getLogAgent();
+ 
+             if (var3 != null) {
+@@ -668,10 +670,6 @@
+                 var16.canCreateBonusChest(true);
+             }
+ 
+-            if (var2) {
+-                var16.func_120011_ar();
+-            }
+-
+             var16.startServerThread();
+             Runtime.getRuntime().addShutdownHook(new ThreadDedicatedServer(var16));
+         } catch (Exception var15) {
+@@ -801,7 +799,7 @@
+     }
+ 
+     public String getServerModName() {
+-        return "vanilla";
++        return "nailed";
+     }
+ 
+     /**

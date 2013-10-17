@@ -1,0 +1,11 @@
+--- /net/minecraft/network/MemoryConnection.java
++++ /net/minecraft/network/MemoryConnection.java
+@@ -106,4 +106,8 @@
+             this.readPacketCache.add(par1Packet);
+         }
+     }
++
++    public java.net.Socket getSocket(){
++        return null;
+ }
++}

@@ -1,0 +1,9 @@
+--- /net/minecraft/network/INetworkManager.java
++++ /net/minecraft/network/INetworkManager.java
+@@ -45,4 +45,6 @@
+      * stop reading and writing threads.
+      */
+     void networkShutdown(String var1, Object ... var2);
++
++    java.net.Socket getSocket(); //FIXME: this is a dirty hack
+ }

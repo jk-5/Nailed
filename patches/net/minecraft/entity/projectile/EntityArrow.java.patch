@@ -1,0 +1,20 @@
+--- /net/minecraft/entity/projectile/EntityArrow.java
++++ /net/minecraft/entity/projectile/EntityArrow.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.entity.projectile;
+ 
+ import java.util.List;
++
++import jk_5.nailed.NailedEventFactory;
+ import net.minecraft.block.Block;
+ import net.minecraft.enchantment.EnchantmentThorns;
+ import net.minecraft.entity.Entity;
+@@ -406,7 +408,7 @@
+      * Called by a player entity when they collide with an entity
+      */
+     public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
+-        if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0) {
++        if (!this.worldObj.isRemote && this.inGround && this.arrowShake <= 0 && NailedEventFactory.canPlayerPickup(par1EntityPlayer)) {
+             boolean var2 = this.canBePickedUp == 1 || this.canBePickedUp == 2 && par1EntityPlayer.capabilities.isCreativeMode;
+ 
+             if (this.canBePickedUp == 1 && !par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.arrow, 1))) {
