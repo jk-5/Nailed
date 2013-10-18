@@ -1,0 +1,12 @@
+--- /net/minecraft/world/WorldServerMulti.java
++++ /net/minecraft/world/WorldServerMulti.java
+@@ -13,9 +13,4 @@
+         this.worldScoreboard = par6WorldServer.getScoreboard();
+         this.worldInfo = new DerivedWorldInfo(par6WorldServer.getWorldInfo());
+     }
+-
+-    /**
+-     * Saves the chunks to disk.
+-     */
+-    protected void saveLevel() throws MinecraftException {}
+ }
