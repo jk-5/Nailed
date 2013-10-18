@@ -52,6 +52,12 @@ public class ProjectTask extends DefaultTask {
         out.append("apply plugin: 'java' ").append(Constants.NEWLINE);
         out.append("apply plugin: 'scala' ").append(Constants.NEWLINE).append(Constants.NEWLINE);
 
+        out.append("group = 'jk_5.nailed'").append(Constants.NEWLINE);
+        out.append("version = '0.1-SNAPSHOT'").append(Constants.NEWLINE);
+        out.append("archivesBaseName = 'Nailed'").append(Constants.NEWLINE);
+        out.append("targetCompatibility = '1.6'").append(Constants.NEWLINE);
+        out.append("sourceCompatibility = '1.6'").append(Constants.NEWLINE).append(Constants.NEWLINE);
+
         out.append("repositories {").append(Constants.NEWLINE);
         out.append("    maven {").append(Constants.NEWLINE);
         out.append("        name 'jk-5'").append(Constants.NEWLINE);
@@ -68,7 +74,8 @@ public class ProjectTask extends DefaultTask {
         for (String dep : deps) {
             out.append("    compile '").append(dep).append('\'').append(Constants.NEWLINE);
         }
-        out.append(Constants.NEWLINE).append("    testCompile 'junit:junit:4.+'").append(Constants.NEWLINE);
+        out.append(Constants.NEWLINE);
+        out.append("    testCompile 'junit:junit:4.+'").append(Constants.NEWLINE);
         out.append('}').append(Constants.NEWLINE).append(Constants.NEWLINE);
 
         out.append("sourceSets {").append(Constants.NEWLINE);

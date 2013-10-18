@@ -5,6 +5,8 @@ apply plugin: 'groovy'
 group = 'jk_5.nailed.buildscript'
 version = '0.1-SNAPSHOT'
 archivesBaseName = 'NailedBuildscript'
+targetCompatibility = '1.7'
+sourceCompatibility = '1.7'
 
 repositories{
     mavenCentral()
