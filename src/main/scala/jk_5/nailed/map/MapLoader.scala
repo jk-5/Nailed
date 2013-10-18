@@ -23,7 +23,7 @@ object MapLoader {
 
   private final val maps = mutable.ArrayBuffer[Map]()
   private final val mappacks = mutable.ArrayBuffer[Mappack]()
-  private final val handles = mutable.ArrayBuffer[WorldServer]()
+  final val worlds = mutable.ArrayBuffer[WorldServer]()
   private var lobby: Map = null
 
   if(!this.mappackFolder.exists()) this.mappackFolder.mkdirs()
@@ -104,7 +104,7 @@ object MapLoader {
     worldServer.worldScoreboard = new Scoreboard
     worldServer.difficultySetting = mappack.getDifficulty
     worldServer.setAllowedSpawnTypes(mappack.shouldSpawnHostileMobs, mappack.shouldSpawnFriendlyMobs)
-    this.handles += worldServer
+    this.worlds += worldServer
     println("Preparing start region for level '" + map.getFolderName + "'")
     /*if (true) {
       val short1: Short = 196
@@ -146,7 +146,7 @@ object MapLoader {
   def unloadWorld(map: Map, save: Boolean): Boolean = {
     if (map == null) return false
     val handle = map.getWorld
-    if (!this.handles.contains(handle)) return false
+    if (!this.worlds.contains(handle)) return false
     if (handle.playerEntities.size > 0) return false
     if (save) {
       try {
@@ -157,7 +157,7 @@ object MapLoader {
       }
     }
     maps -= map
-    handles -= handle
+    worlds -= handle
     true
   }
 
