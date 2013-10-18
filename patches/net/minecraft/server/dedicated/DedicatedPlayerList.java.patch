@@ -1,0 +1,87 @@
+--- /net/minecraft/server/dedicated/DedicatedPlayerList.java
++++ /net/minecraft/server/dedicated/DedicatedPlayerList.java
+@@ -10,12 +10,10 @@
+ import net.minecraft.server.management.ServerConfigurationManager;
+ 
+ public class DedicatedPlayerList extends ServerConfigurationManager {
+-    private File opsList;
+     private File whiteList;
+ 
+     public DedicatedPlayerList(DedicatedServer par1DedicatedServer) {
+         super(par1DedicatedServer);
+-        this.opsList = par1DedicatedServer.getFile("ops.txt");
+         this.whiteList = par1DedicatedServer.getFile("white-list.txt");
+         this.viewDistance = par1DedicatedServer.getIntProperty("view-distance", 10);
+         this.maxPlayers = par1DedicatedServer.getIntProperty("max-players", 20);
+@@ -30,9 +28,7 @@
+         this.getBannedPlayers().saveToFileWithHeader();
+         this.getBannedIPs().loadBanList();
+         this.getBannedIPs().saveToFileWithHeader();
+-        this.loadOpsList();
+         this.readWhiteList();
+-        this.saveOpsList();
+ 
+         if (!this.whiteList.exists()) {
+             this.saveWhiteList();
+@@ -46,22 +42,6 @@
+     }
+ 
+     /**
+-     * This adds a username to the ops list, then saves the op list
+-     */
+-    public void addOp(String par1Str) {
+-        super.addOp(par1Str);
+-        this.saveOpsList();
+-    }
+-
+-    /**
+-     * This removes a username from the ops list, then saves the op list
+-     */
+-    public void removeOp(String par1Str) {
+-        super.removeOp(par1Str);
+-        this.saveOpsList();
+-    }
+-
+-    /**
+      * Remove the specified player from the whitelist.
+      */
+     public void removeFromWhitelist(String par1Str) {
+@@ -84,38 +64,6 @@
+         this.readWhiteList();
+     }
+ 
+-    private void loadOpsList() {
+-        try {
+-            this.getOps().clear();
+-            BufferedReader var1 = new BufferedReader(new FileReader(this.opsList));
+-            String var2 = "";
+-
+-            while ((var2 = var1.readLine()) != null) {
+-                this.getOps().add(var2.trim().toLowerCase());
+-            }
+-
+-            var1.close();
+-        } catch (Exception var3) {
+-            this.getDedicatedServerInstance().getLogAgent().logWarning("Failed to load operators list: " + var3);
+-        }
+-    }
+-
+-    private void saveOpsList() {
+-        try {
+-            PrintWriter var1 = new PrintWriter(new FileWriter(this.opsList, false));
+-            Iterator var2 = this.getOps().iterator();
+-
+-            while (var2.hasNext()) {
+-                String var3 = (String)var2.next();
+-                var1.println(var3);
+-            }
+-
+-            var1.close();
+-        } catch (Exception var4) {
+-            this.getDedicatedServerInstance().getLogAgent().logWarning("Failed to save operators list: " + var4);
+-        }
+-    }
+-
+     private void readWhiteList() {
+         try {
+             this.getWhiteListedPlayers().clear();

@@ -1,0 +1,30 @@
+--- /net/minecraft/command/CommandServerDeop.java
++++ /net/minecraft/command/CommandServerDeop.java
+@@ -1,4 +1,4 @@
+-package net.minecraft.command;
++/*package net.minecraft.command;
+ 
+ import java.util.List;
+ import net.minecraft.server.MinecraftServer;
+@@ -8,9 +8,6 @@
+         return "deop";
+     }
+ 
+-    /**
+-     * Return the required permission level for this command.
+-     */
+     public int getRequiredPermissionLevel() {
+         return 3;
+     }
+@@ -28,10 +25,7 @@
+         }
+     }
+ 
+-    /**
+-     * Adds the strings available in this command to the given list of tab completion options.
+-     */
+     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] par2ArrayOfStr) {
+         return par2ArrayOfStr.length == 1 ? getListOfStringsFromIterableMatchingLastWord(par2ArrayOfStr, MinecraftServer.getServer().getConfigurationManager().getOps()) : null;
+     }
+-}
++}*/

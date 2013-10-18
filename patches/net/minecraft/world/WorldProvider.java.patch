@@ -1,0 +1,25 @@
+--- /net/minecraft/world/WorldProvider.java
++++ /net/minecraft/world/WorldProvider.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.world;
+ 
++import jk_5.nailed.map.NailedWorldGen;
+ import net.minecraft.block.Block;
+ import net.minecraft.util.ChunkCoordinates;
+ import net.minecraft.world.biome.BiomeGenBase;
+@@ -73,13 +74,14 @@
+         } else {
+             this.worldChunkMgr = new WorldChunkManager(this.worldObj);
+         }
++        this.worldChunkMgr = NailedWorldGen.getWorldChunkManager(this.worldObj);
+     }
+ 
+     /**
+      * Returns a new chunk provider which generates chunks for this world
+      */
+     public IChunkProvider createChunkGenerator() {
+-        return (IChunkProvider)(this.terrainType == WorldType.FLAT ? new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled(), this.field_82913_c) : new ChunkProviderGenerate(this.worldObj, this.worldObj.getSeed(), this.worldObj.getWorldInfo().isMapFeaturesEnabled()));
++        return NailedWorldGen.getChunkProvider(this.worldObj);
+     }
+ 
+     /**

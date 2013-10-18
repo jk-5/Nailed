@@ -1,10 +1,8 @@
-*.py[co]
-*.sw[op]
 *.iml
+*.ipr
+*.iws
 .idea
 .DS_Store
-out
-mcp
-runtime
-mcp.zip
-mcp-1.6.2
+.gradle
+build
+minecraft/*

@@ -1,0 +1,11 @@
+--- /net/minecraft/command/ServerCommandManager.java
++++ /net/minecraft/command/ServerCommandManager.java
+@@ -38,8 +38,6 @@
+         this.registerCommand(new ServerCommandScoreboard());
+ 
+         if (MinecraftServer.getServer().isDedicatedServer()) {
+-            this.registerCommand(new CommandServerOp());
+-            this.registerCommand(new CommandServerDeop());
+             this.registerCommand(new CommandServerStop());
+             this.registerCommand(new CommandServerSaveAll());
+             this.registerCommand(new CommandServerSaveOff());

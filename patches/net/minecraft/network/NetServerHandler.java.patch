@@ -1,0 +1,37 @@
+--- /net/minecraft/network/NetServerHandler.java
++++ /net/minecraft/network/NetServerHandler.java
+@@ -6,6 +6,8 @@
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ import java.util.Random;
++
++import jk_5.nailed.NailedEventFactory;
+ import net.minecraft.crash.CrashReport;
+ import net.minecraft.crash.CrashReportCategory;
+ import net.minecraft.entity.Entity;
+@@ -151,7 +153,6 @@
+             this.playerEntity.mountEntityAndWakeUp();
+             this.sendPacketToPlayer(new Packet255KickDisconnect(par1Str));
+             this.netManager.serverShutdown();
+-            this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromTranslationWithSubstitutions("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).setColor(EnumChatFormatting.YELLOW));
+             this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
+             this.connectionClosed = true;
+         }
+@@ -500,7 +501,6 @@
+ 
+     public void handleErrorMessage(String par1Str, Object[] par2ArrayOfObj) {
+         this.mcServer.getLogAgent().logInfo(this.playerEntity.getCommandSenderName() + " lost connection: " + par1Str);
+-        this.mcServer.getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromTranslationWithSubstitutions("multiplayer.player.left", new Object[] {this.playerEntity.getTranslatedEntityName()}).setColor(EnumChatFormatting.YELLOW));
+         this.mcServer.getConfigurationManager().playerLoggedOut(this.playerEntity);
+         this.connectionClosed = true;
+ 
+@@ -583,8 +583,7 @@
+                         return;
+                     }
+ 
+-                    ChatMessageComponent var4 = ChatMessageComponent.createFromTranslationWithSubstitutions("chat.type.text", new Object[] {this.playerEntity.getTranslatedEntityName(), var2});
+-                    this.mcServer.getConfigurationManager().func_110459_a(var4, false);
++                    NailedEventFactory.onPlayerChat(this.playerEntity, var2);
+                 }
+ 
+                 this.chatSpamThresholdCount += 20;

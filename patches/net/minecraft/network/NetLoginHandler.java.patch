@@ -1,0 +1,69 @@
+--- /net/minecraft/network/NetLoginHandler.java
++++ /net/minecraft/network/NetLoginHandler.java
+@@ -11,6 +11,10 @@
+ import java.util.List;
+ import java.util.Random;
+ import javax.crypto.SecretKey;
++
++import jk_5.nailed.NailedEventFactory;
++import jk_5.nailed.network.NettyNetworkManager;
++import jk_5.nailed.network.NettyServerHandler;
+ import net.minecraft.entity.player.EntityPlayerMP;
+ import net.minecraft.network.packet.NetHandler;
+ import net.minecraft.network.packet.Packet;
+@@ -35,7 +39,7 @@
+ 
+     /** Reference to the MinecraftServer object. */
+     private final MinecraftServer mcServer;
+-    public final TcpConnection myTCPConnection;
++    public final INetworkManager myTCPConnection;
+     public boolean connectionComplete;
+     private int connectionTimer;
+     private String clientUsername;
+@@ -48,10 +52,14 @@
+     /** Secret AES key obtained from the client's Packet252SharedKey */
+     private SecretKey sharedKey;
+ 
++    public NetLoginHandler(MinecraftServer server, NettyNetworkManager networkManager) {
++        this.mcServer = server;
++        this.myTCPConnection = networkManager;
++    }
++
+     public NetLoginHandler(MinecraftServer par1MinecraftServer, Socket par2Socket, String par3Str) throws IOException {
+         this.mcServer = par1MinecraftServer;
+         this.myTCPConnection = new TcpConnection(par1MinecraftServer.getLogAgent(), par2Socket, par3Str, this, par1MinecraftServer.getKeyPair().getPrivate());
+-        this.myTCPConnection.field_74468_e = 0;
+     }
+ 
+     /**
+@@ -170,10 +178,16 @@
+             ServerConfigurationManager var2 = this.mcServer.getConfigurationManager();
+             String var3 = null;
+ 
++            InetAddress var8 = null;
++
++            if (this.myTCPConnection.getSocket() != null) {
++                var8 = this.myTCPConnection.getSocket().getInetAddress();
++            }
++
+             if (par1Packet254ServerPing.func_140050_d()) {
+                 var3 = this.mcServer.getMOTD() + "\u00a7" + var2.getCurrentPlayerCount() + "\u00a7" + var2.getMaxPlayers();
+             } else {
+-                List var4 = Arrays.asList(new Serializable[] {Integer.valueOf(1), Integer.valueOf(78), this.mcServer.getMinecraftVersion(), this.mcServer.getMOTD(), Integer.valueOf(var2.getCurrentPlayerCount()), Integer.valueOf(var2.getMaxPlayers())});
++                List var4 = Arrays.asList(new Serializable[] {Integer.valueOf(1), NailedEventFactory.getProtocolVersion(var8), NailedEventFactory.getMCVersionForList(var8), NailedEventFactory.getMotdForList(), Integer.valueOf(var2.getCurrentPlayerCount()), Integer.valueOf(var2.getMaxPlayers())});
+                 Object var6;
+ 
+                 for (Iterator var5 = var4.iterator(); var5.hasNext(); var3 = var3 + var6.toString().replaceAll("\u0000", "")) {
+@@ -187,12 +201,6 @@
+                 }
+             }
+ 
+-            InetAddress var8 = null;
+-
+-            if (this.myTCPConnection.getSocket() != null) {
+-                var8 = this.myTCPConnection.getSocket().getInetAddress();
+-            }
+-
+             this.myTCPConnection.addToSendQueue(new Packet255KickDisconnect(var3));
+             this.myTCPConnection.serverShutdown();
+ 

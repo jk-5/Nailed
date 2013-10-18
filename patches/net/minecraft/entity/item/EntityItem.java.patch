@@ -1,0 +1,20 @@
+--- /net/minecraft/entity/item/EntityItem.java
++++ /net/minecraft/entity/item/EntityItem.java
+@@ -1,6 +1,8 @@
+ package net.minecraft.entity.item;
+ 
+ import java.util.Iterator;
++
++import jk_5.nailed.NailedEventFactory;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.material.Material;
+ import net.minecraft.entity.Entity;
+@@ -243,7 +245,7 @@
+      * Called by a player entity when they collide with an entity
+      */
+     public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
+-        if (!this.worldObj.isRemote) {
++        if (!this.worldObj.isRemote && NailedEventFactory.canPlayerPickup(par1EntityPlayer)) {
+             ItemStack var2 = this.getEntityItem();
+             int var3 = var2.stackSize;
+ 
