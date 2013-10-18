@@ -29,7 +29,19 @@
          } else {
              var8 = new WorldSettings(var9);
          }
-@@ -246,6 +248,7 @@
+@@ -228,11 +230,7 @@
+             }
+ 
+             if (var10 == 0) {
+-                if (this.isDemo()) {
+-                    this.worldServers[var10] = new DemoWorldServer(this, var7, par2Str, var11, this.theProfiler, this.getLogAgent());
+-                } else {
+                     this.worldServers[var10] = new WorldServer(this, var7, par2Str, var11, var8, this.theProfiler, this.getLogAgent());
+-                }
+             } else {
+                 this.worldServers[var10] = new WorldServerMulti(this, var7, par2Str, var11, var8, this.worldServers[0], this.theProfiler, this.getLogAgent());
+             }
+@@ -246,6 +244,7 @@
              this.serverConfigManager.setPlayerManager(this.worldServers);
          }
  
@@ -37,7 +49,7 @@
          this.setDifficultyForAllWorlds(this.getDifficulty());
          this.initialWorldChunkLoad();
      }
-@@ -280,8 +283,6 @@
+@@ -280,8 +279,6 @@
          this.clearCurrentTask();
      }
  
@@ -46,7 +58,7 @@
      public abstract EnumGameType getGameType();
  
      /**
-@@ -646,6 +647,7 @@
+@@ -646,6 +643,7 @@
              }
  
              DedicatedServer var16 = new DedicatedServer(new File(var4));
@@ -54,7 +66,7 @@
              var1 = var16.getLogAgent();
  
              if (var3 != null) {
-@@ -668,10 +670,6 @@
+@@ -668,10 +666,6 @@
                  var16.canCreateBonusChest(true);
              }
  
@@ -65,7 +77,7 @@
              var16.startServerThread();
              Runtime.getRuntime().addShutdownHook(new ThreadDedicatedServer(var16));
          } catch (Exception var15) {
-@@ -801,7 +799,7 @@
+@@ -801,7 +795,7 @@
      }
  
      public String getServerModName() {
