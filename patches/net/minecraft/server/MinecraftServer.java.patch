@@ -9,16 +9,15 @@
  import net.minecraft.command.CommandBase;
  import net.minecraft.command.ICommandManager;
  import net.minecraft.command.ICommandSender;
-@@ -167,6 +169,8 @@
+@@ -167,6 +169,7 @@
          this.commandManager = new ServerCommandManager();
          this.anvilConverterForAnvilFile = new AnvilSaveConverter(par1File);
          this.registerDispenseBehaviors();
-+
 +        Nailed.initJLine();
      }
  
      /**
-@@ -196,7 +200,7 @@
+@@ -196,7 +199,7 @@
          this.userMessage = par1Str;
      }
  
@@ -27,7 +26,7 @@
          this.convertMapIfNeeded(par1Str);
          this.setUserMessage("menu.loadingLevel");
          this.worldServers = new WorldServer[3];
-@@ -206,8 +210,8 @@
+@@ -206,8 +209,8 @@
          WorldSettings var8;
  
          if (var9 == null) {
@@ -38,7 +37,7 @@
          } else {
              var8 = new WorldSettings(var9);
          }
-@@ -228,11 +232,7 @@
+@@ -228,11 +231,7 @@
              }
  
              if (var10 == 0) {
@@ -50,7 +49,7 @@
              } else {
                  this.worldServers[var10] = new WorldServerMulti(this, var7, par2Str, var11, var8, this.worldServers[0], this.theProfiler, this.getLogAgent());
              }
-@@ -246,6 +246,7 @@
+@@ -246,6 +245,7 @@
              this.serverConfigManager.setPlayerManager(this.worldServers);
          }
  
@@ -58,7 +57,7 @@
          this.setDifficultyForAllWorlds(this.getDifficulty());
          this.initialWorldChunkLoad();
      }
-@@ -280,8 +281,6 @@
+@@ -280,8 +280,6 @@
          this.clearCurrentTask();
      }
  
@@ -67,7 +66,7 @@
      public abstract EnumGameType getGameType();
  
      /**
-@@ -646,6 +645,7 @@
+@@ -646,6 +644,7 @@
              }
  
              DedicatedServer var16 = new DedicatedServer(new File(var4));
@@ -75,7 +74,7 @@
              var1 = var16.getLogAgent();
  
              if (var3 != null) {
-@@ -668,10 +668,6 @@
+@@ -668,10 +667,6 @@
                  var16.canCreateBonusChest(true);
              }
  
@@ -86,7 +85,7 @@
              var16.startServerThread();
              Runtime.getRuntime().addShutdownHook(new ThreadDedicatedServer(var16));
          } catch (Exception var15) {
-@@ -801,7 +797,7 @@
+@@ -801,7 +796,7 @@
      }
  
      public String getServerModName() {

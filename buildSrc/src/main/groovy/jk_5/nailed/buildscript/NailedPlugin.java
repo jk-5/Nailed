@@ -18,7 +18,7 @@ public class NailedPlugin implements Plugin<Project> {
     public void apply(Project project) {
         this.project = project;
 
-        project.getExtensions().create(Constants.EXT_NAME, ExtensionObject.class, this);
+        project.getExtensions().create(Constants.EXT_NAME, ExtensionObject.class);
 
         createDownloadTasks();
         createMappingFixTask();

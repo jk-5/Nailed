@@ -1,15 +1,39 @@
 --- /net/minecraft/server/dedicated/DedicatedServer.java
 +++ /net/minecraft/server/dedicated/DedicatedServer.java
-@@ -7,6 +7,8 @@
+@@ -6,28 +6,27 @@
+ import java.util.ArrayList;
  import java.util.Collections;
  import java.util.List;
- import java.util.Random;
+-import java.util.Random;
 +
++import jk_5.nailed.logging.NailedLogging;
++import jk_5.nailed.logging.VanillaLogAgent;
 +import jk_5.nailed.network.NettyServerHandler;
  import net.minecraft.command.ICommandSender;
  import net.minecraft.command.ServerCommand;
  import net.minecraft.crash.CrashReport;
-@@ -36,9 +38,8 @@
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.logging.ILogAgent;
+-import net.minecraft.logging.LogAgent;
+ import net.minecraft.network.NetworkListenThread;
+ import net.minecraft.network.rcon.IServer;
+ import net.minecraft.network.rcon.RConThreadMain;
+ import net.minecraft.network.rcon.RConThreadQuery;
+ import net.minecraft.profiler.PlayerUsageSnooper;
+ import net.minecraft.server.MinecraftServer;
+-import net.minecraft.server.gui.MinecraftServerGui;
+ import net.minecraft.server.management.ServerConfigurationManager;
+ import net.minecraft.util.ChunkCoordinates;
+ import net.minecraft.util.CryptManager;
+ import net.minecraft.util.MathHelper;
+ import net.minecraft.world.EnumGameType;
+ import net.minecraft.world.World;
+-import net.minecraft.world.WorldSettings;
+-import net.minecraft.world.WorldType;
+ 
+ public class DedicatedServer extends MinecraftServer implements IServer {
+     private final List pendingCommandList = Collections.synchronizedList(new ArrayList());
+@@ -36,13 +35,12 @@
      private RConThreadMain theRConThreadMain;
      private PropertyManager settings;
      private boolean canSpawnStructures;
@@ -20,7 +44,20 @@
  
      public DedicatedServer(File par1File) {
          super(par1File);
-@@ -69,25 +70,8 @@
+-        this.field_98131_l = new LogAgent("Minecraft-Server", (String)null, (new File(par1File, "server.log")).getAbsolutePath());
++        this.field_98131_l = new VanillaLogAgent();
+         new DedicatedServerSleepThread(this);
+     }
+ 
+@@ -53,6 +51,7 @@
+         DedicatedServerCommandThread var1 = new DedicatedServerCommandThread(this);
+         var1.setDaemon(true);
+         var1.start();
++
+         this.getLogAgent().logInfo("Starting minecraft server version 1.6.4");
+ 
+         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
+@@ -69,25 +68,8 @@
              this.setHostname(this.settings.getProperty("server-ip", ""));
          }
  
@@ -46,7 +83,7 @@
          InetAddress var3 = null;
  
          if (this.getServerHostname().length() > 0) {
-@@ -103,7 +87,7 @@
+@@ -103,7 +85,7 @@
          this.getLogAgent().logInfo("Starting Minecraft server on " + (this.getServerHostname().length() == 0 ? "*" : this.getServerHostname()) + ":" + this.getServerPort());
  
          try {
@@ -55,7 +92,7 @@
          } catch (IOException var16) {
              this.getLogAgent().logWarning("**** FAILED TO BIND TO PORT!");
              this.getLogAgent().logWarningFormatted("The exception was: {0}", new Object[] {var16.toString()});
-@@ -121,39 +105,12 @@
+@@ -121,39 +103,12 @@
          this.setConfigurationManager(new DedicatedPlayerList(this));
          long var4 = System.nanoTime();
  
@@ -96,7 +133,7 @@
          long var12 = System.nanoTime() - var4;
          String var14 = String.format("%.3fs", new Object[] {Double.valueOf((double)var12 / 1.0E9D)});
          this.getLogAgent().logInfo("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
-@@ -173,10 +130,6 @@
+@@ -173,10 +128,6 @@
          return true;
      }
  
@@ -107,7 +144,7 @@
      public EnumGameType getGameType() {
          return this.gameType;
      }
-@@ -233,11 +186,11 @@
+@@ -233,11 +184,11 @@
      }
  
      public boolean getAllowNether() {
@@ -121,7 +158,7 @@
      }
  
      public void addServerStatsToSnooper(PlayerUsageSnooper par1PlayerUsageSnooper) {
-@@ -319,15 +272,6 @@
+@@ -319,15 +270,6 @@
          return var1 != null ? var1.getAbsolutePath() : "No settings file";
      }
  
@@ -137,7 +174,7 @@
      /**
       * On dedicated does nothing. On integrated, sets commandsAllowedForAll, gameType and allows external connections.
       */
-@@ -339,7 +283,7 @@
+@@ -339,7 +281,7 @@
       * Return whether command blocks are enabled.
       */
      public boolean isCommandBlockEnabled() {
@@ -146,7 +183,7 @@
      }
  
      /**
-@@ -355,8 +299,6 @@
+@@ -355,8 +297,6 @@
      public boolean isBlockProtected(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer) {
          if (par1World.provider.dimensionId != 0) {
              return false;

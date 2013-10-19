@@ -20,7 +20,7 @@ public class Constants {
     }
 
     public static String withVersion(Project project, String format){
-        return format.replace("%%version%%", MC_VERSION(project));
+        return format.replaceAll("%%version%%", MC_VERSION(project));
     }
 
     public static final String MC_SERVER_URL = "http://s3.amazonaws.com/Minecraft.Download/versions/%%version%%/minecraft_server.%%version%%.jar";

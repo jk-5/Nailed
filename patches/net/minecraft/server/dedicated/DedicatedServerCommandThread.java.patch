@@ -21,7 +21,7 @@
 -            while (!this.server.isServerStopped() && this.server.isServerRunning() && (var2 = var1.readLine()) != null) {
 +            while (!this.server.isServerStopped() && this.server.isServerRunning()) {
 +                if(Nailed.useJLine()){
-+                    var2 = var1.readLine(">", null);
++                    var2 = var1.readLine("> ", null);
 +                }else{
 +                    var2 = var1.readLine();
 +                }
