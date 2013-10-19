@@ -31,6 +31,7 @@ class Map(private final val mappack: Mappack) {
   }
 
   def setWorldServer(server: WorldServer){
+    this.mappack.configureServer(server)
     this.world = server
     this.teamManager.setupTeams()
     println("Constructed map " + this.getUID + " with server " + this.world)

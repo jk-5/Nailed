@@ -7,7 +7,7 @@ import jk_5.nailed.map.gameloop.IInstruction
 import jk_5.nailed.config.helper.ConfigFile
 import jk_5.nailed.util.FileUtils
 import net.minecraft.util.ChunkCoordinates
-import net.minecraft.world.EnumGameType
+import net.minecraft.world.{WorldServer, EnumGameType}
 
 /**
  * No description given
@@ -26,7 +26,7 @@ class Mappack(private final val mappackFile: File, private final val config: Con
   private final val difficulty = config.getTag("map").getTag("difficulty").getIntValue(2)
   private final val _mapName = config.getTag("name").getValue(this._internalName)
   private final val spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(default = true)
-  private final val spawnFriendlyMobs = config.getTag("map").getTag("spawn-frienly-mobs").getBooleanValue(default = true)
+  private final val spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(default = true)
   private final val pvp = config.getTag("map").getTag("pvp").getBooleanValue(default = true)
 
   private final val spawnX = config.getTag("spawnpoint").getTag("x").getIntValue(0)
@@ -53,6 +53,11 @@ class Mappack(private final val mappackFile: File, private final val config: Con
       case e: Exception => throw new MappackInitializationException(this, "Error while parsing instructions file at line " + lineNumber, e)
     }
     this._instructions = list.toList
+  }
+
+  def configureServer(server: WorldServer){
+    server.setAllowedSpawnTypes(this.shouldSpawnHostileMobs, this.shouldSpawnFriendlyMobs)
+    server.difficultySetting = this.getDifficulty
   }
 
   @inline def instructions = this._instructions

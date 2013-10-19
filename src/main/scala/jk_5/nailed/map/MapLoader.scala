@@ -102,9 +102,8 @@ object MapLoader {
     }
     val worldServer = new WorldServer(Nailed.server, new AnvilSaveHandler(mapsFolder, map.getFolderName, true), map.getFolderName, map.getUID, new WorldSettings(1L, mappack.getDefaultGamemode, false, false, WorldType.DEFAULT), Nailed.server.theProfiler, Nailed.server.getLogAgent)
     worldServer.worldScoreboard = new Scoreboard
-    worldServer.difficultySetting = mappack.getDifficulty
-    worldServer.setAllowedSpawnTypes(mappack.shouldSpawnHostileMobs, mappack.shouldSpawnFriendlyMobs)
     this.worlds += worldServer
+
     println("Preparing start region for level '" + map.getFolderName + "'")
     /*if (true) {
       val short1: Short = 196
@@ -138,6 +137,7 @@ object MapLoader {
         }
       }
     }*/
+
     this.maps += map
     map.setWorldServer(worldServer)
     map
