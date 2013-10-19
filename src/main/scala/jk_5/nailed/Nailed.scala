@@ -2,7 +2,7 @@ package jk_5.nailed
 
 import com.google.common.eventbus.EventBus
 import jk_5.nailed.config.helper.ConfigFile
-import java.io.File
+import java.io.{IOException, File}
 import jk_5.nailed.map.MapLoader
 import jk_5.nailed.irc.IrcConnector
 import jk_5.nailed.teamspeak3.TeamspeakManager
@@ -13,6 +13,9 @@ import scala.collection.JavaConversions._
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.command.{CommandServerWhitelist, CommandShowSeed, CommandDefaultGameMode, ServerCommandManager}
 import net.minecraft.scoreboard.ServerCommandScoreboard
+import jline.console.ConsoleReader
+import jk_5.nailed.logging.NailedLogging
+import jk_5.nailed.util.JLineAutoCompleter
 
 /**
  * No description given
@@ -23,10 +26,14 @@ object Nailed {
   final val eventBus = new EventBus
   final val config = new ConfigFile(new File("nailed.cfg")).setComment("Nailed main config file")
   final val irc = new IrcConnector
+  var reader: ConsoleReader = _
 
   var server: DedicatedServer = _
+  var useJLine = true
 
   def init(server: DedicatedServer){
+    NailedLogging.init()
+
     this.server = server
 
     this.eventBus.register(NailedEventListener)
@@ -55,6 +62,25 @@ object Nailed {
     //val map2 = this.mapLoader.createWorld(mapLoader.getMappack("raceforwool"))
 
     MapLoader.setLobbyWorld(this.server.worldServerForDimension(0))
+  }
+
+  def initJLine(){
+    try{
+      this.reader = new ConsoleReader(System.in, NailedLogging.sysOut)
+      this.reader.setExpandEvents(false) //Avoid parsing exceptions for uncommonly used event designators
+      this.reader.addCompleter(JLineAutoCompleter)
+    }catch{
+      case e: Exception => try {
+        //Try again with jline disabled for Windows users without C++ 2008 Redistributable
+        System.setProperty("jline.terminal", "jline.UnsupportedTerminal")
+        System.setProperty("user.language", "en")
+        this.useJLine = false
+        this.reader = new ConsoleReader(System.in, System.out)
+        this.reader.setExpandEvents(false)
+      }catch{
+        case e: IOException => e.printStackTrace()
+      }
+    }
   }
 
   def registerCommands(){

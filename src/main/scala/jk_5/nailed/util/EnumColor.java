@@ -5,6 +5,7 @@ package jk_5.nailed.util;
  *
  * @author jk-5
  */
+@Deprecated
 public enum EnumColor {
     BLACK("\u00a70"),
     DARKBLUE("\u00a71"),

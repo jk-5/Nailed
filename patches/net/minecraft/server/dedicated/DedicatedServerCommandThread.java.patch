@@ -1,0 +1,34 @@
+--- /net/minecraft/server/dedicated/DedicatedServerCommandThread.java
++++ /net/minecraft/server/dedicated/DedicatedServerCommandThread.java
+@@ -1,5 +1,8 @@
+ package net.minecraft.server.dedicated;
+ 
++import jk_5.nailed.Nailed;
++import jline.console.ConsoleReader;
++
+ import java.io.BufferedReader;
+ import java.io.IOException;
+ import java.io.InputStreamReader;
+@@ -12,13 +15,20 @@
+     }
+ 
+     public void run() {
+-        BufferedReader var1 = new BufferedReader(new InputStreamReader(System.in));
++        ConsoleReader var1 = Nailed.reader();
+         String var2;
+ 
+         try {
+-            while (!this.server.isServerStopped() && this.server.isServerRunning() && (var2 = var1.readLine()) != null) {
++            while (!this.server.isServerStopped() && this.server.isServerRunning()) {
++                if(Nailed.useJLine()){
++                    var2 = var1.readLine(">", null);
++                }else{
++                    var2 = var1.readLine();
++                }
++                if(var2 != null){
+                 this.server.addPendingCommand(var2, this.server);
+             }
++            }
+         } catch (IOException var4) {
+             var4.printStackTrace();
+         }
