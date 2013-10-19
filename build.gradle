@@ -20,6 +20,10 @@ repositories {
     mavenCentral()
 }
 
+minecraft {
+    minecraftVersion '1.6.4'
+}
+
 dependencies {
     compile 'io.netty:netty-all:4.0.10.Final'
     compile 'jline:jline:2.11'
@@ -41,10 +45,10 @@ dependencies {
 sourceSets {
     main {
         scala {
-            srcDirs 'minecraft/work', 'src/main/scala'
+            srcDirs 'minecraft/1.6.4/work', 'src/main/scala'
         }
         resources {
-            srcDirs 'minecraft/resources', 'src/main/resources'
+            srcDirs 'minecraft/1.6.4/resources', 'src/main/resources'
         }
     }
 }

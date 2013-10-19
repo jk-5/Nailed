@@ -11,42 +11,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constants {
-    // OS
-    public static enum OperatingSystem {
-        WINDOWS, OSX, LINUX
-    }
 
-    public static final OperatingSystem OPERATING_SYSTEM = getOs();
-
-    // extension nam
     public static final String EXT_NAME = "minecraft";
 
-    // urls
-    public static final String MC_VERSION = "1.6.4";
-    public static final String MC_SERVER_URL = String.format("http://s3.amazonaws.com/Minecraft.Download/versions/%1$s/minecraft_server.%1$s.jar", MC_VERSION);
+    //Url's
+    public static String MC_VERSION(Project project){
+        return ((ExtensionObject) project.getExtensions().getByName(EXT_NAME)).getMinecraftVersion();
+    }
+
+    public static String withVersion(Project project, String format){
+        return format.replace("%%version%%", MC_VERSION(project));
+    }
+
+    public static final String MC_SERVER_URL = "http://s3.amazonaws.com/Minecraft.Download/versions/%%version%%/minecraft_server.%%version%%.jar";
     public static final String FERNFLOWER_URL = "https://github.com/nailed/nailed/raw/buildscript/mcplibs/fernflower.jar";
     public static final String EXCEPTOR_URL = "https://github.com/nailed/nailed/raw/buildscript/mcplibs/mcinjector.jar";
 
-    // things in the cache dir.
+    //Cached files
     public static final String CACHE_DIR = "caches/nailed";
-    public static final String JAR_SERVER_FRESH = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_server/%1$s/minecraft_server-%1$s.jar", MC_VERSION);
-    public static final String JAR_SRG = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/minecraft_srg-%1$s.jar", MC_VERSION);
-    public static final String ZIP_DECOMP = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_decomp/%1$s/minecraft_decomp-%1$s.zip", MC_VERSION);
-    public static final String PACKAGED_SRG = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/packaged-%1$s.srg", MC_VERSION);
-    public static final String PACKAGED_EXC = CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/packaged-%1$s.exc", MC_VERSION);
+    public static final String JAR_SERVER_FRESH = CACHE_DIR + "/net/minecraft/minecraft_server/%%version%%/minecraft_server-%%version%%.jar";
+    public static final String JAR_SRG = CACHE_DIR + "/net/minecraft/minecraft_srg/%%version%%/minecraft_srg-%%version%%.jar";
+    public static final String ZIP_DECOMP = CACHE_DIR + "/net/minecraft/minecraft_decomp/%%version%%/minecraft_decomp-%%version%%.zip";
+    public static final String PACKAGED_SRG = CACHE_DIR + "/net/minecraft/minecraft_srg/%%version%%/packaged-%%version%%.srg";
+    public static final String PACKAGED_EXC = CACHE_DIR + "/net/minecraft/minecraft_srg/%%version%%/packaged-%%version%%.exc";
     public static final String FERNFLOWER = "caches/fernflower.jar";
     public static final String EXCEPTOR = "caches/exceptor.jar";
 
-    // src dirs
-    public static final String MINECRAFT_CLEAN_DIR = "minecraft/clean";
-    public static final String MINECRAFT_WORK_DIR = "minecraft/work";
-    public static final String MINECRAFT_RESOURCES_DIR = "minecraft/resources";
+    //Src directories
+    public static final String MINECRAFT_CLEAN_DIR = "minecraft/%%version%%/clean";
+    public static final String MINECRAFT_WORK_DIR = "minecraft/%%version%%/work";
+    public static final String MINECRAFT_RESOURCES_DIR = "minecraft/%%version%%/resources";
     public static final String NAILED_SRC = "src/main/scala";
     public static final String NAILED_RES = "src/main/resources";
     public static final String PATCH_DIR = "patches";
 
-    // mappings
-    public static final String MAPPINGS_DIR = "conf";
+    //Mappings
+    public static final String MAPPINGS_DIR = "conf/%%version%%";
     public static final String METHOD_CSV = MAPPINGS_DIR + "/methods.csv";
     public static final String FIELDS_CSV = MAPPINGS_DIR + "/fields.csv";
     public static final String PARAMS_CSV = MAPPINGS_DIR + "/params.csv";
@@ -57,9 +57,7 @@ public class Constants {
 
     // various useful files
     public static final String MCP_PATCH = MAPPINGS_DIR + "/patches/minecraft_server_ff.patch";
-    public static final String PACKAGED_PATCH = Constants.CACHE_DIR + "/" + String.format("net/minecraft/minecraft_srg/%1$s/packaged-%1$s.patch", Constants.MC_VERSION);
-    public static final String MERGE_CFG = "mcp_merge.cfg";
-    public static final String ECLIPSE = "eclipse-workspace-dev.zip";
+    public static final String PACKAGED_PATCH = Constants.CACHE_DIR + "/net/minecraft/minecraft_srg/%%version%%/packaged-%%version%%.patch";
 
     // helper methods
     public static File projectFile(Project project, String... otherFiles) {
@@ -95,19 +93,6 @@ public class Constants {
         return list;
     }
 
-    private static OperatingSystem getOs() {
-        String name = System.getProperty("os.name").toString().toLowerCase();
-        if (name.contains("windows")) {
-            return OperatingSystem.WINDOWS;
-        } else if (name.contains("mac")) {
-            return OperatingSystem.OSX;
-        } else if (name.contains("linux")) {
-            return OperatingSystem.LINUX;
-        } else {
-            return null;
-        }
-    }
-
     public static String hash(File file) {
         try {
 
@@ -129,8 +114,8 @@ public class Constants {
 
             String result = "";
 
-            for (int i = 0; i < hash.length; i++) {
-                result += Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1);
+            for (byte h : hash) {
+                result += Integer.toString((h & 0xff) + 0x100, 16).substring(1);
             }
             return result;
         } catch (Exception e) {
@@ -142,14 +127,12 @@ public class Constants {
 
     public static String hash(String str) {
         try {
-            byte[] buffer = new byte[1024];
             MessageDigest complete = MessageDigest.getInstance("MD5");
             byte[] hash = complete.digest(str.getBytes());
 
             String result = "";
-
-            for (int i = 0; i < hash.length; i++) {
-                result += Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1);
+            for (byte h : hash){
+                result += Integer.toString((h & 0xff) + 0x100, 16).substring(1);
             }
             return result;
         } catch (Exception e) {

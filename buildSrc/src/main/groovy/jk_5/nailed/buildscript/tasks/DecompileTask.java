@@ -232,9 +232,9 @@ public class DecompileTask extends CachedTask {
 
     private void renameSources() throws IOException {
         Map<String, File> files = Maps.newHashMap();
-        files.put("methods", Constants.projectFile(getProject(), Constants.METHOD_CSV));
-        files.put("fields", Constants.projectFile(getProject(), Constants.FIELDS_CSV));
-        files.put("params", Constants.projectFile(getProject(), Constants.PARAMS_CSV));
+        files.put("methods", Constants.projectFile(getProject(), Constants.withVersion(getProject(), Constants.METHOD_CSV)));
+        files.put("fields", Constants.projectFile(getProject(), Constants.withVersion(getProject(), Constants.FIELDS_CSV)));
+        files.put("params", Constants.projectFile(getProject(), Constants.withVersion(getProject(), Constants.PARAMS_CSV)));
         SourceRemapper remapper = new SourceRemapper(files);
 
         HashMap<String, String> newSources = new HashMap<String, String>();

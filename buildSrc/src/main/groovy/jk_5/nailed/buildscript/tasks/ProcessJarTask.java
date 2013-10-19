@@ -112,10 +112,6 @@ public class ProcessJarTask extends CachedTask {
     }
 
     public void applyExceptor(final File injectorJar, final File inJar, final File outJar, final File config, final File log) {
-        getLogger().debug("INPUT: " + inJar);
-        getLogger().debug("OUTPUT: " + outJar);
-        getLogger().debug("CONFIG: " + config);
-        // http://www.gradle.org/docs/current/dsl/org.gradle.api.tasks.JavaExec.html
         getProject().javaexec(new Closure(this) {
             public Object call() {
                 JavaExecSpec exec = (JavaExecSpec) getDelegate();
@@ -128,14 +124,9 @@ public class ProcessJarTask extends CachedTask {
                         log.getAbsolutePath()
                 );
 
-                //exec.jvmArgs("-jar", injectorJar.getAbsolutePath());
-
                 exec.setMain("-jar");
-                //exec.setExecutable(injectorJar);
                 exec.setWorkingDir(injectorJar.getParentFile());
-
                 exec.classpath(Constants.getClassPath());
-
                 exec.setStandardOutput(Constants.getNullStream());
 
                 return exec;
