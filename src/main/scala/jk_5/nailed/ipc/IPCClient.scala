@@ -6,6 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.socket.nio.NioSocketChannel
 import jk_5.nailed.ipc.packet.IPCPacket
+import java.nio.channels.UnresolvedAddressException
 
 /**
  * No description given
@@ -36,13 +37,11 @@ object IPCClient extends Thread {
       handler.getHandshakeFuture.sync
       this.channel.closeFuture.sync
     }catch{
+      case e: ConnectException => println("Was not able to connect to IPC server")
+      case e: UnresolvedAddressException => println("Unresolved address for IPC server")
       case e: Exception => {
-        if (e.isInstanceOf[ConnectException]) println("Was not able to connect to IPC server")
-        else{
-          System.err.println("IPC Error:")
-          e.printStackTrace()
-          sys.exit(1)
-        }
+        System.err.println("IPC Error:")
+        e.printStackTrace()
       }
     }finally{
       group.shutdownGracefully
